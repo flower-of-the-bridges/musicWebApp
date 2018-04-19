@@ -12,10 +12,15 @@
  * @author giovanni
  */
 class EMusician extends EUser{
-    //put your code here
-    private $songs;
-    private $genre;
     
+    private $songs; //list of songs made by the musician 
+    private $genre; //music genre adopted by the musician
+    
+    /**
+     * 
+     * @param string $user
+     * @param DateTime $birthDate
+     */
     public function __construct(string $user, DateTime $birthDate) {
         
         parent::__construct($user, $birthDate);
@@ -49,11 +54,11 @@ class EMusician extends EUser{
         return parent::getBirthDate();
     }
 
-    public function getName() {
+    public function getName() : string{
         parent::getName();
     }
 
-    public function setName(string $name) {
+    public function setName(string $name){
         parent::setName($name);
     }
 

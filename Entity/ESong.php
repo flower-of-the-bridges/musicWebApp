@@ -14,33 +14,41 @@
 class ESong
 {
 
-    // put your code here
-    private $name;
+    private $name; //stringa contenente il nome dela canzone
 
-    private $artist;
+    private $artist; //il nome dell'artista
 
-    private $lenght;
+    private $lenght; //lunghezza del brano
 
-    private $genre;
+    private $genre; //il genere del brano
 
-    private $lyrics;
+    private $lyrics; //testo del brano (facoltativo)
+    
+    private $composers; //i compositori del brano (facoltativo)
 
+    //attributi booleani che denotano la visibilita' del brano
     private $forAll;
 
     private $supportersOnly;
 
     private $registeredOnly;
 
-    public function __construct(string $name, DateTime $lenght, string $genre)
+    /**
+     * Inizializza una canzone. La visibilita' e' di default solo
+     * per gli utenti registrati
+     * @param string $name il nome del brano
+     * @param string $genre il genere del brano
+     */
+    public function __construct(string $name, string $genre)
     {
         $this->name = $name;
-        $this->lenght = $lenght;
         $this->genre = $genre;
         $this->forAll = false;
         $this->supportersOnly = false;
         $this->registeredOnly = true;
     }
 
+    
     function getText(): string
     {
         return $this->lyrics;
@@ -80,22 +88,69 @@ class ESong
     {
         $this->genre = $genre;
     }
+    
+    /**
+     * @return string
+     */
+    public function getLyrics() : string
+    {
+        return $this->lyrics;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getComposers() : string
+    {
+        return $this->composers;
+    }
+    
+    /**
+     * @param string $lyrics
+     */
+    public function setLyrics(string $lyrics)
+    {
+        $this->lyrics = $lyrics;
+    }
+    
+    /**
+     * @param mixed $composers
+     */
+    public function setComposers(string $composers)
+    {
+        $this->composers = $composers;
+    }
 
+    /**
+     * Controlla se il brano e' visibile per tutte le tipologie di utenti
+     * @return bool 
+     */
     function isForAll(): bool
     {
         return $this->All;
     }
 
+    /**
+     * Controlla se il brano e' visibile solo per chi supporta l'artista
+     * @return bool
+     */
     function isForSupportersOnly(): bool
     {
         return $this->supportersOnly;
     }
 
+    /**
+     * Controlla se il brano e' visibile solo per chi e' registrato
+     * @return bool
+     */
     function isForRegisteredOnly(): bool
     {
         return $this->registeredOnly;
     }
 
+   /**
+    * Imposta la visibilita' per tutti gli utenti.
+    */
     function setForAll()
     {
         $this->All = true;
@@ -103,6 +158,9 @@ class ESong
         $this->registeredOnly = true;
     }
 
+    /**
+     * Imposta la visibilita' solo per chi supporta l'artista
+     */
     function setForSupportersOnly()
     {
         $this->All = false;
@@ -110,6 +168,11 @@ class ESong
         $this->supportersOnly = true;
     }
 
+  
+
+    /**
+     * Imposta la visibilita' solo per chi e' registrato
+     */
     function setForRegisteredOnly()
     {
         $this->All = false;
@@ -117,6 +180,9 @@ class ESong
         $this->registeredOnly = true;
     }
 
+    /**
+     * Nasconde il brano a tutti gli utenti
+     */
     function hide()
     {
         $this->All = false;
