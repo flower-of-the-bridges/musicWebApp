@@ -15,6 +15,7 @@
  */
 
 require_once 'config.inc.php';
+require_once 'inc.php';
 
 class FPersistantManager {
     
@@ -23,20 +24,18 @@ class FPersistantManager {
 
     private function __construct()
     {
-        
-        $db = new mysqli($address, $user, $pass, $database);
-        if($db->connect_errno > 0){
+        global $address,$user,$pass,$database;
+        $this->db = new mysqli($address, $user, $pass, $database);
+        if($this->db->connect_errno > 0){
             die('Unable to connect to database [' . $db->connect_error . ']');
         }
     }
 
-    private function __clone()
-    {
+    private function __clone(){
         // evita la clonazione dell'oggetto
     }
 
-    public static function getInstance()
-    {
+    public static function getInstance(){
         if (static::$instance == null) {
             static::$instance = new FPersistantManager();
         }
@@ -47,10 +46,11 @@ class FPersistantManager {
         $result;
         switch($className){
             case('E'.$className=='EMusician'):
-                $result=FMusician::getMusician($db, $name);
                 break;
             case('E'.$className=='EListener'):
-                $result;
+                break;
+            case('E'.$className=='ESong'):
+                
                 break;
             default:
                 break;
@@ -61,16 +61,19 @@ class FPersistantManager {
     public function store($obj){
         $result;
         switch($obj){
-            case(is_a($object, EMusician::class)):
-                $result=FMusician::getMusician($db, $name);
+            case(is_a($obj, EMusician::class)):
+                $result=FMusician::getMusician($this->db, $name);
                 break;
-            case(is_a($object, EMusician::class)):
+            case(is_a($obj, EListener::class)):
+                break;
+            case(is_a($obj, ESong::class)):
+                if(FSong::storeSong($this->db, $obj))
+                    echo("Caricamento effettuato.");
+                else echo("Caricamento fallito.");
                 break;
             default:
                 break;
         }
-        
-        return $result;        
     }
 }
 

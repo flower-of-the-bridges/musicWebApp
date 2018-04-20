@@ -55,7 +55,7 @@ class ESong
     /**
      * @return string
      */
-    public function getArtist()
+    function getArtist() : string
     {
         return $this->artist;
     }
@@ -63,18 +63,9 @@ class ESong
     /**
      * @param string $artist
      */
-    public function setArtist($artist)
+    function setArtist($artist)
     {
         $this->artist = $artist;
-    }
-    function getText(): string
-    {
-        return $this->lyrics;
-    }
-
-    function setText(string $text)
-    {
-        $this->lyrics = $text;
     }
 
     function getName(): string
@@ -116,7 +107,7 @@ class ESong
     }
     
     /**
-     * @return mixed
+     * @return string for the composers
      */
     public function getComposers() : string
     {
@@ -201,7 +192,7 @@ class ESong
     /**
      * Nasconde il brano a tutti gli utenti
      */
-    function hide() : void
+    function setHide() : void
     {
         $this->All = false;
         $this->supportersOnly = false;
@@ -209,7 +200,15 @@ class ESong
     }
 
     function __toString(){
-        $string="Nome :".$this->name."\nArtista: ".$this->artist."\nGenere: ".$this->genre;
+        $string="Nome :".$this->name."\nArtista: ".
+                 $this->artist."\nGenere: ".
+                 $this->genre."\nVisibilita': ";
+        if($this->isForAll())
+            $string.="Per tutti. \n";
+        if($this->isForRegisteredOnly())
+            $string.="Solo registrati. \n";
+        if($this->isForSupportersOnly())
+            $string.="Solo supporters. \n";
         return $string;
         
     }

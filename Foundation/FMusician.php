@@ -16,14 +16,5 @@
  * @author giovanni
  */
 class FMusician{
- 
-    static function getMusician(mysqli &$db, $name){
-        $result=$db->execQuery("SELECT * FROM  WHERE user= '"+$name+"' AND type='musician'");
-        $rows=$result->fetch_array(MYSQLI_ASSOC);
-        $musician=new EMusician();
-        $musician->setName($rows[name]);
-        $musician->setBirthDate($rows[birth]);
-        return $musician;
-    }
-    
+
 }

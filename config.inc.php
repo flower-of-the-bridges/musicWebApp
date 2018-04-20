@@ -1,8 +1,8 @@
 <?php
 $address= 'localhost';
-$database= 'web';
+$database= 'sito_web';
 $user= 'root';
-$pass= 'class';
+$pass= 'web';
 ?>
 
 

@@ -12,6 +12,20 @@
  * @author giovanni
  */
 class FSong {
-    //put your code here
-    
+
+    static function storeSong(mysqli &$db, ESong $song)
+    {
+        $sql = "INSERT INTO `song`(`name`, `artist`, `genre`, `forall`, `registered`, `supporters`) VALUES ";
+        $sql.= "('" . $song->getName() . "','" . $song->getArtist() . "','" .
+                      $song->getGenre() . "'," . (int) $song->isForAll() . "," . 
+                      (int) $song->isForRegisteredOnly() . "," . 
+                      (int) $song->isForSupportersOnly() . ");";
+        if (! $result = $db->query($sql)) {
+            die('There was an error running the query [' . $db->error . ']');
+            return false;
+        }
+        else 
+            return true;
+    }
 }
+    
