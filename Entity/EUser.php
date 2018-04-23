@@ -1,28 +1,19 @@
 <?php
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- * Description of EUser
- *
- * @author giovanni
+ * @author gruppo 2
+ * Super Class for users
  */
 abstract class EUser {
-    //put your code here
     
-    protected $name;
-    private $password;
-    protected $birthDate;
-    protected $followers;
+    protected 	$name;
+    private 	$password;
+    protected 	$birthDate;
+    protected 	$followers;
     
     function __construct(string $user, DateTime $birthDate) {
         $this->name = $user;
         $this->birthDate = $birthDate;
-        $this->followers=array();
+        $this->followers = array();
     }
     
     function getBirthDate() {
@@ -52,8 +43,5 @@ abstract class EUser {
     function hasFollowers(){
         return count($this->followers);
     }
-    
-
-
 
 }

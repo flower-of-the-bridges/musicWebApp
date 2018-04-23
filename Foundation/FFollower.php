@@ -1,15 +1,7 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- * Description of FFollower
- *
- * @author giovanni
+ * @author gruppo 2
  */
 class FFollower {
     //put your code here

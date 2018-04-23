@@ -1,16 +1,8 @@
 <?php
 
 require_once 'inc.php';
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- * Description of EMusician
- *
- * @author giovanni
+ * @author gruppo 2
  */
 class EMusician extends EUser{
     
@@ -18,7 +10,6 @@ class EMusician extends EUser{
     private $genre; //music genre adopted by the musician
     
     /**
-     * 
      * @param string $user
      * @param DateTime $birthDate
      */
@@ -47,6 +38,7 @@ class EMusician extends EUser{
     public function setBirthDate($birthDate) {
         parent::setBirthDate($birthDate);
     }
+	
     /**
      * Overrided method from the parent class.
      * @return DateTime representing the birth date of the musician.

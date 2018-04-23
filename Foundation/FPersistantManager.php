@@ -1,26 +1,19 @@
-<?php
-    
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-     
+<?php   
 /**
  * Description of FPersistantManager
  * This foundation class provides a unique access to the Mysql DBMS, its aim is 
  * to use the static methods of all the other foundation classes in order to 
  * gather the information required by the upper layers.
- * @author giovanni
+ * @author gruppo 2
  */
-
+ 
 require_once 'config.inc.php';
 require_once 'inc.php';
 
 class FPersistantManager {
     
-    private static $instance = null; // the unique instance of the class
-    private $db; // mysqli's database
+    private static $instance = null; 	// the unique instance of the class
+    private $db; 						// mysqli's database
 
     private function __construct()
     {
@@ -70,6 +63,23 @@ class FPersistantManager {
                 if(FSong::storeSong($this->db, $obj))
                     echo("Caricamento effettuato.");
                 else echo("Caricamento fallito.");
+                break;
+            default:
+                break;
+        }
+    }
+	
+	public function update($obj){
+        $result;
+        switch($obj){
+            case(is_a($obj, EMusician::class)):
+                break;
+            case(is_a($obj, EListener::class)):
+                break;
+            case(is_a($obj, ESong::class)):
+                if(FSong::updateSong($this->db, $obj))
+                    echo("Aggiornamento effettuato.");
+                else echo("Aggiornamento fallito.");
                 break;
             default:
                 break;

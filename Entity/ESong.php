@@ -1,28 +1,19 @@
 <?php
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- * Description of ESong
- *
- * @author giovanni
+ * @author gruppo 2
  */
 class ESong
 {
 
-    private $name; //stringa contenente il nome dela canzone
+    private $name; 		//stringa contenente il nome dela canzone
 
-    private $artist; //il nome dell'artista
+    private $artist; 	//il nome dell'artista
 
-    private $lenght; //lunghezza del brano
+    private $lenght; 	//lunghezza del brano
 
-    private $genre; //il genere del brano
+    private $genre; 	//il genere del brano
 
-    private $lyrics; //testo del brano (facoltativo)
+    private $lyrics; 	//testo del brano (facoltativo)
     
     private $composers; //i compositori del brano (facoltativo)
 
@@ -177,8 +168,6 @@ class ESong
         $this->supportersOnly = true;
     }
 
-  
-
     /**
      * Imposta la visibilita' solo per chi e' registrato
      */
@@ -201,17 +190,16 @@ class ESong
 
     function __toString(){
         $string="Nome :".$this->name."\nArtista: ".
-                 $this->artist."\nGenere: ".
-                 $this->genre."\nVisibilita': ";
+            $this->artist."\nGenere: ".
+			$this->genre."\nVisibilita': ";
         if($this->isForAll())
-            $string.="Per tutti. \n";
+			$string.="Per tutti. \n";
         if($this->isForRegisteredOnly())
-            $string.="Solo registrati. \n";
+			$string.="Solo registrati. \n";
         if($this->isForSupportersOnly())
-            $string.="Solo supporters. \n";
+			$string.="Solo supporters. \n";
         return $string;
         
     }
 
-    
 }
