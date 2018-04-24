@@ -22,7 +22,7 @@ class FPersistantManager {
     {
         try{
 			global $address,$user,$pass,$database;
-			$db = new PDO ("mysql:host=$hostname;dbname=$dbname", $user, $pass);
+			$this->db = new PDO ("mysql:host=$address;dbname=$database", $user, $pass);
 			// connessione non persistente
 		}catch (PDOException $e){
 			echo "Errore : " . $e->getMessage();
@@ -64,7 +64,6 @@ class FPersistantManager {
         $result;
         switch($obj){
             case(is_a($obj, EMusician::class)):
-                //$result = FMusician::getMusician($this->db, $name); not yet implemented
                 break;
             case(is_a($obj, EListener::class)):
                 break;

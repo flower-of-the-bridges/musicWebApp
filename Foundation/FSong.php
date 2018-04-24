@@ -4,39 +4,35 @@
  */
 class FSong {
 
-    static function storeSong(mysqli &$db, ESong $song)
+    static function storeSong(PDO &$db, ESong $song)
     {
-		$sql = "INSERT INTO song(name, artist, genre, forall, registered, supporters) 
-				VALUES(':name',':artist',':genre',':forall',':registered',':supporters')";
-		$stmt = $db->prepare($sql);
-		
-		$name = $song->getName();
-		$stmt->bindValue(':name', $name);
-		$artist = $song->getArtist();
-		$stmt->bindValue(':artist', $artist);
-		$genre = $song->getGenre();
-		$stmt->bindValue(':genre', $genre);
-		$forall = (int) $song->isForAll();
-		$stmt->bindValue(':forall', $forall);
-		$registered = (int) $song->isForRegisteredOnly();
-		$stmt->bindValue(':registered', $registered);
-		$supporters = (int) $song->isForSupportersOnly();
-		$stmt->bindValue(':supporters', $supporters);
-		
-		$stmt->execute();
-		
-		//manca il controllo errori
-		//da testare
-        if (! $result = $stmt) {
-            die('There was an error running the query [' . $db->error . ']');
+		$db->beginTransaction(); //inizio della transazione
+        $sql = "INSERT INTO song(name, artist, genre, forall, registered, supporters) 
+				VALUES(:name,:artist,:genre,:forall,:registered,:supporters)";
+		$stmt = $db->prepare($sql); 
+		//si prepara la query facendo un bind tra parametri e variabili dell'oggetto
+
+		$stmt->bindValue(':name', $song->getName(), PDO::PARAM_STR);
+	
+		$stmt->bindValue(':artist', $song->getArtist(), PDO::PARAM_STR);
+		$stmt->bindValue(':genre', $song->getGenre(), PDO::PARAM_STR);
+		$stmt->bindValue(':forall', (int) $song->isForAll(), PDO::PARAM_INT);
+		$stmt->bindValue(':registered', (int) $song->isForRegisteredOnly(), PDO::PARAM_INT);
+		$stmt->bindValue(':supporters', (int) $song->isForSupportersOnly(), PDO::PARAM_INT);
+		//si verifica se la query e' corretta e se il commit va a buon fine
+		if (! $stmt->execute()) { 
+            die('There was an error running the query [' . $db->errorCode(). ']');
             return false;
         }
-        else 
+        else{
+            $db->commit();
             return true;
+        }
     }
 	
 	static function updateSong(mysqli &$db, ESong $song){
 		// inserire un controllo con la ESong già presente facendo un load (?)
 		// la update va fatta con le pdo una volta aggiornato tutto
+	}
 }
     
