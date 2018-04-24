@@ -4,6 +4,9 @@
  * This foundation class provides a unique access to the Mysql DBMS, its aim is 
  * to use the static methods of all the other foundation classes in order to 
  * gather the information required by the upper layers.
+ *
+ * attivare se non già attivato il supporto alle PDO sul web server
+ * localizzando la stringa ";extension=php_pdo.dll" e se presente rimuovere il ;
  * @author gruppo 2
  */
  
@@ -13,16 +16,23 @@ require_once 'inc.php';
 class FPersistantManager {
     
     private static $instance = null; 	// the unique instance of the class
-    private $db; 						// mysqli's database
+    private $db; 						// PDO connection to database
 
     private function __construct()
     {
-        global $address,$user,$pass,$database;
-        $this->db = new mysqli($address, $user, $pass, $database);
-        if($this->db->connect_errno > 0){
-            die('Unable to connect to database [' . $db->connect_error . ']');
-        }
+        try{
+			global $address,$user,$pass,$database;
+			$db = new PDO ("mysql:host=$hostname;dbname=$dbname", $user, $pass);
+			// connessione non persistente
+		}catch (PDOException $e){
+			echo "Errore : " . $e->getMessage();
+			die;
+		}
     }
+	
+	private function closeDBConnection(){
+		$db = null;
+	}
 
     private function __clone(){
         // evita la clonazione dell'oggetto
