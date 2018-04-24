@@ -53,7 +53,6 @@ class FPersistantManager {
             case('E'.$className=='EListener'):
                 break;
             case('E'.$className=='ESong'):
-                
                 break;
             default:
                 break;
@@ -65,7 +64,7 @@ class FPersistantManager {
         $result;
         switch($obj){
             case(is_a($obj, EMusician::class)):
-                $result=FMusician::getMusician($this->db, $name);
+                //$result = FMusician::getMusician($this->db, $name); not yet implemented
                 break;
             case(is_a($obj, EListener::class)):
                 break;
