@@ -4,9 +4,9 @@
  */
 class FSong {
 
-    static function storeSong(PDO &$db, ESong $song)
+    static function storeSong(PDO &$db, ESong $song) : bool
     {
-		$db->beginTransaction(); //inizio della transazione
+        $db->beginTransaction(); //inizio della transazione
         $sql = "INSERT INTO song(name, artist, genre, forall, registered, supporters) 
 				VALUES(:name,:artist,:genre,:forall,:registered,:supporters)";
 		$stmt = $db->prepare($sql); 
@@ -25,12 +25,23 @@ class FSong {
             return false;
         }
         else{
-            $db->commit();
-            return true;
+            return confirmChanges($db);
         }
     }
 	
-	static function updateSong(mysqli &$db, ESong $song){
+    private function confirmChanges(PDO &$db) :bool 
+    {
+        if($db->commit()){
+            return true;
+        }
+        else {
+            $db->rollBack();
+            return false;
+        }
+    }
+    
+    
+	static function updateSong(PDO &$db, ESong $song){
 		// inserire un controllo con la ESong già presente facendo un load (?)
 		// la update va fatta con le pdo una volta aggiornato tutto
 	}

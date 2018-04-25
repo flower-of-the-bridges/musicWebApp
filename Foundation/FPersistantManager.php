@@ -60,8 +60,8 @@ class FPersistantManager {
         return $result;        
     }
     
-    public function store($obj){
-        $result;
+    public function store($obj) :void 
+    {
         switch($obj){
             case(is_a($obj, EMusician::class)):
                 break;

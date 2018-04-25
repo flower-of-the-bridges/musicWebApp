@@ -181,7 +181,7 @@ class ESong
     /**
      * Nasconde il brano a tutti gli utenti
      */
-    function setHide() : void
+    function setHidden() : void
     {
         $this->All = false;
         $this->supportersOnly = false;
