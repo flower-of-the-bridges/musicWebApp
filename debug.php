@@ -2,7 +2,6 @@
 require 'inc.php';
 $p=FPersistantManager::getInstance();
 $s=new ESong("2112", "Rush","Rock");
-$s->setForSupportersOnly();
 $p->store($s);
 echo($s);
 

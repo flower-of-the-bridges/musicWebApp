@@ -18,6 +18,10 @@ class FPersistantManager {
     private static $instance = null; 	// the unique instance of the class
     private $db; 						// PDO connection to database
 
+    /**
+     * Inizializza un oggetto FPersistantManager. Metodo privato per evitare
+     * duplicazioni dell'oggetto.
+     */
     private function __construct()
     {
         try{
@@ -30,6 +34,9 @@ class FPersistantManager {
 		}
     }
 	
+	/**
+	 * Metodo che chiude la connessione al dbms.
+	 */
 	private function closeDBConnection(){
 		$db = null;
 	}
@@ -38,6 +45,10 @@ class FPersistantManager {
         // evita la clonazione dell'oggetto
     }
 
+    /**
+     * Metodo che restituisce l'unica istanza dell'oggetto.
+     * @return FPersistantManager 
+     */
     public static function getInstance(){
         if (static::$instance == null) {
             static::$instance = new FPersistantManager();
@@ -45,7 +56,13 @@ class FPersistantManager {
         return static::$instance;
     }
     
-    public function load($className){
+    /**
+     * Metodo che carica dal dbms informazioni nel corrispettivo
+     * oggetto Entity.
+     * @param string $className il nome dell'oggetto (Song, User, Musician, ...)
+     * @return object un oggetto Entity.
+     */
+    public function load(string $className, int $id=null, string $key=null){
         $result;
         switch($className){
             case('E'.$className=='EMusician'):
@@ -60,7 +77,12 @@ class FPersistantManager {
         return $result;        
     }
     
-    public function store($obj) :void 
+    /**
+     * Metodo che permette di salvare informazioni contenute in un oggetto 
+     * Entity sul database.
+     * @param object $obj il nome dell'oggetto.
+     */
+    public function store(&$obj) :void 
     {
         switch($obj){
             case(is_a($obj, EMusician::class)):
@@ -77,6 +99,11 @@ class FPersistantManager {
         }
     }
 	
+	/**
+	 * Metodo che permette di aggiornare informazioni sul database, relative
+	 * ad una singola ennupla.
+	 * @param $obj
+	 */
 	public function update($obj){
         $result;
         switch($obj){

@@ -41,17 +41,18 @@ class FSong {
      * Commit query
      * @param PDO $db
      * @return bool
-     */
+    */
     private function confirmChanges(PDO &$db) :bool 
     {
         if($db->commit()){
             return true;
         }
         else {
-            $db->rollBack();
+            $db->rollBack(); //elimino la transazione
             return false;
         }
     }
+    
     
     /**
      * Execute a query
@@ -73,13 +74,13 @@ class FSong {
         
         //si verifica se la query e' corretta e se il commit va a buon fine
         if (! $stmt->execute()) {
-            die('There was an error running the query [' . $db->errorCode(). ']');
+            die('There was an error running the query [' . $db->errorInfo()[0] .']');
             return false;
         }
         else{
-            $tempReturn = FSong::confirmChanges($db);
-            $song->setID($db->lastInsertId());
-            return $tempReturn;
+            $song->setID($db->lastInsertId()); //assegno all'oggetto l'id del db.
+            return FSong::confirmChanges($db);
+            
         }
         
     }
