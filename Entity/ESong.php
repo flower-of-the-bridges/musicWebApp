@@ -5,9 +5,11 @@
 class ESong
 {
 
-    private $name; 		//stringa contenente il nome dela canzone
+    private $IdSong;    //identificativo univoco canzone
+    
+    private $name; 		//stringa contenente il nome dela canzone      PK sul db
 
-    private $artist; 	//il nome dell'artista
+    private $artist; 	//il nome dell'artista                         PK sul db
 
     private $lenght; 	//lunghezza del brano
 
@@ -23,8 +25,8 @@ class ESong
     private $supportersOnly;
 
     private $registeredOnly;
-
-
+    
+    private $pathMp3;
 
     /**
      * Inizializza una canzone. La visibilita' e' di default solo
@@ -92,7 +94,7 @@ class ESong
     /**
      * @return string
      */
-    public function getLyrics() : string
+    function getLyrics() : string
     {
         return $this->lyrics;
     }
@@ -100,7 +102,7 @@ class ESong
     /**
      * @return string for the composers
      */
-    public function getComposers() : string
+    function getComposers() : string
     {
         return $this->composers;
     }
@@ -108,7 +110,7 @@ class ESong
     /**
      * @param string $lyrics
      */
-    public function setLyrics(string $lyrics)
+    function setLyrics(string $lyrics)
     {
         $this->lyrics = $lyrics;
     }
@@ -116,7 +118,7 @@ class ESong
     /**
      * @param mixed $composers
      */
-    public function setComposers(string $composers)
+    function setComposers(string $composers)
     {
         $this->composers = $composers;
     }
@@ -188,6 +190,7 @@ class ESong
         $this->registeredOnly = false;
     }
 
+
     function __toString(){
         $string="Nome :".$this->name."\nArtista: ".
             $this->artist."\nGenere: ".
@@ -198,8 +201,30 @@ class ESong
 			$string.="Solo registrati. \n";
         if($this->isForSupportersOnly())
 			$string.="Solo supporters. \n";
+        $string.=$this->getID() . "\n";
         return $string;
         
     }
 
+
+
+    function getFilePath() :string {
+        return $this->pathMp3;
+    }
+    
+    function setFilePath(string $path) : void{
+        $this->pathMp3 = $path;
+    }
+    
+    function getID() {
+        return $this->IdSong;
+    }
+    
+    function setID(string $id) {
+        $this->IdSong = $id;
+    }
+      
+    
+    
+    
 }

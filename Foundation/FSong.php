@@ -77,7 +77,9 @@ class FSong {
             return false;
         }
         else{
-            return FSong::confirmChanges($db);
+            $tempReturn = FSong::confirmChanges($db);
+            $song->setID($db->lastInsertId());
+            return $tempReturn;
         }
         
     }
