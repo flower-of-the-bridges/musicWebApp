@@ -15,7 +15,7 @@ class FSong {
         $sql = "INSERT INTO song(name, artist, genre, forall, registered, supporters)
 				VALUES(:name,:artist,:genre,:forall,:registered,:supporters)";
        
-        return $this->execQuery($db, $sql, $song);
+        return FSong::execQuery($db, $sql, $song);
     }
     
     static function updateSong(PDO &$db, ESong $song){
@@ -66,7 +66,7 @@ class FSong {
         $stmt = $db->prepare($sql);
         //si prepara la query facendo un bind tra parametri e variabili dell'oggetto
         try {
-            $this->bindValue($stmt, $song);
+            FSong::bindValue($stmt, $song);
         } catch (PDOException $e) {
                 echo('Errore');
         }
@@ -77,7 +77,7 @@ class FSong {
             return false;
         }
         else{
-            return confirmChanges($db);
+            return FSong::confirmChanges($db);
         }
         
     }
