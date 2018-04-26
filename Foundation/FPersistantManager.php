@@ -62,7 +62,7 @@ class FPersistantManager {
      * @param string $className il nome dell'oggetto (Song, User, Musician, ...)
      * @return object un oggetto Entity.
      */
-    public function load(string $className, int $id=null, string $key=null){
+    public function load(string $className, int $id){
         $result;
         switch($className){
             case('E'.$className=='EMusician'):
@@ -70,6 +70,7 @@ class FPersistantManager {
             case('E'.$className=='EListener'):
                 break;
             case('E'.$className=='ESong'):
+                return FSong::loadSong($this->db, $id);
                 break;
             default:
                 break;

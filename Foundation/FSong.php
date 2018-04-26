@@ -3,6 +3,8 @@
  * @author gruppo 2
  */
 class FSong {
+    
+    private $blob;
 
     /**
      * Store a ESong to database
@@ -12,10 +14,40 @@ class FSong {
      */
     static function storeSong(PDO &$db, ESong $song) : bool
     {
-        $sql = "INSERT INTO song(name, artist, genre, forall, registered, supporters)
-				VALUES(:name,:artist,:genre,:forall,:registered,:supporters)";
+        $sql = "INSERT INTO song(name, artist, genre, mp3, forall, registered, supporters)
+				VALUES(:name,:artist,:genre, :mp3, :forall, :registered,:supporters)";
        
         return FSong::execQuery($db, $sql, $song);
+    }
+
+    /**
+     * Carica una canzone dal DBMS e la salva in un oggetto ESong.
+     * @param PDO $db  l'istanza del dbms
+     * @param int $id l'id della canzone
+     * @return object l'oggetto ottenuto dal database
+     */
+    static function loadSong(PDO &$db, int $id): object
+    {
+        $sql = "select * from song where ID= " . $id . ";"; //query sql
+        try {
+            $stmt = $db->prepare($sql); 
+            $stmt->execute(); //viene eseguita la query
+            $row = $stmt->fetch(PDO::FETCH_ASSOC); //salva in un array le colonne della tupla
+          
+            $song = new ESong($row['name'], $row['artist'], $row['genre']); //creazione dell'oggetto Esong
+            //impostazione visibilita'.
+            if ($row['forall'] && $row['registered'] && $row['supporters'])
+                $song->setForAll();
+            if ($row['registered'] && $row['supporters'] && ! $row['forall'])
+                $song->setForRegisteredOnly();
+            if ($row['supporters'] && ! $row['registered'] && ! $row['forall'])
+                $song->setForSupportersOnly();
+            return $song; //ritorna la canzone
+        } 
+        catch (PDOException $e) {
+            die($e->errorInfo);
+            return null; //ritorna null se ci sono errori
+        }
     }
     
     static function updateSong(PDO &$db, ESong $song){
@@ -28,13 +60,16 @@ class FSong {
      * @param PDOStatement $stmt the query statement to analyze
      * @param ESong $song the song to bind
      */
-    private function bindValue(PDOStatement &$stmt, ESong &$song){
+    private function bindValue(PDOStatement &$stmt, ESong &$song, &$blob){
+       
         $stmt->bindValue(':name', $song->getName(), PDO::PARAM_STR);
         $stmt->bindValue(':artist', $song->getArtist(), PDO::PARAM_STR);
         $stmt->bindValue(':genre', $song->getGenre(), PDO::PARAM_STR);
+        $stmt->bindValue(':mp3', $blob, PDO::PARAM_LOB);
         $stmt->bindValue(':forall', (int) $song->isForAll(), PDO::PARAM_INT);
         $stmt->bindValue(':registered', (int) $song->isForRegisteredOnly(), PDO::PARAM_INT);
         $stmt->bindValue(':supporters', (int) $song->isForSupportersOnly(), PDO::PARAM_INT);
+    
     }
 	
     /**
@@ -67,24 +102,24 @@ class FSong {
         $stmt = $db->prepare($sql);
         //si prepara la query facendo un bind tra parametri e variabili dell'oggetto
         try {
-            FSong::bindValue($stmt, $song);
+            //momentaneamente il file e' una risorsa statica
+            $blob=fopen($song->getFilePath(), 'rb') or die('cant open'); //si apre il file contenuto nel path.
+            FSong::bindValue($stmt, $song, $blob); //si associano i valori dell'oggetto alle entry della query
+            $stmt->execute(); //si esegue la query
+            fclose($blob); // si chiude il file
+            $song->setID($db->lastInsertId());
+            return $db->commit(); //ritorna alla funzione chiamante il risultato della transazione
         } catch (PDOException $e) {
-                echo('Errore');
+                echo('Errore: '.$e->getMessage());
+                return !$db->rollBack();
         }
-        
-        //si verifica se la query e' corretta e se il commit va a buon fine
-        if (! $stmt->execute()) {
-            die('There was an error running the query [' . $db->errorInfo()[0] .']');
-            return false;
-        }
-        else{
-            $song->setID($db->lastInsertId()); //assegno all'oggetto l'id del db.
-            return FSong::confirmChanges($db);
-            
-        }
-        
+  
     }
     
+    /**
+     * Cancella tutte le entry di una query. Usata a scopo di debug.
+     * @param PDO $db
+     */
     static function emptyTable (PDO &$db){
         $db->beginTransaction();                        //inizio transazione
         $stmt = $db->prepare("TRUNCATE TABLE song;");    //prepara lo statement

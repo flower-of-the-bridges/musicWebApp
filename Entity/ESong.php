@@ -49,9 +49,8 @@ class ESong
     /**
      * Metodo che fornisce il path del file .mp3 associato
      * alla canzone nel filesystem del server.
-     * @return string il path del filesystem
      */
-    function getFilePath() :string {
+    function getFilePath():string{
         return $this->pathMp3;
     }
     
