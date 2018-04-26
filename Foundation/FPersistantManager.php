@@ -104,7 +104,7 @@ class FPersistantManager {
 	 * ad una singola ennupla.
 	 * @param $obj
 	 */
-	public function update($obj){
+    public function update($obj){
         $result;
         switch($obj){
             case(is_a($obj, EMusician::class)):
@@ -114,11 +114,20 @@ class FPersistantManager {
             case(is_a($obj, ESong::class)):
                 if(FSong::updateSong($this->db, $obj))
                     echo("Aggiornamento effettuato.");
-                else echo("Aggiornamento fallito.");
-                break;
+                    else echo("Aggiornamento fallito.");
+                    break;
             default:
                 break;
         }
     }
+    
+    
+    //empty song table
+    public function truncateSong(){
+        if(FSong::emptyTable($this->db))
+        echo("Troncamento effettuato.");
+        else echo("Troncamento fallito.");
+    }
+    
 }
 

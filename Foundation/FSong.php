@@ -84,6 +84,14 @@ class FSong {
         }
         
     }
+    
+    static function emptyTable (PDO &$db){
+        $db->beginTransaction();                        //inizio transazione
+        $stmt = $db->prepare("TRUNCATE TABLE song");    //prepara lo statement
+        $stmt->execute();
+        $db->commit();
+        
+    }
 	
 }
     
