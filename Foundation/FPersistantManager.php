@@ -122,11 +122,25 @@ class FPersistantManager {
     }
     
     
-    //empty song table
-    public function truncateSong(){
-        if(FSong::emptyTable($this->db))
-        echo("Troncamento effettuato.");
-        else echo("Troncamento fallito.");
+    /**
+     * Cancella tutte le entry in un DBMS. A scopo di debug
+     * @param string $className il nome della table da cancellare
+     * @return bool il risultato dell'operazione.
+     */
+    public function truncate(string $className){
+        $result;
+        switch($className){
+            case('F'.$className=='FMusician'):
+                break;
+            case('F'.$className=='FListener'):
+                break;
+            case('F'.$className=='FSong'):
+                $result=FSong::emptyTable($this->db);
+                break;
+            default:
+                break;
+        }
+        return $result;        
     }
     
 }

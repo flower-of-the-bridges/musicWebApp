@@ -1,6 +1,7 @@
 <?php
 require 'inc.php';
 $p=FPersistantManager::getInstance();
+$p->truncate('Song');
 $s=new ESong("2112", "Rush","Rock");
 $p->store($s);
 echo($s);
