@@ -37,7 +37,7 @@ class FPersistantManager {
 	/**
 	 * Metodo che chiude la connessione al dbms.
 	 */
-	private function closeDBConnection(){
+	public function closeDBConnection(){
 		$db = null;
 	}
 

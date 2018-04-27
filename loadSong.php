@@ -9,4 +9,6 @@ $s=$p->load('Song', 1);
 
 echo($s);
 
+$p->closeDBConnection();			 //end PDO connection instance
+
 ?>

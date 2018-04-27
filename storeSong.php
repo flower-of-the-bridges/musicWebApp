@@ -24,4 +24,6 @@ $s->setFilePath('./prova.mp3');
 $p->store($s);
 echo($s);
 
+$p->closeDBConnection();			 //end PDO connection instance
+
 ?>
