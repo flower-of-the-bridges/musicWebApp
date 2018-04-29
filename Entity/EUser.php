@@ -1,14 +1,16 @@
 <?php
+use Entity\EObject;
+
 /**
  * @author gruppo 2
  * Super Class for users
  */
-abstract class EUser {
+abstract class EUser extends EObject{
     
-    protected 	$name;
-    private 	$password;
-    protected 	$birthDate;
-    protected 	$followers;
+    protected 	$name; //il nome dell'utente
+    private 	$password; //la password dell'utente
+    protected 	$birthDate; //la data di nascita dell'utente
+    protected 	$followers; // i follower dell'utente
     
     function __construct(string $user, DateTime $birthDate) {
         $this->name = $user;
@@ -28,8 +30,16 @@ abstract class EUser {
         return (string) $this->name;
     }
     
+    function getPassword(){
+        return $this->password;
+    }
+    
     function setName(string $name){
         $this->name=$name;
+    }
+    
+    function setPassword(string $pass){
+        $this->password=md5($pass); //cripta la password inserita dall'utente come hash
     }
     
     function addFollower(EUser $user){
@@ -40,7 +50,7 @@ abstract class EUser {
         else return false;
     }
     
-    function hasFollowers(){
+    function numberOfFollowers() : int {
         return count($this->followers);
     }
 
