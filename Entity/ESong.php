@@ -1,11 +1,13 @@
 <?php
+use Entity\EObject;
+
 /**
  * @author gruppo 2
  */
-class ESong
+class ESong extends EObject
 {
 
-    private $IdSong;    //identificativo univoco canzone               
+    //private $IdSong;    //identificativo univoco canzone               
     
     private $name; 		//stringa contenente il nome dela canzone      PK sul db
 
@@ -19,16 +21,19 @@ class ESong
     
     private $composers; //i compositori del brano (facoltativo)
 
-    //attributi booleani che denotano la visibilita' del brano
-    private $guests;
+    //attributi booleani che denotano la visibilita' del brano rispetto a...
+    private $guests; //...guest
 
-    private $supporters;
+    private $supporters; //...utenti supporters
 
-    private $users;
+    private $users; //...utenti registrati
     
-    //stringa che contiene il path del brano
-    private $pathMp3;
-
+    private $pathMp3; //stringa che contiene il path del brano
+    
+    private $comments; //array contenente i commenti associati al brano
+    
+    private $listens; //numero di ascolti del brano
+    
     /**
      * Inizializza una canzone. La visibilita' di default e'
      * per gli utenti registrati e i supporters.
@@ -36,14 +41,18 @@ class ESong
      * @param string $artist il nome dell'artista
      * @param string $genre il genere del brano
      */
-    public function __construct(string $name, string $artist,string $genre)
+    public function __construct(string $name=null, string $artist=null,string $genre=null)
     {
         $this->name = $name;
         $this->artist=$artist;
         $this->genre = $genre;
+        $this->comments=array();
+        //la visibilita' viene impostata solo per i registrati al sito (user e supporter)
         $this->guests = false;
         $this->supporters = true;
         $this->users = true;
+        $this->listens=0; // di default gli ascolti sono impostati a zero.
+        
     }
 
     /**
@@ -63,11 +72,12 @@ class ESong
         $this->pathMp3 = $path;
     }
     
+    /*
     /**
      * Metodo che restituisce l'identificativo univoco della canzone
      * nel database.
      * @return int l'id della canzone.
-     */
+     
     function getID() {
         return $this->IdSong;
     }
@@ -77,10 +87,11 @@ class ESong
      * Va richiamato dalle classi Foundation che comunicano con il 
      * DBMS.
      * @param int $id l'id univoco della canzone.
-     */
+     
     function setID(string $id) {
         $this->IdSong = $id;
     }
+    */
     
     /**
      * Metodo che fornisce il nome dell'artista che ha 
@@ -127,6 +138,27 @@ class ESong
     function getGenre(): string
     {
         return $this->genre;
+    }
+
+    /**
+     * @return number
+     */
+    public function getListens() : int
+    {
+        return $this->listens;
+    }
+
+    /**
+     * @param number $listens
+     */
+    public function setListens(int $listens)
+    {
+        $this->listens = $listens;
+    }
+    
+    public function addListen() : void
+    {
+        $this->listens++;
     }
 
     /**
@@ -190,6 +222,21 @@ class ESong
     function setComposers(string $composers)
     {
         $this->composers = $composers;
+    }
+    
+    function addComment(EComment $comm){
+        $this->comments[]=$comm;
+    }
+    
+    function getComment(int $i) : EComment{
+        return $this->comments[$i];
+    }
+    
+    function removeComment(int $i) : void {
+        unset($this->comments[$i]);
+    }
+    function commentSize() : int {
+        return count($this->comments);
     }
 
     /**
@@ -285,7 +332,7 @@ class ESong
 			$string.="Solo registrati. \n";
         if($this->isForSupportersOnly())
 			$string.="Solo supporters. \n";
-        $string.=$this->getID() . "\n";
+        $string.=$this->getId() . "\n";
         return $string;
         
     }
