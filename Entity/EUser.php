@@ -43,16 +43,23 @@ class EUser extends EObject{
     }
     
     /**
-     * Viene aggiunto un utente alla lista dei follower. 
+     * Viene aggiunto un utente alla lista dei follower. Si specifica se l'utente 
+     * sia un follower o meno.
      * @param EUser $user
+     * @param bool $supp se l'utente e' un supporter o meno. Se non specificato verra' 
+     * considerato come un semplice follower
      * @return boolean
      */
-    function addFollower(EUser &$user){
+    function addFollower(EUser &$user, bool $supp=null){
         if($this->user!=$user){
             //viene caricata nella struttura dati una versione ridotta
             $reducedUser=new EUser($user->getName()); 
             $reducedUser->setId($user->getId());
-            $this->followers[]=$user;
+            $this->followers[]['user']=$reducedUser;
+            if($supp!=NULL) // se l'informazione sul supporting e' specificata...
+                $value=$supp; //...verra' inserita nella struttura dati
+            else $value=false; //...altrimenti verra' posta a false (follower non supporter)
+            $this->followers[]['supporting']=$value;
             return true;
         }
         else return false;

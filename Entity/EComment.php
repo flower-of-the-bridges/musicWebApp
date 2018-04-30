@@ -10,7 +10,7 @@ class EComment {
     
     private $comment;
     
-    function __construct(int $songId, string $user, string $comment){
+    function __construct(int $songId=null, string $user=null, string $comment=null){
         $this->songId=$songId;
         $this->user=$user;
         $this->comment=$comment;

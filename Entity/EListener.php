@@ -3,10 +3,11 @@
  * @author gruppo 2
  */
 class EListener extends EUser{
+    //Spostare in EUser e discriminare tra musicista e ascoltatore tramite campo type?
     
     private $favourites; //lista canzoni preferite
     
-    function __construct($user, $birthDate){
+    function __construct($user=null, $birthDate=null){
         parent::__construct($user, $birthDate);
         $favourites=array();
     }

@@ -5,6 +5,7 @@ require_once 'inc.php';
  * @author gruppo 2
  */
 class EMusician extends EUser{
+    //Spostare in EUser e discriminare tra ascoltare e musicista tramite campo type?
     
     private $songs; //lista di canzoni create dal musicista 
     private $genre; //genere musicale adottato dall'artista. Calcolato rispetto ai generi di ogni singola canzone.
@@ -13,7 +14,7 @@ class EMusician extends EUser{
      * @param string $user
      * @param DateTime $birthDate
      */
-    public function __construct(string $user, DateTime $birthDate) {
+    public function __construct(string $user=null, DateTime $birthDate=null) {
         
         parent::__construct($user, $birthDate);
         $this->songs =array();
