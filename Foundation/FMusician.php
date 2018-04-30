@@ -1,15 +1,27 @@
 <?php
 
 /**
- * Description of FMusician
- * The musician's foundation class provides an access to the musicians 
- * information contained in the user's db table. Those information can be related
- * to a logged user (so there may be also personal information, such as password) 
- * or can be related to a musician which the logged user needs to obtain public
- * informations.
+ * La classe FMusician consente di prelevare tramite i suoi metodi statici le informazioni
+ * di un musicista: tali informazioni possono essere relative all'utente che sta visitando 
+ * il sito oppure di un musicista di cui l'utente vuole ottenere informazioni. 
  * @author gruppo 2
  */
  
 class FMusician{
 
+    static function storeMusician(PDO &$db, EMusician &$musician) : bool {
+        //TODO
+    }
+    
+    static function updateMusician(PDO &$db, EMusician &$musician) : bool{
+        //TODO
+    }
+    
+    static function loadMusician(PDO &$db, int $id) : EMusician{
+        //TODO
+    }
+    
+    static function removeMusician(PDO &$db, int $id) : bool {
+        //TODO
+    }
 }

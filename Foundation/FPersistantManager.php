@@ -1,12 +1,9 @@
 <?php   
 /**
  * Description of FPersistantManager
- * This foundation class provides a unique access to the Mysql DBMS, its aim is 
- * to use the static methods of all the other foundation classes in order to 
- * gather the information required by the upper layers.
- *
- * attivare se non già attivato il supporto alle PDO sul web server
- * localizzando la stringa ";extension=php_pdo.dll" e se presente rimuovere il ;
+ * Lo scopo di questa classe e' quello di fornire un accesso unico al DBMS, incapsulando
+ * al proprio interno i metodi statici di tutte le altre classi Foundation, cosi che l'accesso
+ * ai dati persistenti da parte degli strati superiore dell'applicazione sia piu' intuitivo.
  * @author gruppo 2
  */
  
@@ -15,8 +12,8 @@ require_once 'inc.php';
 
 class FPersistantManager {
     
-    private static $instance = null; 	// the unique instance of the class
-    private $db; 						// PDO connection to database
+    private static $instance = null; 	// l'unica istanza della classe
+    private $db; 						// oggetto PDO che effettua la connessione al dbms
 
     /**
      * Inizializza un oggetto FPersistantManager. Metodo privato per evitare
@@ -41,13 +38,14 @@ class FPersistantManager {
 		$db = null;
 	}
 
-    private function __clone(){
-        // evita la clonazione dell'oggetto
-    }
+    /**
+     * Metodo reso privato per evitare la clonazione dell'oggetto.
+     */
+    private function __clone(){ }
 
     /**
      * Metodo che restituisce l'unica istanza dell'oggetto.
-     * @return FPersistantManager 
+     * @return FPersistantManager l'istanza dell'oggetto.
      */
     public static function getInstance(){
         if (static::$instance == null) {
@@ -63,39 +61,70 @@ class FPersistantManager {
      * @return object un oggetto Entity.
      */
     public function load(string $className, int $id){
-        $result;
         switch($className){
             case('E'.$className=='EMusician'):
+                return FMusician::loadMusician($this->db, $id);
                 break;
             case('E'.$className=='EListener'):
+                return FListener::loadListener($this->db, $id);
                 break;
             case('E'.$className=='ESong'):
                 return FSong::loadSong($this->db, $id);
                 break;
+            case('E'.$className=='EComment'):
+                return FComment::loadComment($this->db, $id);
             default:
+                return NULL;
                 break;
-        }
-        return $result;        
+        }      
     }
     
+    /**
+     * Metodo che cancella dal database una entry di un particolare
+     * oggetto Entity.
+     * @param string $className il nome dell'oggetto (Song, User, Musician, ...)
+     * @param int $id l'identifier dell'oggetto da eliminare.
+     * @return bool se l'operazione ha avuto successo o meno.
+     */
+    public function remove(string $className, int $id){
+        switch($className){
+            case('E'.$className=='EMusician'):
+                return FMusician::removeMusician($this->db, $id);
+                break;
+            case('E'.$className=='EListener'):
+                return FListener::removeListener($this->db, $id);
+                break;
+            case('E'.$className=='ESong'):
+                return FSong::removeSong($this->db, $id);
+                break;
+            case('E'.$className=='EComment'):
+                return FComment::removeComment($this->db, $id);
+            default:
+                return false;
+                break;
+        }
+    }
     /**
      * Metodo che permette di salvare informazioni contenute in un oggetto 
      * Entity sul database.
      * @param object $obj il nome dell'oggetto.
      */
-    public function store(&$obj) :void 
+    public function store(&$obj) : bool 
     {
         switch($obj){
             case(is_a($obj, EMusician::class)):
+                return FMusician::storeMusician($this->db, $obj);
                 break;
             case(is_a($obj, EListener::class)):
+                return FListener::storeListener($this->db, $obj);
                 break;
             case(is_a($obj, ESong::class)):
-                if(FSong::storeSong($this->db, $obj))
-                    echo("Caricamento effettuato.");
-                else echo("Caricamento fallito.");
+                return (FSong::storeSong($this->db, $obj));
                 break;
+            case(is_a($obj, EComment::class)):
+                return FComment::storeComment($this->db, $obj);
             default:
+                return false;
                 break;
         }
     }
@@ -105,19 +134,23 @@ class FPersistantManager {
 	 * ad una singola ennupla.
 	 * @param $obj
 	 */
-    public function update($obj){
+    public function update($obj) : bool{
         $result;
         switch($obj){
             case(is_a($obj, EMusician::class)):
+                return FMusician::updateMusician($this->db, $obj);
                 break;
             case(is_a($obj, EListener::class)):
+                return FListener::updateListener($this->db, $obj);
                 break;
             case(is_a($obj, ESong::class)):
-                if(FSong::updateSong($this->db, $obj))
-                    echo("Aggiornamento effettuato.");
-                    else echo("Aggiornamento fallito.");
-                    break;
+                return FSong::updateSong($this->db, $obj);
+                break;
+            case(is_a($obj, EComment::class)):
+                return FComment::updateComment($this->db, $obj);
+                break;
             default:
+                return false;
                 break;
         }
     }

@@ -28,7 +28,7 @@ class FSong {
      */
     static function loadSong(PDO &$db, int $id): object
     {
-        $sql = "select * from song where ID= " . $id . ";"; //query sql
+        $sql1 = "select * from song where ID= " . $id . ";"; //query sql
         try {
             $stmt = $db->prepare($sql); 
             $stmt->execute(); //viene eseguita la query
@@ -36,13 +36,13 @@ class FSong {
           
             $song = new ESong($row['name'], $row['artist'], $row['genre']); //creazione dell'oggetto Esong
             //impostazione visibilita'.
-            if ($row['forall'] && $row['registered'] && $row['supporters'])
+            if ($row['forall'] && $row['registered'] && $row['supporters']) 
                 $song->setForAll();
             if ($row['registered'] && $row['supporters'] && ! $row['forall'])
                 $song->setForRegisteredOnly();
             if ($row['supporters'] && ! $row['registered'] && ! $row['forall'])
                 $song->setForSupportersOnly();
-            return $song; //ritorna la canzone
+            return $song; //restituisce la canzone
         } 
         catch (PDOException $e) {
             die($e->errorInfo);
@@ -50,9 +50,12 @@ class FSong {
         }
     }
     
-    static function updateSong(PDO &$db, ESong $song){
-        // inserire un controllo con la ESong già presente facendo un load (?)
-        // la update va fatta con le pdo una volta aggiornato tutto
+    static function updateSong(PDO &$db, ESong &$song){
+        //TODO
+    }
+    
+    static function removeSong(PDO &$db, int $id){
+        //TODO
     }
     
     /**
@@ -107,8 +110,12 @@ class FSong {
             FSong::bindValue($stmt, $song, $blob); //si associano i valori dell'oggetto alle entry della query
             $stmt->execute(); //si esegue la query
             fclose($blob); // si chiude il file
-            $song->setID($db->lastInsertId());
-            return $db->commit(); //ritorna alla funzione chiamante il risultato della transazione
+            if($stmt->rowCount()){
+                $song->setId($db->lastInsertId());
+                return $db->commit();
+            }   
+            else 
+                return !$db->rollBack();
         } catch (PDOException $e) {
                 echo('Errore: '.$e->getMessage());
                 return !$db->rollBack();

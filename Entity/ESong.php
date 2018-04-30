@@ -224,17 +224,36 @@ class ESong extends EObject
         $this->composers = $composers;
     }
     
-    function addComment(EComment $comm){
+    /**
+     * Aggiunge un commento alla canzone.
+     * @param EComment il commento da aggiungere alla canzone
+     */
+    function addComment(EComment &$comm){
+        $reducedComment=new EComment($comm->getSongId(), $comm->getUser());
         $this->comments[]=$comm;
     }
     
+    /**
+     * Restituisce un commento data una certa posizione
+     * @param int $i la posizione del commento
+     * @return EComment il commento da ricevere
+     */
     function getComment(int $i) : EComment{
         return $this->comments[$i];
     }
     
+    /**
+     * Rimuove un commento data una certa posizione
+     * @param int $i la posizione in cui si trova il commento
+     */
     function removeComment(int $i) : void {
-        unset($this->comments[$i]);
+        if($i<=$this->commentSize())
+            unset($this->comments[$i]);
     }
+    /**
+     * Restituisce il numero di commenti associati al brano.
+     * @return int il numero di commenti associati al brano.
+     */
     function commentSize() : int {
         return count($this->comments);
     }

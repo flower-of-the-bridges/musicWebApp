@@ -10,15 +10,17 @@ class EListener extends EUser{
         parent::__construct($user, $birthDate);
         $favourites=array();
     }
-    
+
     /**
      * Aggiunge ai preferiti una canzone.
+     *
      * @param Esong $song la canzone da aggiungere
      */
-    public function addFavouriteSong(Esong &$song){
-        $reducedSong=new ESong($song->getName(),$song->getArtist(), $song->getGenre()); //carica nell'array una versione ridotta della canzone
+    public function addFavouriteSong(Esong &$song): bool
+    {
+        $reducedSong = new ESong($song->getName(), $song->getArtist(), $song->getGenre()); // carica nell'array una versione ridotta della canzone
         $reducedSong->setId($song->getId());
-        $this->favourites[]=$reducedSong;
+        $this->favourites[] = $reducedSong;    
     }
     
     /**
