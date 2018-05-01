@@ -1,4 +1,4 @@
-<?php   
+<?php
 /**
  * Description of FPersistantManager
  * Lo scopo di questa classe e' quello di fornire un accesso unico al DBMS, incapsulando
@@ -6,7 +6,7 @@
  * ai dati persistenti da parte degli strati superiore dell'applicazione sia piu' intuitivo.
  * @author gruppo 2
  */
- 
+
 require_once 'config.inc.php';
 require_once 'inc.php';
 
@@ -14,7 +14,7 @@ class FPersistantManager {
     
     private static $instance = null; 	// l'unica istanza della classe
     private $db; 						// oggetto PDO che effettua la connessione al dbms
-
+    
     /**
      * Inizializza un oggetto FPersistantManager. Metodo privato per evitare
      * duplicazioni dell'oggetto.
@@ -22,27 +22,27 @@ class FPersistantManager {
     private function __construct()
     {
         try{
-			global $address,$user,$pass,$database;
-			$this->db = new PDO ("mysql:host=$address;dbname=$database", $user, $pass);
-			// connessione non persistente
-		}catch (PDOException $e){
-			echo "Errore : " . $e->getMessage();
-			die;
-		}
+            global $address,$user,$pass,$database;
+            $this->db = new PDO ("mysql:host=$address;dbname=$database", $user, $pass);
+            // connessione non persistente
+        }catch (PDOException $e){
+            echo "Errore : " . $e->getMessage();
+            die;
+        }
     }
-	
-	/**
-	 * Metodo che chiude la connessione al dbms.
-	 */
-	public function closeDBConnection(){
-		$db = null;
-	}
-
+    
+    /**
+     * Metodo che chiude la connessione al dbms.
+     */
+    public function closeDBConnection(){
+        $db = null;
+    }
+    
     /**
      * Metodo reso privato per evitare la clonazione dell'oggetto.
      */
     private function __clone(){ }
-
+    
     /**
      * Metodo che restituisce l'unica istanza dell'oggetto.
      * @return FPersistantManager l'istanza dell'oggetto.
@@ -76,7 +76,7 @@ class FPersistantManager {
             default:
                 return NULL;
                 break;
-        }      
+        }
     }
     
     /**
@@ -105,11 +105,11 @@ class FPersistantManager {
         }
     }
     /**
-     * Metodo che permette di salvare informazioni contenute in un oggetto 
+     * Metodo che permette di salvare informazioni contenute in un oggetto
      * Entity sul database.
      * @param object $obj il nome dell'oggetto.
      */
-    public function store(&$obj) : bool 
+    public function store(&$obj) : bool
     {
         switch($obj){
             case(is_a($obj, EMusician::class)):
@@ -128,12 +128,12 @@ class FPersistantManager {
                 break;
         }
     }
-	
-	/**
-	 * Metodo che permette di aggiornare informazioni sul database, relative
-	 * ad una singola ennupla.
-	 * @param $obj
-	 */
+    
+    /**
+     * Metodo che permette di aggiornare informazioni sul database, relative
+     * ad una singola ennupla.
+     * @param $obj
+     */
     public function update($obj) : bool{
         $result;
         switch($obj){
@@ -174,7 +174,7 @@ class FPersistantManager {
             default:
                 break;
         }
-        return $result;        
+        return $result;
     }
     
 }

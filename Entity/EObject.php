@@ -1,9 +1,22 @@
 <?php
 namespace Entity;
 
+/**
+ * La classe EObject caratterizza un oggetto Entity a partire dal suo Id.
+ * @author gruppo2
+ *
+ */
 class EObject
 {
-    protected $id;
+    protected $id; //l'id dell'oggetto
+    
+    /**
+     *
+     * @param int $id
+     */
+    protected function __construct(int $id=null){
+        $this->id=$id;
+    }
     
     /**
      * @return int l'identifier dell'oggetto
@@ -12,7 +25,7 @@ class EObject
     {
         return $this->id;
     }
-
+    
     /**
      * @param mixed $id
      */
@@ -20,8 +33,8 @@ class EObject
     {
         $this->id = $id;
     }
-
     
-
+    
+    
 }
 

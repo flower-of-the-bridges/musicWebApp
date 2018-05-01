@@ -3,20 +3,29 @@
 require_once 'inc.php';
 /**
  * @author gruppo 2
+ * La classe EMusician rappresenta una tipologia di utente piu' avanzata di quella
+ * di EListener (di cui infatti eredita i metodi). Un utente istanza di EMusician
+ * ha infatti un genere musicale, ricavato dalla lista di canzoni che egli stesso puo'
+ * caricare.
  */
-class EMusician extends EUser{
-    //Spostare in EUser e discriminare tra ascoltare e musicista tramite campo type?
+class EMusician extends EListener{
     
-    private $songs; //lista di canzoni create dal musicista 
-    private $genre; //genere musicale adottato dall'artista. Calcolato rispetto ai generi di ogni singola canzone.
+    private $songs; //lista di canzoni appartenenti al musicista
+    private $genre; //genere musicale adottato dal musicista. Calcolato rispetto ai generi di ogni singola canzone.
     
     /**
+     *
+     * @param int $id
      * @param string $user
-     * @param DateTime $birthDate
+     * @param string $mail
+     * @param string $region
+     * @param DateInterval $birthDate
+     * @param string $genre
      */
-    public function __construct(string $user=null, DateTime $birthDate=null) {
+    public function __construct(int $id, string $user=null, string $mail=null, string $region=null, DateInterval $birthDate=null, string $genre) {
         
-        parent::__construct($user, $birthDate);
+        parent::__construct($id, $user, $mail, $region, $birthDate); //richiamo il costruttore della classe padre
+        $this->genre=$genre;
         $this->songs =array();
     }
     
@@ -25,28 +34,35 @@ class EMusician extends EUser{
      * @param Esong $song la canzone da aggiungere
      */
     public function addSong(Esong &$song){
+        //FPersistantManger->store?
         $reducedSong=new ESong($song->getName(),$song->getArtist(), $song->getGenre()); //carica nell'array una versione ridotta della canzone
         $reducedSong->setId($song->getId());
         $this->songs[]=$reducedSong;
     }
     
     /**
-     * Rimuove una canzone dal musicista
-     * @param int $pos la posizione della canzone nella struttura dati
+     * Rimuove una canzone del musicista
+     * @param int $pos la posizione della canzone nella struttura dati (comincia da 1)
+     * @return bool true se l'operazione e' riuscita, false altrimenti
      */
     public function removeSong(int $pos){
-        unset($this->songs[$pos]);
+        if($pos<$this->numberOfSongs() && $pos>0){
+            unset($this->songs[$pos]);
+            return true;
+        }
+        else return false;
     }
     
     /**
      * Restituisce una canzone dell'artista
-     * @param int $pos la posizione dell'artista
-     * @return ESong|NULL ritorna una canzone se la posizione e' valida, NULL altrimenti
+     * @param int $pos la posizione dell'artista (comincia da 1)
+     * @return ESong|NULL ritorna una ESong se la posizione e' valida, NULL altrimenti
      */
     public function getSong(int $pos) : ESong{
-        if($pos<$this->numberOfSongs())
+        if($pos<=$this->numberOfSongs() && $pos>0)
+            //load FSong?
             return $this->songs[$pos];
-        else return null;
+            else return null;
     }
     
     /**
@@ -58,47 +74,29 @@ class EMusician extends EUser{
     }
     
     /**
-     * Overrided method from the parent class.
-     * @param $birthDate DateTime value
-     */
-    public function setBirthDate($birthDate) {
-        parent::setBirthDate($birthDate);
-    }
-	
-    /**
-     * Overrided method from the parent class.
-     * @return DateTime representing the birth date of the musician.
-     */
-    public function getBirthDate() {
-        return parent::getBirthDate();
-    }
-
-    public function getName() : string{
-        parent::getName();
-    }
-
-    public function setName(string $name){
-        parent::setName($name);
-    }
-    
-    /**
      * @return string il genere musicale dell'artista
      */
     public function getGenre() : string
     {
         return $this->genre;
     }
-
+    
     /**
      * Calcola il genere musicale dell'artista come combinazione dei generi musicali
-     * di ogni singola canzone.
+     * di ogni singola canzone, oppure viene fornito in ingresso.
+     *
+     * @param string $genre
+     *            il genere musicale dell'artista (facoltativo)
      */
-    public function setGenre() : void
+    public function setGenre(string $genre = null): void
     {
-        foreach ($this->songs as $value)
-            if(strpos($this->genre, $value)!== false) //verifica che il genere non sia gia stato inserito
-                $this->genre.=$value." ";
+        if ($genre != null) { //se non e' specificato il genere, il metodo procede con il calcolo
+            $genre=""; //si cancella eventualmente il precedente genere
+            foreach ($this->songs as $value)
+                if (strpos($this->genre, $value) !== false) // verifica che il genere non sia gia stato inserito
+                $this->genre .= $value . " ";
+        } else
+            $this->genre = $genre;
     }
-
-
+    
 }
