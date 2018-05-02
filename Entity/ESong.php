@@ -1,6 +1,8 @@
 <?php
 use Entity\EObject;
-
+//////////////////////////////////////////////////////////////////////////////////////
+// rimuovere metodi relativi ai commenti e spostarli in EComment per evitare coupling 
+//////////////////////////////////////////////////////////////////////////////////////
 /**
  * @author gruppo 2
  * La classe ESong caratterizza le canzoni su cui si basa l'applicazione. Oltre a 
@@ -10,31 +12,27 @@ use Entity\EObject;
  */
 class ESong extends EObject
 {
-    
-    private $name; 		//stringa contenente il nome dela canzone
-    
-    private $artist; 	//il nome dell'artista
-    
-    private $lenght; 	//lunghezza del brano
-    
-    private $genre; 	//il genere del brano
-    
-    private $lyrics; 	//testo del brano (facoltativo)
-    
-    private $composers; //i compositori del brano (facoltativo)
+    // attributi generali del brano
+    private $name;          //stringa contenente il nome dela canzone
+    private $artist;        //stringa contenente il nome dell'artista
+    private $lenght;        //time stamp che indica lunghezza del brano
+    private $genre; 	    //stringa contenente il genere del brano
+    private $lyrics; 	    //stringa contenente il testo del brano (facoltativo)
+    private $composers;     //stringa contenente i compositori del brano (facoltativo)
     
     //attributi booleani che denotano la visibilita' del brano rispetto a...
-    private $guests; //...guest
+    private $guests;        //...guest
+    private $supporters;    //...utenti supporters
+    private $users;         //...utenti registrati
     
-    private $supporters; //...utenti supporters
+    //stringa che contiene il path del brano
+    private $pathMp3; 
     
-    private $users; //...utenti registrati
+    //array contenente i commenti associati al brano
+    private $comments; 
     
-    private $pathMp3; //stringa che contiene il path del brano
-    
-    private $comments; //array contenente i commenti associati al brano
-    
-    private $listens; //numero di ascolti del brano
+    //numero di ascolti del brano
+    private $listens; 
     
     /**
      * Inizializza una canzone. La visibilita' di default e'
@@ -44,18 +42,22 @@ class ESong extends EObject
      * @param string $artist il nome dell'artista
      * @param string $genre il genere del brano
      */
-    public function __construct(int $id=null, string $name=null, string $artist=null,string $genre=null)
+    function __construct(int $id=null, string $name=null, string $artist=null,string $genre=null)
     {
         parent::__construct($id);
+        
         $this->name = $name;
-        $this->artist=$artist;
+        $this->artist = $artist;
         $this->genre = $genre;
-        $this->comments=array();
+        $this->comments = array();
+        
         //la visibilita' viene impostata solo per i registrati al sito (user e supporter)
         $this->guests = false;
         $this->supporters = true;
         $this->users = true;
-        $this->listens=0; // di default gli ascolti sono impostati a zero.
+       
+        // numero di ascolti : di default gli ascolti sono impostati a zero.
+        $this->listens=0; 
         
     }
     
@@ -151,12 +153,12 @@ class ESong extends EObject
         $this->artist = $artist;
     }
     
-   
+    
     /**
      * Imposta il numero di ascolti
      * @param number $listens il numero di ascolti
      */
-    public function setListens(int $listens)
+    function setListens(int $listens)
     {
         $this->listens = $listens;
     }
@@ -211,11 +213,12 @@ class ESong extends EObject
     /**
      * Aggiunge un ascolto al brano
      */
-    public function addListen() : void
+    function addListen() : void
     {
         $this->listens++;
         //update ??
     }
+    
     
     /**
      * Aggiunge un commento alla canzone.
@@ -249,6 +252,7 @@ class ESong extends EObject
         }
         else return false;
     }
+    
     /**
      * Restituisce il numero di commenti associati al brano.
      * @return int il numero di commenti associati al brano.
@@ -256,6 +260,7 @@ class ESong extends EObject
     function commentSize() : int {
         return count($this->comments);
     }
+    
     
     /**
      * Metodo che verifica se il brano e' nascosto a tutte le tipologie di utenti.
