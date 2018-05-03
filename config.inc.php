@@ -1,15 +1,15 @@
 <?php
-/*
-$address= 'localhost';
-$database= 'musicwebapp';
-$user= 'root';
-$pass= 'web';
-*/
 #/*
 $address= 'localhost';
 $database= 'musicwebapp';
-$user= 'root';
-$pass= 'web';
+$user= 'gruppo2';
+$pass= 'lautz97';
+#*/
+/*
+$address= 'localhost';
+$database= 'webApp';
+$user= 'pi';
+$pass= 'lautz97';
 #*/
 ?>
 
