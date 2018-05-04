@@ -1,5 +1,5 @@
 <?php
-
+require_once 'inc.php';
 /**
  * La classe EObject caratterizza un oggetto Entity a partire dal suo Id.
  * @author gruppo2

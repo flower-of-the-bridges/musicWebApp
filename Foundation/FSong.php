@@ -59,7 +59,8 @@ class FSong {
      * @param PDOStatement $stmt the query statement to analyze
      * @param ESong $song the song to bind
      */
-    private function bindValue(PDOStatement &$stmt, ESong &$song, &$blob){
+    private function bindValue(PDOStatement &$stmt, ESong &$song, &$blob)
+    {
        
         $stmt->bindValue(':name', $song->getName(), PDO::PARAM_STR);
         $stmt->bindValue(':artist', $song->getArtist(), PDO::PARAM_STR);
@@ -78,7 +79,7 @@ class FSong {
      * @param int $id l'id della canzone
      * @return object l'oggetto ottenuto dal database
      */
-    static function loadSong(PDO &$db, int $id): object
+    static function loadSong(PDO &$db, int $id)
     {
         $sql = "select * from song where ID= " . $id . ";"; //query sql
         try {
@@ -89,7 +90,7 @@ class FSong {
             
             $row = $stmt->fetch(PDO::FETCH_ASSOC);                          //salva in un array le colonne della tupla
             
-            $song = new ESong($row['name'], $row['artist'], $row['genre']); //creazione dell'oggetto Esong
+            $song = new ESong($row ['ID'], $row['name'], $row['artist'], $row['genre']); //creazione dell'oggetto Esong
             
             //impostazione visibilita'.
             if ($row['forall']) {
@@ -102,10 +103,11 @@ class FSong {
                         
                         $song->setForSupportersOnly();
                         
-                        return $song; //restituisce la canzone
+                       
                     }
                 }
-            }
+	    }
+            return $song; //ritorna la canzone
         }
         catch (PDOException $e) {
             die($e->errorInfo);

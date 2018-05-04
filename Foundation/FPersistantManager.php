@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Description of FPersistantManager
  * Lo scopo di questa classe e' quello di fornire un accesso unico al DBMS, incapsulando
@@ -76,6 +77,7 @@ class FPersistantManager {
                 break;
             case('E'.$className=='EComment'):
                 return FComment::loadComment($this->db, $id);
+		break;
             default:
                 return NULL;
                 break;

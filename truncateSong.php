@@ -6,6 +6,8 @@ $p=FPersistantManager::getInstance(); //creo istanza del manager di connessione 
 
 $p->truncate('Song'); //cancello tutte le entry nella table
 
+echo ('OKKE');
+
 $p->closeDBConnection();			 //end PDO connection instance
 
 ?>

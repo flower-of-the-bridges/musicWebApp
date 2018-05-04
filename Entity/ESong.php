@@ -1,8 +1,8 @@
 <?php
-use Entity\EObject;
-//////////////////////////////////////////////////////////////////////////////////////
-// rimuovere metodi relativi ai commenti e spostarli in EComment per evitare coupling 
-//////////////////////////////////////////////////////////////////////////////////////
+
+require_once 'inc.php';
+include_once 'Entity/EObject.php';
+
 /**
  * @author gruppo 2
  * La classe ESong caratterizza le canzoni su cui si basa l'applicazione. Oltre a 
