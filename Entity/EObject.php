@@ -1,5 +1,4 @@
 <?php
-namespace Entity;
 
 /**
  * La classe EObject caratterizza un oggetto Entity a partire dal suo Id.
