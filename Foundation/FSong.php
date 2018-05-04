@@ -17,7 +17,41 @@ class FSong {
         $sql = "INSERT INTO song(name, artist, genre, mp3, forall, registered, supporters)
 				VALUES(:name,:artist,:genre, :mp3, :forall, :registered,:supporters)";
        
-        return FSong::execStoreQuery($db, $sql, $song);
+        $db->beginTransaction(); //inizio della transazione
+        
+        $stmt = $db->prepare($sql);
+        
+        //si prepara la query facendo un bind tra parametri e variabili dell'oggetto
+        try {
+            
+            //momentaneamente il file e' una risorsa statica
+            $blob=fopen($song->getFilePath(), 'rb') or die('cant open');    //si apre il file contenuto nel path.
+            
+            FSong::bindValue($stmt, $song, $blob);    //si associano i valori dell'oggetto alle entry della query
+            
+            $stmt->execute();   //si esegue la query
+            
+            fclose($blob);      // si chiude il file
+            
+            if($stmt->rowCount())
+            {
+                
+                $song->setId( $db->lastInsertId() );
+                
+                return $db->commit();
+            } else {
+                $db->rollBack();
+                
+                return false;
+            }
+        } catch (PDOException $e) {
+           
+            echo('Errore: '.$e->getMessage());
+            
+            $db->rollBack();
+            
+            return false;
+        }
     }
     
     /**
@@ -37,41 +71,6 @@ class FSong {
     
     }
 	
-    /**
-     * Execute a query
-     * @param PDO $db the database
-     * @param string $sql the sql query
-     * @param ESong $song song object
-     * @return boolean true if the execution was successful, false otherwise
-     */
-    private function execStoreQuery(PDO &$db, string $sql, ESong &$song){
-        $db->beginTransaction(); //inizio della transazione
-        
-        $stmt = $db->prepare($sql);
-        //si prepara la query facendo un bind tra parametri e variabili dell'oggetto
-        try {
-            //momentaneamente il file e' una risorsa statica
-            $blob=fopen($song->getFilePath(), 'rb') or die('cant open'); //si apre il file contenuto nel path.
-            
-            FSong::bindValue($stmt, $song, $blob); //si associano i valori dell'oggetto alle entry della query
-            
-            $stmt->execute(); //si esegue la query
-            
-            fclose($blob); // si chiude il file
-            
-            if($stmt->rowCount()){
-                $song->setId($db->lastInsertId());
-                return $db->commit();
-            }   
-            else 
-                return !$db->rollBack();
-        
-        } catch (PDOException $e) {
-                echo('Errore: '.$e->getMessage());
-                return !$db->rollBack();
-        }
-  
-    }
     
     /**
      * Carica una canzone dal DBMS e la salva in un oggetto ESong.
@@ -83,19 +82,30 @@ class FSong {
     {
         $sql = "select * from song where ID= " . $id . ";"; //query sql
         try {
+            
             $stmt = $db->prepare($sql);
-            $stmt->execute(); //viene eseguita la query
-            $row = $stmt->fetch(PDO::FETCH_ASSOC); //salva in un array le colonne della tupla
+            
+            $stmt->execute();                                               //viene eseguita la query
+            
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);                          //salva in un array le colonne della tupla
             
             $song = new ESong($row['name'], $row['artist'], $row['genre']); //creazione dell'oggetto Esong
+            
             //impostazione visibilita'.
-            if ($row['forall'] && $row['registered'] && $row['supporters'])
+            if ($row['forall']) {
+                
                 $song->setForAll();
-                if ($row['registered'] && $row['supporters'] && ! $row['forall'])
+                if ($row['registered'] && ! $row['forall']) {
+                    
                     $song->setForRegisteredOnly();
-                    if ($row['supporters'] && ! $row['registered'] && ! $row['forall'])
+                    if ($row['supporters'] && ! $row['registered'] && ! $row['forall']) {
+                        
                         $song->setForSupportersOnly();
+                        
                         return $song; //restituisce la canzone
+                    }
+                }
+            }
         }
         catch (PDOException $e) {
             die($e->errorInfo);
@@ -109,9 +119,13 @@ class FSong {
      * @param PDO $db
      */
     static function emptyTable (PDO &$db){
+        
         $db->beginTransaction();                         //inizio transazione
+        
         $stmt = $db->prepare("TRUNCATE TABLE song;");    //prepara lo statement
+        
         $stmt->execute();
+        
         $db->commit();
         
     }
@@ -130,24 +144,6 @@ class FSong {
      */
     static function removeSong(PDO &$db, int $id){
         //TODO
-    }
-    
-    
-    /**
-     * DEPRECATED
-     * Commit query
-     * @param PDO $db
-     * @return bool
-     */
-    private function confirmChanges(PDO &$db) :bool
-    {
-        if($db->commit()){      //confermo la transazione e chiudo
-            return true;
-        }
-        else {
-            $db->rollBack();    //elimino la transazione
-            return false;
-        }
     }
     
 }

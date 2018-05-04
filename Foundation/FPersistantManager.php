@@ -34,20 +34,22 @@ class FPersistantManager {
     /**
      * Metodo che chiude la connessione al dbms.
      */
-    public function closeDBConnection(){
+    function closeDBConnection()
+    {
         $db = null;
     }
     
     /**
      * Metodo reso privato per evitare la clonazione dell'oggetto.
      */
-    private function __clone(){ }
+    private function __clone(){}
     
     /**
      * Metodo che restituisce l'unica istanza dell'oggetto.
      * @return FPersistantManager l'istanza dell'oggetto.
      */
-    public static function getInstance(){
+    static function getInstance() : FPersistantManager
+    {
         if (static::$instance == null) {
             static::$instance = new FPersistantManager();
         }
@@ -60,7 +62,8 @@ class FPersistantManager {
      * @param string $className il nome dell'oggetto (Song, User, Musician, ...)
      * @return object un oggetto Entity.
      */
-    public function load(string $className, int $id){
+    function load(string $className, int $id)
+    {
         switch($className){
             case('E'.$className=='EMusician'):
                 return FMusician::loadMusician($this->db, $id);
@@ -86,7 +89,8 @@ class FPersistantManager {
      * @param int $id l'identifier dell'oggetto da eliminare.
      * @return bool se l'operazione ha avuto successo o meno.
      */
-    public function remove(string $className, int $id){
+    function remove(string $className, int $id)
+    {
         switch($className){
             case('E'.$className=='EMusician'):
                 return FMusician::removeMusician($this->db, $id);
@@ -104,12 +108,13 @@ class FPersistantManager {
                 break;
         }
     }
+    
     /**
      * Metodo che permette di salvare informazioni contenute in un oggetto
      * Entity sul database.
      * @param object $obj il nome dell'oggetto.
      */
-    public function store(&$obj) : bool
+    function store(&$obj) : bool
     {
         switch($obj){
             case(is_a($obj, EMusician::class)):
@@ -123,6 +128,7 @@ class FPersistantManager {
                 break;
             case(is_a($obj, EComment::class)):
                 return FComment::storeComment($this->db, $obj);
+                break;
             default:
                 return false;
                 break;
@@ -134,7 +140,8 @@ class FPersistantManager {
      * ad una singola ennupla.
      * @param $obj
      */
-    public function update($obj) : bool{
+    function update($obj) : bool
+    {
         $result;
         switch($obj){
             case(is_a($obj, EMusician::class)):
@@ -161,20 +168,19 @@ class FPersistantManager {
      * @param string $className il nome della table da cancellare
      * @return bool il risultato dell'operazione.
      */
-    public function truncate(string $className){
-        $result;
+    function truncate(string $className)
+    {
         switch($className){
             case('F'.$className=='FMusician'):
                 break;
             case('F'.$className=='FListener'):
                 break;
             case('F'.$className=='FSong'):
-                $result=FSong::emptyTable($this->db);
+                FSong::emptyTable($this->db);
                 break;
             default:
                 break;
         }
-        return $result;
     }
     
 }

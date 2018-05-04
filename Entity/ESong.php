@@ -28,9 +28,6 @@ class ESong extends EObject
     //stringa che contiene il path del brano
     private $pathMp3; 
     
-    //array contenente i commenti associati al brano
-    private $comments; 
-    
     //numero di ascolti del brano
     private $listens; 
     
@@ -42,30 +39,27 @@ class ESong extends EObject
      * @param string $artist il nome dell'artista
      * @param string $genre il genere del brano
      */
-    function __construct(int $id=null, string $name=null, string $artist=null,string $genre=null)
+    function __construct(int $id = null, string $name = null, string $artist = null, string $genre = null)
     {
         parent::__construct($id);
         
         $this->name = $name;
         $this->artist = $artist;
         $this->genre = $genre;
-        $this->comments = array();
         
         //la visibilita' viene impostata solo per i registrati al sito (user e supporter)
-        $this->guests = false;
-        $this->supporters = true;
-        $this->users = true;
+        $this->setForRegisteredOnly();
        
         // numero di ascolti : di default gli ascolti sono impostati a zero.
-        $this->listens=0; 
-        
+        $this->listens = 0; 
     }
     
     /**
      * Metodo che fornisce il path del file .mp3 associato
      * alla canzone nel filesystem del server.
      */
-    function getFilePath():string{
+    function getFilePath() : string
+    {
         return $this->pathMp3;
     }
     
@@ -83,7 +77,7 @@ class ESong extends EObject
      * Metodo che fornisce il nome della canzone
      * @return string il nome della canzone
      */
-    function getName(): string
+    function getName() : string
     {
         return $this->name;
     }
@@ -92,7 +86,7 @@ class ESong extends EObject
      * Metodo che fornisce la durata in secondi della canzone.
      * @return DateTime la durata della canzone.
      */
-    function getLenght(): DateTime
+    function getLenght() : DateTime
     {
         return $this->lenght;
     }
@@ -101,7 +95,7 @@ class ESong extends EObject
      * Metodo che fornisce il genere della canzone
      * @return string il genere della canzone
      */
-    function getGenre(): string
+    function getGenre() : string
     {
         return $this->genre;
     }
@@ -109,7 +103,7 @@ class ESong extends EObject
     /**
      * @return number
      */
-    public function getListens() : int
+    function getListens() : int
     {
         return $this->listens;
     }
@@ -137,7 +131,8 @@ class ESong extends EObject
      * alla canzone nel filesystem del server.
      * @param string $path il path da utilizzare.
      */
-    function setFilePath(string $path) : void{
+    function setFilePath(string $path)
+    {
         $this->pathMp3 = $path;
     }
     
@@ -213,60 +208,18 @@ class ESong extends EObject
     /**
      * Aggiunge un ascolto al brano
      */
-    function addListen() : void
+    function addListen()
     {
         $this->listens++;
         //update ??
-    }
-    
-    
-    /**
-     * Aggiunge un commento alla canzone.
-     * @param EComment il commento da aggiungere alla canzone
-     */
-    function addComment(EComment &$comm){
-        $reducedComment=new EComment($comm->getId(),$comm->getSongId(), $comm->getUser());
-        $this->comments[]=$comm;
-    }
-    
-    /**
-     * Restituisce un commento data una certa posizione
-     * @param int $i la posizione del commento. Parte da 1
-     * @return EComment il commento da ricevere
-     */
-    function getComment(int $i) : EComment{
-        if($i<=$this->commentSize() && $i>0)
-            return $this->comments[$i];
-            else return null;
-    }
-    
-    /**
-     * Rimuove un commento data una certa posizione
-     * @param int $i la posizione in cui si trova il commento. Parte da 1
-     * @return bool true se il commento e' stato rimosso, false altrimenti
-     */
-    function removeComment(int $i) : bool{
-        if($i<=$this->commentSize() && $i>0){
-            unset($this->comments[$i]);
-            return true; //chiamata a Fpersistantmanager->remove?
-        }
-        else return false;
-    }
-    
-    /**
-     * Restituisce il numero di commenti associati al brano.
-     * @return int il numero di commenti associati al brano.
-     */
-    function commentSize() : int {
-        return count($this->comments);
-    }
-    
+    }  
     
     /**
      * Metodo che verifica se il brano e' nascosto a tutte le tipologie di utenti.
      * @return bool true se il brano e' nascosto, false altrimenti.
      */
-    function isHidden() : bool{
+    function isHidden() : bool
+    {
         return !$this->users && !$this->guests && !$this->supporters;
     }
     
@@ -275,7 +228,7 @@ class ESong extends EObject
      * @return bool true se le tre categorie di utenti (guest, registrati e supporters)
      * possono vedere i brani
      */
-    function isForAll(): bool
+    function isForAll() : bool
     {
         return $this->guests && $this->users && $this->supporters;
     }
@@ -285,7 +238,7 @@ class ESong extends EObject
      * @return bool true se solo i supporters possono ascoltare i brani,
      * false altrimenti.
      */
-    function isForSupportersOnly(): bool
+    function isForSupportersOnly() : bool
     {
         return $this->supporters && !$this->users;
     }
@@ -294,7 +247,7 @@ class ESong extends EObject
      * Controlla se il brano e' visibile solo per chi e' registrato
      * @return bool
      */
-    function isForRegisteredOnly(): bool
+    function isForRegisteredOnly() : bool
     {
         return $this->users && $this->supporters;
     }
@@ -302,7 +255,7 @@ class ESong extends EObject
     /**
      * Imposta la visibilita' per tutti gli utenti.
      */
-    function setForAll() : void
+    function setForAll() 
     {
         $this->All = true;
         $this->supporters = true;
@@ -312,7 +265,7 @@ class ESong extends EObject
     /**
      * Imposta la visibilita' solo per chi supporta l'artista
      */
-    function setForSupportersOnly() : void
+    function setForSupportersOnly()
     {
         $this->All = false;
         $this->users = false;
@@ -322,7 +275,7 @@ class ESong extends EObject
     /**
      * Imposta la visibilita' solo per chi e' registrato.
      */
-    function setForRegisteredOnly() : void
+    function setForRegisteredOnly() 
     {
         $this->All = false;
         $this->supporters = true;
@@ -332,7 +285,7 @@ class ESong extends EObject
     /**
      * Nasconde il brano a tutti gli utenti
      */
-    function setHidden() : void
+    function setHidden() 
     {
         $this->All = false;
         $this->supporters = false;
@@ -345,16 +298,20 @@ class ESong extends EObject
      *
      * @return string una stringa rappresentante le informazioni sull'oggetto.
      */
-    function __toString()
+    function __toString() : string
     {
         $string = "Nome :" . $this->name . "\nArtista: " . $this->artist . "\nGenere: " . $this->genre . "\nVisibilita': ";
         if ($this->isForAll())
             $string .= "Per tutti. \n";
+        
         if ($this->isForRegisteredOnly())
             $string .= "Solo registrati. \n";
+        
         if ($this->isForSupportersOnly())
             $string .= "Solo supporters. \n";
-        $string .= $this->getId() . "\n";
+        
+        if ($this->id!=NULL)
+            $string .= $this->getId() . "\n";
         return $string;
     }
     
