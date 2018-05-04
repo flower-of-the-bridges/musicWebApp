@@ -257,7 +257,7 @@ class ESong extends EObject
      */
     function setForAll() 
     {
-        $this->All = true;
+        $this->guests = true;
         $this->supporters = true;
         $this->users = true;
     }
@@ -267,7 +267,7 @@ class ESong extends EObject
      */
     function setForSupportersOnly()
     {
-        $this->All = false;
+        $this->guests = false;
         $this->users = false;
         $this->supporters = true;
     }
@@ -277,7 +277,7 @@ class ESong extends EObject
      */
     function setForRegisteredOnly() 
     {
-        $this->All = false;
+        $this->guests = false;
         $this->supporters = true;
         $this->users = true;
     }
@@ -287,7 +287,7 @@ class ESong extends EObject
      */
     function setHidden() 
     {
-        $this->All = false;
+        $this->guests = false;
         $this->supporters = false;
         $this->users = false;
     }
