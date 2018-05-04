@@ -1,5 +1,5 @@
 <?php
-require_once 'in.php';
+require_once 'inc.php';
 
 $p = FPersistantManager::getInstance();
 

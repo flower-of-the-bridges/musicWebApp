@@ -160,7 +160,7 @@ class FSong {
         }
         catch (PDOException $e) {
             die($e->errorInfo);
-            return FALSE; //ritorna null se ci sono errori
+            return FALSE; //ritorna false se ci sono errori
         }
             
            
