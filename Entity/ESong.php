@@ -220,7 +220,7 @@ class ESong extends EObject
      */
     function isHidden() : bool
     {
-        return !$this->users && !$this->guests && !$this->supporters;
+        return !$this->supporters;
     }
     
     /**
@@ -230,7 +230,7 @@ class ESong extends EObject
      */
     function isForAll() : bool
     {
-        return $this->guests && $this->users && $this->supporters;
+        return $this->guests;
     }
     
     /**
@@ -240,7 +240,7 @@ class ESong extends EObject
      */
     function isForSupportersOnly() : bool
     {
-        return $this->supporters && !$this->users;
+        return $this->supporters;
     }
     
     /**
@@ -249,7 +249,7 @@ class ESong extends EObject
      */
     function isForRegisteredOnly() : bool
     {
-        return $this->users && $this->supporters;
+        return $this->users;
     }
     
     /**
