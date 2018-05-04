@@ -154,7 +154,8 @@ class FSong {
             $stmt = $db->prepare($sql);
             
             $stmt->bindValue(":id", $id, PDO::PARAM_INT);
-            return $stmt->execute();
+            $stmt->execute();
+            return (bool) $stmt->rowCount();
             
             
         }
