@@ -144,8 +144,26 @@ class FSong {
      * Elimina tuttio ciò che è associato alla canzone
      * @param PDO $db, int $id
      */
-    static function removeSong(PDO &$db, int $id){
-        //TODO
+    static function removeSong(PDO &$db, int $id) : bool
+    {
+        
+        
+        $sql =" delete  from song where ID= :id ;"; //query sql
+        try {
+            
+            $stmt = $db->prepare($sql);
+            
+            $stmt->bindValue(":id", $id, PDO::PARAM_INT);
+            return $stmt->execute();
+            
+            
+        }
+        catch (PDOException $e) {
+            die($e->errorInfo);
+            return FALSE; //ritorna null se ci sono errori
+        }
+            
+           
     }
     
 }
