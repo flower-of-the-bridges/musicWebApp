@@ -303,13 +303,11 @@ class ESong extends EObject
         $string = "Nome :" . $this->name . "\nArtista: " . $this->artist . "\nGenere: " . $this->genre . "\nVisibilita': ";
         if ($this->isForAll())
             $string .= "Per tutti. \n";
-        
-        if ($this->isForRegisteredOnly())
+        elseif ($this->isForRegisteredOnly())
             $string .= "Solo registrati. \n";
-        
-        if ($this->isForSupportersOnly())
+        elseif ($this->isForSupportersOnly())
             $string .= "Solo supporters. \n";
-        
+        else $string .= "Nascosta. \n";
         if ($this->id!=NULL)
             $string .= $this->getId() . "\n";
         return $string;
