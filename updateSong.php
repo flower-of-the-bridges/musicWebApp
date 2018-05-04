@@ -10,7 +10,9 @@ $s = $p->load('Song', 3);
 $s->setForAll();
 $s->setName('monkey business');
 
-echo($p->update($s));
+$p->update($s);
+
+echo($p->load('Song', 3));
 
 $p->closeDBConnection();			 //end PDO connection instance
 
