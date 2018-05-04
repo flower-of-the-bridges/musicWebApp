@@ -93,15 +93,11 @@ class FSong {
             $song = new ESong($row ['ID'], $row['name'], $row['artist'], $row['genre']); //creazione dell'oggetto Esong
             
             //impostazione visibilita'.
-            $song->setForAll();
-            if ($row['registered'] && ! $row['forall']) {
-                
-                $song->setForRegisteredOnly();
-                if ($row['supporters'] && ! $row['registered'] && ! $row['forall']) {
-                    
-                    $song->setForSupportersOnly();
-                }
-            }
+            if ($row['forall']) $song->setForAll();
+            elseif ($row['registered']) $song->setForRegisteredOnly();
+            elseif ($row['supporters']) $song->setForSupportersOnly();
+            else $song->setHidden();
+            
             return $song; //ritorna la canzone
         }
         catch (PDOException $e) {
