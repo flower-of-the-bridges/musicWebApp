@@ -93,20 +93,15 @@ class FSong {
             $song = new ESong($row ['ID'], $row['name'], $row['artist'], $row['genre']); //creazione dell'oggetto Esong
             
             //impostazione visibilita'.
-            if ($row['forall']) {
+            $song->setForAll();
+            if ($row['registered'] && ! $row['forall']) {
                 
-                $song->setForAll();
-                if ($row['registered'] && ! $row['forall']) {
+                $song->setForRegisteredOnly();
+                if ($row['supporters'] && ! $row['registered'] && ! $row['forall']) {
                     
-                    $song->setForRegisteredOnly();
-                    if ($row['supporters'] && ! $row['registered'] && ! $row['forall']) {
-                        
-                        $song->setForSupportersOnly();
-                        
-                       
-                    }
+                    $song->setForSupportersOnly();
                 }
-	    }
+            }
             return $song; //ritorna la canzone
         }
         catch (PDOException $e) {
@@ -136,9 +131,42 @@ class FSong {
      * Aggiorna i dati di una canzone     
      * @param PDO $db, ESONG $song
      */
-    static function updateSong(PDO &$db, ESong &$song){
-        //TODO
-    }
+    static function updateSong(PDO &$db, ESong &$song)
+    {
+        $sql = "UPDATE song SET name=?, artist=?, genre=?, forall=?, registered=?, supporters=? WHERE ID=?";
+        
+        $db->beginTransaction(); //inizio della transazione
+        
+        $stmt = $db->prepare($sql);
+        
+        //si prepara la query facendo un bind tra parametri e variabili dell'oggetto
+        try {
+                        
+            $stmt->execute([
+                $song->getName(), $song->getArtist(), $song->getGenre(), (int) $song->isForAll(),
+                (int) $song->isForRegisteredOnly(), (int) $song->isForSupportersOnly(), $song->getId()
+            ]);   ////si associano i valori dell'oggetto alle entry della query e si esegue la query
+                        
+            if($stmt->rowCount())
+            {
+                $song->setId( $db->lastInsertId() );
+                
+                return $db->commit();
+            } else {
+             
+                $db->rollBack();
+                
+                return false;
+            }
+        } catch (PDOException $e) {
+            
+            echo('Errore: '.$e->getMessage());
+            
+            $db->rollBack();
+            
+            return false;
+        }
+    }   
     
     /**
      * Elimina tuttio ciò che è associato alla canzone
