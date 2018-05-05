@@ -1,5 +1,6 @@
 <?php
-use Entity\EObject;
+require_once 'inc.php';
+include_once 'Entity/EObject';
 
 /**
  *
@@ -10,18 +11,18 @@ use Entity\EObject;
  */
 class EListener extends EObject
 {
-    
+
     // ATTRIBUTI PER I DATI PERSONALI
-    protected $name; // il nome dell'utente
-    protected $password; // la password dell'utente
-    protected $email; // l'email dell'utente
-    protected $region; // il luogo dove abita l'utente
-    protected $birthDate; // la data di nascita dell'utente
-    
-    // ATTRIBUTI PER LE STRUTTURE DATI
-    protected $followers; // lista dei follower dell'utente
-    protected $following; // lista degli utenti seguiti dall'utente
-    protected $favourites; // lista delle canzoni preferite
+    protected $name;
+ // il nome dell'utente
+    protected $password;
+ // la password dell'utente
+    protected $email;
+ // l'email dell'utente
+    protected $region;
+ // il luogo dove abita l'utente
+    protected $birthDate;
+ // la data di nascita dell'utente
     
     /**
      * Metodo costruttore che istanzia un oggetto EListener
@@ -37,47 +38,48 @@ class EListener extends EObject
      * @param DateTime $birthDate
      *            la data di nascita (facoltativo)
      */
-    function __construct(int $id=null, string $user = null, string $mail = null, string $region = null, DateInterval $birthDate = null){
+    function __construct(int $id = null, string $user = null, string $mail = null, string $region = null, DateInterval $birthDate = null)
+    {
         parent::__construct($id);
         $this->name = $user;
         $this->email = $mail;
         $this->region = $region;
         $this->birthDate = $birthDate;
-        
-        $this->followers = array();
-        $this->following = array();
-        $this->favourites = array();
     }
-    
+
     /**
+     *
      * @return string l'email dell'utente
      */
-    public function getEmail() : string
+    public function getEmail(): string
     {
         return $this->email;
     }
 
     /**
+     *
      * @return string la regione dell'utente
      */
-    public function getRegion() : string
+    public function getRegion(): string
     {
         return $this->region;
     }
-    
+
     /**
      *
      * @return string il nome dell'utente
      */
-    function getName(): string {
+    function getName(): string
+    {
         return $this->name;
     }
-    
+
     /**
      *
      * @return string la password (criptata) dell'utente
      */
-    function getPassword(): string {
+    function getPassword(): string
+    {
         return $this->password;
     }
 
@@ -85,13 +87,15 @@ class EListener extends EObject
      *
      * @return DateInterval la data di nascita dell'utente
      */
-    function getBirthDate(): DateInterval{
+    function getBirthDate(): DateInterval
+    {
         return $this->birthDate;
     }
-    
-    
+
     /**
-     * @param string $email l'email dell'utente
+     *
+     * @param string $email
+     *            l'email dell'utente
      */
     public function setEmail(string $email)
     {
@@ -99,7 +103,9 @@ class EListener extends EObject
     }
 
     /**
-     * @param string $region la regione dell'utente
+     *
+     * @param string $region
+     *            la regione dell'utente
      */
     public function setRegion(string $region)
     {
@@ -111,51 +117,53 @@ class EListener extends EObject
      * @param DateInterval $birthDate
      *            la data di nascita da impostare
      */
-    function setBirthDate(DateInterval $birthDate) {
+    function setBirthDate(DateInterval $birthDate)
+    {
         $this->birthDate = $birthDate;
     }
-    
+
     /**
      *
      * @param string $name
      *            il nome da assegnare all'utente
      */
-    function setName(string $name) {
+    function setName(string $name)
+    {
         $this->name = $name;
     }
-    
+
     /**
      *
      * @param string $pass
      *            la password da impostare
      */
-    function setPassword(string $pass) {
+    function setPassword(string $pass)
+    {
         $this->password = md5($pass); // cripta la password inserita dall'utente come hash
     }
-    
+
     /**
      * Viene aggiunto un utente alla lista dei follower.
+     *
      * @param EListener $user
      */
-    function addFollower(EListener &$user) {
-        // viene caricata nella struttura dati una versione ridotta
-        $reducedUser = new EListener($user->getId(), $user->getName());
-        $this->followers[]['user'] = $reducedUser;
+    function addFollower(EListener &$user)
+    {
+        
+        // TODO
     }
-    
+
     /**
      * Aggiunge ai preferiti una canzone.
      *
      * @param Esong $song
      *            la canzone da aggiungere
      */
-    public function addSongToFavourites(Esong &$song): bool {
-        // carica nell'array una versione ridotta della canzone
-        $reducedSong = new ESong($song->getId(), $song->getName(), $song->getArtist(), $song->getGenre());
-        $this->favourites[] = $reducedSong;
-        // store sul db?
+    public function addSongToFavourites(Esong &$song): bool
+    {
+        // TODO
     }
-    
+
     /**
      * Rimuove una canzone dai preferiti
      *
@@ -163,11 +171,11 @@ class EListener extends EObject
      *            la posizione della canzone nella struttura dati.
      *            Il conteggio comincia da 1.
      */
-    public function removeSongFromFavourites(int $pos) {
-        if ($pos <= $this->numberOfFavouriteSongs() && $pos > 0)
-            unset($this->favourites[$pos - 1]);
+    function removeSongFromFavourites(int $pos)
+    {
+        // TODO
     }
-    
+
     /**
      * Rimuove un follower data la sua posizione
      *
@@ -175,11 +183,11 @@ class EListener extends EObject
      *            la posizione del follower nella struttura dati.
      *            Il conteggio comincia da 1.
      */
-    public function removeFollower(int $pos) {
-        if ($pos <= $this->numberOfFollowers() && $pos > 0)
-            unset($this->followers[$pos - 1]);
+    function removeFollower(int $pos)
+    {
+        // TODO
     }
-    
+
     /**
      * Restituisce una canzone presente tra i preferiti.
      *
@@ -187,64 +195,57 @@ class EListener extends EObject
      *            la posizione dell'artista (comincia da 1).
      * @return ESong|NULL ritorna una canzone se la posizione e' valida, NULL altrimenti
      */
-    public function getSongFromFavourites(int $pos) : ESong {
-        if ($pos <= $this->numberOfSongs() && $pos > 0) // verifica che la posizione sia valida
-            return $this->favourites[$pos - 1];
-            else
-                return null;
-    }
-    
-    /**
-     * Restituisce il numero di follower di un brano.
-     *
-     * @return int il numero di follower.
-     */
-    function numberOfFollowers(): int
+    function getSongsFromFavourites(int $pos): array
     {
-        return count($this->followers);
+        // TODO
     }
-    
-    /**
-     * Restituisce il numero delle canzoni salvate tra i preferiti.
-     *
-     * @return number il numero di canzoni.
-     */
-    public function numberOfFavouriteSongs() : int {
-        return count($this->favourites);
-    }
-    
+
     /**
      * Permette di seguire un altro utente
-     * @param EListener $listener l'utente da seguire
+     *
+     * @param EListener $listener
+     *            l'utente da seguire
      */
-    public function follow(EListener &$listener) {
-        $listener->addFollower($this);
-        $reducedUser = new EListener($listener->getId(), $listener->getName());
-        $this->following[] = $reducedUser;
-        // store sul db ?
+    public function follow(EListener &$listener)
+    {
+        // TODO
     }
-    
+
     /**
      * Smette di seguire un altro utente
-     * @param EListener $listener l'utente da non seguire
+     *
+     * @param EListener $listener
+     *            l'utente da non seguire
      */
-    public function unFollow(EListener &$listener) {
+    function unFollow(EListener &$listener)
+    {
         // TODO
     }
-    
+
     /**
      * Permette di supportare un musicista.
+     *
      * @param EMusician $musician
      */
-    public function support(EMusician &$musician) {
+    function support(EMusician &$musician)
+    {
         // TODO
     }
-    
+
     /**
      * Smette di supportare un musicista.
+     *
      * @param EMusician $musician
      */
-    public function unSupport(EMusician &$musician) {
+    function unSupport(EMusician &$musician)
+    {
+        // TODO
+    }
+
+    function report($object)
+    {
         // TODO
     }
 }
+
+    
