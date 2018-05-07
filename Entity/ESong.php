@@ -303,7 +303,7 @@ class ESong extends EObject
      */
     function __toString() : string
     {
-        $string = "Nome :" . $this->name . "\nArtista: " . $this->artist . "\nGenere: " . $this->genre . "\nVisibilita': ";
+        $string = "Nome :" . $this->name . "\nArtista: " . $this->artist->getName() . "\nGenere: " . $this->genre . "\nVisibilita': ";
         if ($this->isForAll())
             $string .= "Per tutti. \n";
         elseif ($this->isForRegisteredOnly())
