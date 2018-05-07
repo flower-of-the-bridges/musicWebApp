@@ -4,18 +4,18 @@
  */
 class FSong {
     
-    private $blob;
+    private $blob; //momentaneamente utilizzato per upload statico di mp3
 
     /**
-     * Store a ESong to database
-     * @param PDO $db the database
-     * @param ESong $song the song to save
-     * @return bool true if loading was successful, false otherwise
+     * Salva una ESong nel database
+     * @param PDO $db la connessione verso il dbms
+     * @param ESong $song da salvare
+     * @return bool corrispondente all'esito dell'operazione
      */
     static function storeSong(PDO &$db, ESong $song) : bool
     {
-        $sql = "INSERT INTO song(name, artist, genre, mp3, forall, registered, supporters)
-				VALUES(:name,:artist,:genre, :mp3, :forall, :registered,:supporters)";
+        $sql = "INSERT INTO song(id_artist, name, genre, mp3, forall, registered, supporters)
+				VALUES(:id_artist,:name,:genre, :mp3, :forall, :registered,:supporters)";
        
         $db->beginTransaction(); //inizio della transazione
         
@@ -55,27 +55,25 @@ class FSong {
     }
     
     /**
-     * Binds the query's values to the Esong's object attributes
-     * @param PDOStatement $stmt the query statement to analyze
-     * @param ESong $song the song to bind
+     * Associa ai campi della query i corrispondenti attributi dell'oggetto ESong.
+     * @param PDOStatement $stmt da cui prelevare i campi
+     * @param ESong $song da cui prelevare gli attributi
      */
-    private function bindValue(PDOStatement &$stmt, ESong &$song, &$blob)
+    private function bindValues(PDOStatement &$stmt, ESong &$song, &$blob)
     {
-       
+        $stmt->bindValue(':artist', $song->getArtist()->getId(), PDO::PARAM_INT);
         $stmt->bindValue(':name', $song->getName(), PDO::PARAM_STR);
-        $stmt->bindValue(':artist', $song->getArtist(), PDO::PARAM_STR);
         $stmt->bindValue(':genre', $song->getGenre(), PDO::PARAM_STR);
         $stmt->bindValue(':mp3', $blob, PDO::PARAM_LOB);
         $stmt->bindValue(':forall', (int) $song->isForAll(), PDO::PARAM_INT);
         $stmt->bindValue(':registered', (int) $song->isForRegisteredOnly(), PDO::PARAM_INT);
         $stmt->bindValue(':supporters', (int) $song->isForSupportersOnly(), PDO::PARAM_INT);
-    
     }
 	
     
     /**
-     * Carica una canzone dal DBMS e la salva in un oggetto ESong.
-     * @param PDO $db  l'istanza del dbms
+     * Carica una canzone dal database e la salva in un oggetto ESong.
+     * @param PDO $db  la connessione verso il dbms
      * @param int $id l'id della canzone
      * @return object l'oggetto ottenuto dal database
      */
@@ -86,14 +84,15 @@ class FSong {
             
             $stmt = $db->prepare($sql);
             
-            $stmt->execute();                                               //viene eseguita la query
+            $stmt->execute();  //viene eseguita la query
             
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);                          //salva in un array le colonne della tupla
+            //salva in un array la tupla prelevata. Gli indici corrispondono ai nomi delle colonne nel db.
+            $row = $stmt->fetch(PDO::FETCH_ASSOC); 
             
-            $song = new ESong($row ['ID'], $row['name'], $row['artist'], $row['genre']); //creazione dell'oggetto Esong
+            $song = new ESong($row ['id_song'], new EMusician($row['id_artist']), $row['name'], $row['genre']); //creazione dell'oggetto Esong
             
             //impostazione visibilita'.
-            if ($row['forall']) $song->setForAll();
+            if ($row['forall']) $song->setForAll(); 
             elseif ($row['registered']) $song->setForRegisteredOnly();
             elseif ($row['supporters']) $song->setForSupportersOnly();
             else $song->setHidden();
@@ -129,7 +128,7 @@ class FSong {
      */
     static function updateSong(PDO &$db, ESong &$song)
     {
-        $sql = "UPDATE song SET name=?, artist=?, genre=?, forall=?, registered=?, supporters=? WHERE ID=?";
+        $sql = "UPDATE song SET name=?, id_artist=?, genre=?, forall=?, registered=?, supporters=? WHERE id_song=?";
         
         $db->beginTransaction(); //inizio della transazione
         
@@ -139,17 +138,16 @@ class FSong {
         try {
                         
             $stmt->execute([
-                $song->getName(), $song->getArtist(), $song->getGenre(), (int) $song->isForAll(),
+                $song->getName(), $song->getArtist()->getId(), $song->getGenre(), (int) $song->isForAll(),
                 (int) $song->isForRegisteredOnly(), (int) $song->isForSupportersOnly(), $song->getId()
             ]);   ////si associano i valori dell'oggetto alle entry della query e si esegue la query
                         
             if($stmt->rowCount())
             {
-                $song->setId( $db->lastInsertId() );
-                
                 return $db->commit();
-            } else {
-             
+            } 
+            else 
+            {
                 $db->rollBack();
                 
                 return false;
@@ -165,13 +163,12 @@ class FSong {
     }   
     
     /**
-     * Elimina tuttio ciò che è associato alla canzone
-     * @param PDO $db, int $id
+     * Elimina una canzone dal db .
+     * @param PDO $db la connessione al dbms 
+     * @param int $id la canzone da eliminare
      */
     static function removeSong(PDO &$db, int $id) : bool
-    {
-        
-        
+    {  
         $sql =" delete  from song where ID= :id ;"; //query sql
         try {
             
@@ -186,9 +183,7 @@ class FSong {
         catch (PDOException $e) {
             die($e->errorInfo);
             return FALSE; //ritorna false se ci sono errori
-        }
-            
-           
+        }      
     }
     
 }
