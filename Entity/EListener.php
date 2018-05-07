@@ -5,8 +5,7 @@ include_once 'Entity/EObject';
 /**
  *
  * @author gruppo 2
- *         La classe EListener rappresenta l'utente base dell'applicazione: come tale
- *         puo' avere una lista di follower e una lista di canzoni preferite.
+ *         La classe EListener rappresenta l'utente base dell'applicazione.
  *         Puo' seguire altri utenti e, in caso di musicisti, puo' supportarli
  */
 class EListener extends EObject
@@ -15,10 +14,6 @@ class EListener extends EObject
     // ATTRIBUTI PER I DATI PERSONALI
     protected $name;
  // il nome dell'utente
-    protected $password;
- // la password dell'utente
-    protected $email;
- // l'email dell'utente
     protected $region;
  // il luogo dove abita l'utente
     protected $birthDate;
@@ -38,22 +33,12 @@ class EListener extends EObject
      * @param DateTime $birthDate
      *            la data di nascita (facoltativo)
      */
-    function __construct(int $id = null, string $user = null, string $mail = null, string $region = null, DateInterval $birthDate = null)
+    function __construct(int $id = null, string $user = null, string $region = null, DateInterval $birthDate = null)
     {
         parent::__construct($id);
         $this->name = $user;
-        $this->email = $mail;
         $this->region = $region;
         $this->birthDate = $birthDate;
-    }
-
-    /**
-     *
-     * @return string l'email dell'utente
-     */
-    public function getEmail(): string
-    {
-        return $this->email;
     }
 
     /**
@@ -92,15 +77,6 @@ class EListener extends EObject
         return $this->birthDate;
     }
 
-    /**
-     *
-     * @param string $email
-     *            l'email dell'utente
-     */
-    public function setEmail(string $email)
-    {
-        $this->email = $email;
-    }
 
     /**
      *
@@ -132,20 +108,11 @@ class EListener extends EObject
         $this->name = $name;
     }
 
-    /**
-     *
-     * @param string $pass
-     *            la password da impostare
-     */
-    function setPassword(string $pass)
-    {
-        $this->password = md5($pass); // cripta la password inserita dall'utente come hash
-    }
 
     /**
      * Viene aggiunto un utente alla lista dei follower.
      *
-     * @param EListener $user
+     * @param EListener $user l'utente da aggiungere
      */
     function addFollower(EListener &$user)
     {
@@ -165,25 +132,21 @@ class EListener extends EObject
     }
 
     /**
-     * Rimuove una canzone dai preferiti
+     * Rimuove una canzone dai preferiti.
      *
-     * @param int $pos
-     *            la posizione della canzone nella struttura dati.
-     *            Il conteggio comincia da 1.
+     * @param int $id della canzone.
      */
-    function removeSongFromFavourites(int $pos)
+    function removeSongFromFavourites(int $id)
     {
         // TODO
     }
 
     /**
-     * Rimuove un follower data la sua posizione
+     * Rimuove un utente dalla lista dei follower
      *
-     * @param int $pos
-     *            la posizione del follower nella struttura dati.
-     *            Il conteggio comincia da 1.
+     * @param int $id del follower
      */
-    function removeFollower(int $pos)
+    function removeFollower(int $id)
     {
         // TODO
     }
@@ -191,11 +154,10 @@ class EListener extends EObject
     /**
      * Restituisce una canzone presente tra i preferiti.
      *
-     * @param int $pos
-     *            la posizione dell'artista (comincia da 1).
+     * @param int $id della canzone
      * @return ESong|NULL ritorna una canzone se la posizione e' valida, NULL altrimenti
      */
-    function getSongsFromFavourites(int $pos): array
+    function getSongsFromFavourites(int $id): array
     {
         // TODO
     }
@@ -242,6 +204,10 @@ class EListener extends EObject
         // TODO
     }
 
+    /**
+     * Segnala un contenuto dell'applicazione.
+     * @param object $object il contenuto da segnalare.
+     */
     function report($object)
     {
         // TODO
