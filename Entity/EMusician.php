@@ -19,14 +19,13 @@ class EMusician extends EListener
      *
      * @param int $id
      * @param string $user
-     * @param string $mail
      * @param string $region
      * @param DateInterval $birthDate
      * @param string $genre
      */
-    function __construct(int $id, string $user = null, string $mail = null, string $region = null, DateInterval $birthDate = null, string $genre)
+    function __construct(int $id, string $user = null, string $region = null, DateInterval $birthDate = null, string $genre)
     {
-        parent::__construct($id, $user, $mail, $region, $birthDate); // richiamo il costruttore della classe padre
+        parent::__construct($id, $user, $region, $birthDate); // richiamo il costruttore della classe padre
         $this->genre = $genre;
     }
 
@@ -45,11 +44,10 @@ class EMusician extends EListener
     /**
      * Rimuove una canzone del musicista
      *
-     * @param int $pos
-     *            la posizione della canzone nella struttura dati (comincia da 1)
+     * @param int $id l'id della canzone da ottenere
      * @return bool true se l'operazione e' riuscita, false altrimenti
      */
-    function removeSong(int $pos)
+    function removeSong(int $id)
     {
         // TODO
     }
@@ -57,11 +55,10 @@ class EMusician extends EListener
     /**
      * Restituisce una canzone dell'artista
      *
-     * @param int $pos
-     *            la posizione dell'artista (comincia da 1)
+     * @param int $id della canzone da ottenere
      * @return ESong|NULL ritorna una ESong se la posizione e' valida, NULL altrimenti
      */
-    function getSong(int $pos): ESong
+    function getSong(int $id): ESong
     {
         // TODO
     }

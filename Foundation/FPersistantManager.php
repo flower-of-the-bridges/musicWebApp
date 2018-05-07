@@ -77,7 +77,7 @@ class FPersistantManager {
                 break;
             case('E'.$className=='EComment'):
                 return FComment::loadComment($this->db, $id);
-		break;
+                break;
             default:
                 return NULL;
                 break;
@@ -91,7 +91,7 @@ class FPersistantManager {
      * @param int $id l'identifier dell'oggetto da eliminare.
      * @return bool se l'operazione ha avuto successo o meno.
      */
-    function remove(string $className, int $id)
+    function remove(string $className, int $id) : bool
     {
         switch($className){
             case('E'.$className=='EMusician'):
@@ -105,6 +105,7 @@ class FPersistantManager {
                 break;
             case('E'.$className=='EComment'):
                 return FComment::removeComment($this->db, $id);
+                break;
             default:
                 return false;
                 break;

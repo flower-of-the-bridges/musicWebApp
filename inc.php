@@ -1,8 +1,8 @@
 <?php
 
 //require_once 'Entity/EComment.php';
-//require_once 'Entity/EListener.php';
-//require_once 'Entity/EMusician.php';
+require_once 'Entity/EListener.php';
+require_once 'Entity/EMusician.php';
 require_once 'Entity/ESong.php';
 require_once 'Entity/EObject.php';
 //require_once 'Foundation/FComment.php';
