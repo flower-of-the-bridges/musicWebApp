@@ -36,10 +36,10 @@ class ESong extends EObject
      * per gli utenti registrati e i supporters.
      * @param int $id l'id della canzone
      * @param string $name il nome del brano
-     * @param string $artist il nome dell'artista
+     * @param EMusician $artist il musicista autore della canzone
      * @param string $genre il genere del brano
      */
-    function __construct(int $id = null, string $name = null, string $artist = null, string $genre = null)
+    function __construct(int $id = null, string $name = null, EMusician $artist = null, string $genre = null)
     {
         parent::__construct($id);
         
@@ -66,9 +66,9 @@ class ESong extends EObject
     /**
      * Metodo che fornisce il nome dell'artista che ha
      * prodotto la canzone
-     * @return string il nome dell'artista
+     * @return EMusician il musicista autore della canzone
      */
-    function getArtist() : string
+    function getArtist() : EMusician
     {
         return $this->artist;
     }
@@ -141,9 +141,9 @@ class ESong extends EObject
     /**
      * Metodo che imposta il nome dell'artista che ha
      * prodotto la canzone.
-     * @param string $artist il nome dell'artista.
+     * @param EMusician $artist il musicista che ha realizzato la canzone.
      */
-    function setArtist($artist)
+    function setArtist(EMusician $artist)
     {
         $this->artist = $artist;
     }
@@ -295,7 +295,6 @@ class ESong extends EObject
     /**
      * Funzione che trasforma in una stringa l'oggetto.
      * Utile per il debug.
-     *
      * @return string una stringa rappresentante le informazioni sull'oggetto.
      */
     function __toString() : string
