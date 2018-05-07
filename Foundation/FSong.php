@@ -61,7 +61,7 @@ class FSong {
      */
     private function bindValues(PDOStatement &$stmt, ESong &$song, &$blob)
     {
-        $stmt->bindValue(':artist', $song->getIdArtist(), PDO::PARAM_INT);
+        $stmt->bindValue(':id_artist', $song->getIdArtist(), PDO::PARAM_INT);
         $stmt->bindValue(':name', $song->getName(), PDO::PARAM_STR);
         $stmt->bindValue(':genre', $song->getGenre(), PDO::PARAM_STR);
         $stmt->bindValue(':mp3', $blob, PDO::PARAM_LOB);
