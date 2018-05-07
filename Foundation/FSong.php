@@ -27,7 +27,7 @@ class FSong {
             //momentaneamente il file e' una risorsa statica
             $blob=fopen($song->getFilePath(), 'rb') or die('cant open');    //si apre il file contenuto nel path.
             
-            FSong::bindValue($stmt, $song, $blob);    //si associano i valori dell'oggetto alle entry della query
+            FSong::bindValues($stmt, $song, $blob);    //si associano i valori dell'oggetto alle entry della query
             
             $stmt->execute();   //si esegue la query
             
@@ -61,7 +61,7 @@ class FSong {
      */
     private function bindValues(PDOStatement &$stmt, ESong &$song, &$blob)
     {
-        $stmt->bindValue(':artist', $song->getArtist()->getId(), PDO::PARAM_INT);
+        $stmt->bindValue(':artist', $song->getIdArtist(), PDO::PARAM_INT);
         $stmt->bindValue(':name', $song->getName(), PDO::PARAM_STR);
         $stmt->bindValue(':genre', $song->getGenre(), PDO::PARAM_STR);
         $stmt->bindValue(':mp3', $blob, PDO::PARAM_LOB);

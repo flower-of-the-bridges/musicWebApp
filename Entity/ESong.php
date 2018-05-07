@@ -14,7 +14,7 @@ class ESong extends EObject
 {
     // attributi generali del brano
     private $name;          //stringa contenente il nome dela canzone
-    private $artist;        //stringa contenente il nome dell'artista
+    private $artist;        //stringa contenente l'istanza dell'artista
     private $lenght;        //time stamp che indica lunghezza del brano
     private $genre; 	    //stringa contenente il genere del brano
     private $lyrics; 	    //stringa contenente il testo del brano (facoltativo)
@@ -71,6 +71,10 @@ class ESong extends EObject
     function getArtist() : EMusician
     {
         return $this->artist;
+    }
+    function getIdArtist() : int 
+    {
+        return $this->artist->getId();
     }
     
     /**
