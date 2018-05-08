@@ -1,6 +1,6 @@
 <?php
 require_once 'inc.php';
-include_once 'Entity/EObject.php';
+include_once 'Entity/EUser.php';
 
 /**
  *
@@ -8,7 +8,7 @@ include_once 'Entity/EObject.php';
  *         La classe EListener rappresenta l'utente base dell'applicazione.
  *         Puo' seguire altri utenti e, in caso di musicisti, puo' supportarli
  */
-class EListener extends EObject
+class EListener extends EUser
 {
 
     // ATTRIBUTI PER I DATI PERSONALI
@@ -28,24 +28,17 @@ class EListener extends EObject
      *            il nome dell'utente (facoltativo)
      * @param string $mail
      *            l'email associata all'account (facoltativa)
-     * @param string $region
-     *            il luogo dove abita l'utente (facoltativo
-     * @param DateTime $birthDate
-     *            la data di nascita (facoltativo)
      */
-    function __construct(int $id = null, string $user = null, string $region = null, DateInterval $birthDate = null)
+    function __construct(int $id = null, string $user = null, string $mail = null, string $type = "listener")
     {
-        parent::__construct($id);
-        $this->name = $user;
-        $this->region = $region;
-        $this->birthDate = $birthDate;
+        parent::__construct($id,$user,$mail,$type);
     }
 
     /**
      *
      * @return string la regione dell'utente
      */
-    public function getRegion(): string
+    function getRegion(): string
     {
         return $this->region;
     }
@@ -83,7 +76,7 @@ class EListener extends EObject
      * @param string $region
      *            la regione dell'utente
      */
-    public function setRegion(string $region)
+    function setRegion(string $region)
     {
         $this->region = $region;
     }
@@ -126,7 +119,7 @@ class EListener extends EObject
      * @param Esong $song
      *            la canzone da aggiungere
      */
-    public function addSongToFavourites(Esong &$song): bool
+    function addSongToFavourites(Esong &$song): bool
     {
         // TODO
     }
@@ -168,7 +161,7 @@ class EListener extends EObject
      * @param EListener $listener
      *            l'utente da seguire
      */
-    public function follow(EListener &$listener)
+    function follow(EListener &$listener)
     {
         // TODO
     }
@@ -190,16 +183,6 @@ class EListener extends EObject
      * @param EMusician $musician
      */
     function support(EMusician &$musician)
-    {
-        // TODO
-    }
-
-    /**
-     * Smette di supportare un musicista.
-     *
-     * @param EMusician $musician
-     */
-    function unSupport(EMusician &$musician)
     {
         // TODO
     }

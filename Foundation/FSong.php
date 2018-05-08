@@ -61,7 +61,7 @@ class FSong {
      */
     private function bindValues(PDOStatement &$stmt, ESong &$song, &$blob)
     {
-        $stmt->bindValue(':id_artist', $song->getIdArtist(), PDO::PARAM_INT);
+        $stmt->bindValue(':id_artist', $song->getArtist()->getId(), PDO::PARAM_INT);
         $stmt->bindValue(':name', $song->getName(), PDO::PARAM_STR);
         $stmt->bindValue(':genre', $song->getGenre(), PDO::PARAM_STR);
         $stmt->bindValue(':mp3', $blob, PDO::PARAM_LOB);
@@ -89,7 +89,7 @@ class FSong {
             //salva in un array la tupla prelevata. Gli indici corrispondono ai nomi delle colonne nel db.
             $row = $stmt->fetch(PDO::FETCH_ASSOC); 
             
-            $song = new ESong($row ['id_song'], new EMusician($row['id_artist']), $row['name'], $row['genre']); //creazione dell'oggetto Esong
+            $song = new ESong($row ['id_song'], new EMusician($row['id_artist'],null,null,null,null), $row['name'], $row['genre']); //creazione dell'oggetto Esong
             
             //impostazione visibilita'.
             if ($row['forall']) $song->setForAll(); 

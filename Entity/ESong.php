@@ -72,10 +72,7 @@ class ESong extends EObject
     {
         return $this->artist;
     }
-    function getIdArtist() : int 
-    {
-        return $this->artist->getId();
-    }
+    
     
     /**
      * Metodo che fornisce il nome della canzone

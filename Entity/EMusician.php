@@ -24,44 +24,11 @@ class EMusician extends EListener
      * @param DateInterval $birthDate
      * @param string $genre
      */
-    function __construct(int $id, string $user = null, string $region = null, DateInterval $birthDate = null, string $genre)
+    function __construct(int $id, string $user = null, string $region = null, DateInterval $birthDate = null, string $genre = null)
     {
         parent::__construct($id, $user, $region, $birthDate); // richiamo il costruttore della classe padre
+        
         $this->genre = $genre;
-    }
-
-    /**
-     * Assegna una canzone all'artista.
-     *
-     * @param Esong $song
-     *            la canzone da aggiungere
-     */
-    function addSong(Esong &$song)
-    {
-        // FPersistantManger->store?
-        // TODO
-    }
-
-    /**
-     * Rimuove una canzone del musicista
-     *
-     * @param int $id l'id della canzone da ottenere
-     * @return bool true se l'operazione e' riuscita, false altrimenti
-     */
-    function removeSong(int $id)
-    {
-        // TODO
-    }
-
-    /**
-     * Restituisce una canzone dell'artista
-     *
-     * @param int $id della canzone da ottenere
-     * @return ESong|NULL ritorna una ESong se la posizione e' valida, NULL altrimenti
-     */
-    function getSong(int $id): ESong
-    {
-        // TODO
     }
 
     /**
@@ -84,4 +51,67 @@ class EMusician extends EListener
     {
         // TODO
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
+     /**
+     * Assegna una canzone all'artista.
+     *
+     * @param Esong $song
+     *            la canzone da aggiungere
+     * /
+     
+     function addSong(Esong &$song)
+     {
+     // FPersistantManger->store?
+     // TODO
+     }
+     
+     /**
+     * Rimuove una canzone del musicista
+     *
+     * @param int $id l'id della canzone da ottenere
+     * @return bool true se l'operazione e' riuscita, false altrimenti
+     * /
+     function removeSong(int $id)
+     {
+     // TODO
+     }
+     
+     /**
+     * Restituisce una canzone dell'artista
+     *
+     * @param int $id della canzone da ottenere
+     * @return ESong|NULL ritorna una ESong se la posizione e' valida, NULL altrimenti
+     * /
+     function getSong(int $id): ESong
+     {
+     // TODO
+     }
+     */
 }
