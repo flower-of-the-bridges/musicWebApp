@@ -1,5 +1,7 @@
 <?php
 
+use Foundation\FMp3;
+
 /**
  * Description of FPersistantManager
  * Lo scopo di questa classe e' quello di fornire un accesso unico al DBMS, incapsulando
@@ -130,30 +132,35 @@ class FPersistantManager {
      * Metodo che permette di salvare informazioni contenute in un oggetto
      * Entity sul database.
      * @param object $obj il nome dell'oggetto.
-     * @return bool il risultato dell'elaborazione
+     * @return bool $result il risultato dell'elaborazione
      */
     function store(&$obj) : bool
     {
+        $result = false;
         switch($obj){
             case(is_a($obj, EMusician::class)):
                 $sql = FMusician::storeMusician();
+                $result = $this->execStore($obj, $sql);
+                $sql = FMp3::storeMp3();
+                $result = $this->execStore($obj->getMp3(), $sql);
                 break;
             case(is_a($obj, EListener::class)):
                 $sql = FListener::storeListener();
+                $result = $this->execStore($obj, $sql);
                 break;
             case(is_a($obj, ESong::class)):
                 $sql = FSong::storeSong();
+                $result = $this->execStore($obj, $sql);
                 break;
             case(is_a($obj, EComment::class)):
                 $sql = FComment::storeComment();
+                $result = $this->execStore($obj, $sql);
                 break;
             default:
                 $sql = null;
                 break;
         }
-        if($sql)
-            return $this->execStore($obj, $sql);
-            else return false;
+        return $result;
     }
     
     /**
@@ -373,6 +380,8 @@ class FPersistantManager {
             case(is_a($obj, ESong::class)):
                 FSong::bindValues($stmt, $obj);
                 break;
+            case(is_a($obj)): //mp3
+                FMp3::bindValues($stmt, $obj);
             case(is_a($obj, EComment::class)):
                 break;
             default:
