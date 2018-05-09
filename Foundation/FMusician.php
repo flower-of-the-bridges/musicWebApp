@@ -9,19 +9,23 @@
  
 class FMusician{
 
-    static function storeMusician(PDO &$db, EMusician &$musician) : bool {
+    static function storeMusician() : string 
+    {
         //TODO
     }
     
-    static function updateMusician(PDO &$db, EMusician &$musician) : bool{
+    static function updateMusician() : string
+    {
         //TODO
     }
     
-    static function loadMusician(PDO &$db, int $id) : EMusician{
+    static function loadMusician() : string
+    {
         //TODO
     }
     
-    static function removeMusician(PDO &$db, int $id) : bool {
+    static function removeMusician() : string 
+    {
         //TODO
     }
 }

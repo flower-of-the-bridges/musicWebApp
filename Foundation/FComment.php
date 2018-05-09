@@ -5,19 +5,23 @@
  */
 class FComment {
     
-    static function storeComment(PDO &$db, EComment &$comment) : bool{
+    static function storeComment() : string
+    {
         //TODO 
     }
     
-    static function updateComment(PDO &$db, EComment &$comment) : bool{
+    static function updateComment() : string 
+    {
         //TODO
     }
     
-    static function loadComment(PDO &$db, int $id) : EComment {
+    static function loadComment() : string 
+    {
         //TODO
     }
     
-    static function removeComment(PDO &$db, int $id) : bool{
+    static function removeComment() : string
+    {
         //TODO
     }
 }

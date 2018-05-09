@@ -15,6 +15,8 @@ class FPersistantManager {
     
     private static $instance = null; 	// l'unica istanza della classe
     private $db; 						// oggetto PDO che effettua la connessione al dbms
+  
+/**************************METODI DI INIZIALIZZAZIONE*****************************************/
     
     /**
      * Inizializza un oggetto FPersistantManager. Metodo privato per evitare
@@ -57,61 +59,66 @@ class FPersistantManager {
         return static::$instance;
     }
     
+/********************************* METODI LOAD ****************************************/ 
+    
     /**
      * Metodo che carica dal dbms informazioni nel corrispettivo
      * oggetto Entity.
-     * @param string $className il nome dell'oggetto (Song, User, Musician, ...)
+     * @param string $target il nome dell'oggetto (Song, User, Musician, ...)
      * @return object un oggetto Entity.
      */
-    function load(string $className, int $id)
+    function load(string $target, int $id)
     {
-        switch($className){
-            case('E'.$className=='EMusician'):
-                return FMusician::loadMusician($this->db, $id);
+        switch($target){
+            case($target=='Musician'):
+                $sql = FMusician::loadMusician();
                 break;
-            case('E'.$className=='EListener'):
-                return FListener::loadListener($this->db, $id);
+            case($target=='Listener'):
+                $sql = FListener::loadListener();
                 break;
-            case('E'.$className=='ESong'):
-                return FSong::loadSong($this->db, $id);
+            case($target=='Song'):
+                $sql = FSong::loadSong();
                 break;
-            case('E'.$className=='EComment'):
-                return FComment::loadComment($this->db, $id);
+            case($target=='Comment'):
+                $sql = FComment::loadComment();
                 break;
             default:
-                return NULL;
+                $sql = NULL;
                 break;
         }
+        if($sql)
+            return $this->execLoad($target, $id, $sql);
+        else return NULL;
     }
     
     /**
-     * Metodo che cancella dal database una entry di un particolare
-     * oggetto Entity.
-     * @param string $className il nome dell'oggetto (Song, User, Musician, ...)
-     * @param int $id l'identifier dell'oggetto da eliminare.
-     * @return bool se l'operazione ha avuto successo o meno.
+     * 
+     * @param string $target
+     * @param int $id
+     * @param string $sql
+     * @return NULL
      */
-    function remove(string $className, int $id) : bool
-    {
-        switch($className){
-            case('E'.$className=='EMusician'):
-                return FMusician::removeMusician($this->db, $id);
-                break;
-            case('E'.$className=='EListener'):
-                return FListener::removeListener($this->db, $id);
-                break;
-            case('E'.$className=='ESong'):
-                return FSong::removeSong($this->db, $id);
-                break;
-            case('E'.$className=='EComment'):
-                return FComment::removeComment($this->db, $id);
-                break;
-            default:
-                return false;
-                break;
+    private function execLoad(string $target, int $id, string $sql) {
+        
+        try {
+            
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindValue(":id", $id, PDO::PARAM_INT); //si associa l'id al campo della query
+            $stmt->execute();   //viene eseguita la query
+            
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);  //salva in un array le colonne della tuple
+            if($stmt->rowCount())
+                return FPersistantManager::createObjectFromRow($target, $row); //ritorna l'oggetto
+                else return null;
+        }
+        catch (PDOException $e) {
+            die($e->errorInfo);
+            return null; //ritorna null se ci sono errori
         }
     }
     
+/****************************************** STORE ********************************************/    
+   
     /**
      * Metodo che permette di salvare informazioni contenute in un oggetto
      * Entity sul database.
@@ -121,23 +128,67 @@ class FPersistantManager {
     {
         switch($obj){
             case(is_a($obj, EMusician::class)):
-                return FMusician::storeMusician($this->db, $obj);
+                $sql = FMusician::storeMusician();
                 break;
             case(is_a($obj, EListener::class)):
-                return FListener::storeListener($this->db, $obj);
+                $sql = FListener::storeListener();
                 break;
             case(is_a($obj, ESong::class)):
-                return (FSong::storeSong($this->db, $obj));
+                $sql = FSong::storeSong();
                 break;
             case(is_a($obj, EComment::class)):
-                return FComment::storeComment($this->db, $obj);
+                $sql = FComment::storeComment();
                 break;
             default:
-                return false;
+                $sql = null;
                 break;
+        }
+        if($sql)
+            return $this->execStore($obj, $sql);
+            else return false;
+    }
+    
+    /**
+     * 
+     * @param unknown $obj
+     * @param string $sql
+     * @return boolean
+     */
+    private function execStore(&$obj, string $sql){
+        $this->db->beginTransaction(); //inizio della transazione
+        
+        $stmt = $this->db->prepare($sql);
+        
+        //si prepara la query facendo un bind tra parametri e variabili dell'oggetto
+        try {
+            
+            FPersistantManager::bindValues($stmt, $obj);    //si associano i valori dell'oggetto alle entry della query
+            
+            $stmt->execute();   //si esegue la query
+            
+            if($stmt->rowCount())
+            {
+                
+                $obj->setId( $this->db->lastInsertId() );
+                
+                return $this->db->commit();
+                
+            } else {
+                $this->db->rollBack();
+                
+                return false;
+            }
+        } catch (PDOException $e) {
+            
+            echo('Errore: '.$e->getMessage());
+            
+            $this->db->rollBack();
+            
+            return false;
         }
     }
     
+/******************************************* UPDATE *******************************************/
     /**
      * Metodo che permette di aggiornare informazioni sul database, relative
      * ad una singola ennupla.
@@ -145,26 +196,119 @@ class FPersistantManager {
      */
     function update($obj) : bool
     {
-        $result;
         switch($obj){
             case(is_a($obj, EMusician::class)):
-                return FMusician::updateMusician($this->db, $obj);
+                $sql = FMusician::updateMusician();
                 break;
             case(is_a($obj, EListener::class)):
-                return FListener::updateListener($this->db, $obj);
+                $sql = FListener::updateListener();
                 break;
             case(is_a($obj, ESong::class)):
-                return FSong::updateSong($this->db, $obj);
+                $sql = FSong::updateSong();
                 break;
             case(is_a($obj, EComment::class)):
-                return FComment::updateComment($this->db, $obj);
+                $sql = FComment::updateComment();
                 break;
             default:
-                return false;
+                $sql = null;
                 break;
+        }
+        if($sql)
+            return $this->execUpdate($obj, $sql);
+            else return false;
+    }
+    
+    private function execUpdate(&$obj, string $sql) : bool
+    {
+        $this->db->beginTransaction(); //inizio della transazione
+        
+        $stmt = $this->db->prepare($sql);
+        
+        //si prepara la query facendo un bind tra parametri e variabili dell'oggetto
+        try {
+            
+            FPersistantManager::bindValues($stmt, $obj); //si associano i valori dell'oggetto alle entry della query
+            $stmt->execute();
+            
+            if($stmt->rowCount()) //se la tupla e' alterata...
+            {
+                return $this->db->commit(); //...ritorna il risultato del commit
+            }
+            else //altrimenti l'update non ha avuto successo...
+            {
+                $this->db->rollBack();
+                
+                return false; //...annulla la transazione e ritorna false
+            }
+        } catch (PDOException $e) {
+            
+            echo('Errore: '.$e->getMessage());
+            
+            $this->db->rollBack();
+            
+            return false;
         }
     }
     
+/************************************** REMOVE ************************************************/    
+    
+    /**
+     * Metodo che cancella dal database una entry di un particolare
+     * oggetto Entity.
+     * @param string $className il nome dell'oggetto (Song, User, Musician, ...)
+     * @param int $id l'identifier dell'oggetto da eliminare.
+     * @return bool se l'operazione ha avuto successo o meno.
+     */
+    function remove(string $target, int $id) : bool
+    {
+        switch($className){
+            case($target=='Musician'):
+                $sql = FMusician::removeMusician();
+                break;
+            case($target=='Listener'):
+                $sql = FListener::removeListener();
+                break;
+            case($target=='Song'):
+                $sql = FSong::removeSong();
+                break;
+            case($target=='Comment'):
+                $sql = FComment::removeComment();
+                break;
+            default:
+                $sql = NULL;
+                break;
+        }
+        if($sql)
+            return $this->execRemove($id, $sql);
+        else return false;
+    }
+    
+    /**
+     * Rimuove una entry dal database.
+     * @param int $id della entry da eliminare
+     * @return bool l'esito dell'operazione
+     */
+    static function execRemove(int $id, $sql) : bool {
+        
+        try {
+            
+            $stmt = $this->db->prepare($sql); //a partire dalla stringa sql viene creato uno statement
+            
+            $stmt->bindValue(":id", $id, PDO::PARAM_INT); //si associa l'id al campo della query
+            $stmt->execute(); //esegue lo statement
+            //ritorna true se il numero di tuple eliminate è 1, false altrimenti
+            return (bool) $stmt->rowCount();
+            
+        }
+        catch (PDOException $e) {
+            die($e->errorInfo);
+            return FALSE; //ritorna false se ci sono errori
+        }
+    }
+    
+
+/*************************************** TRUNCATE *********************************************/    
+
     
     /**
      * Cancella tutte le entry in un DBMS. A scopo di debug
@@ -184,6 +328,61 @@ class FPersistantManager {
             default:
                 break;
         }
+    }
+    
+/***************************** ASSOCIAZIONI ENTITY - DB ***************************************/    
+    /**
+     * Associa ai campi della query i corrispondenti valori dell'oggetto
+     * @param PDOStatement $stmt lo statement contenente i campi da riempire
+     * @param EListener $listener contenente i valori da associare alla query
+     */
+    private function bindValues(PDOStatement &$stmt, &$obj) {
+        switch($obj){
+            case(is_a($obj, EMusician::class)):
+                break;
+            case(is_a($obj, EListener::class)):
+                
+                break;
+            case(is_a($obj, ESong::class)):
+                FSong::bindValues($stmt, $obj);
+                break;
+            case(is_a($obj, EComment::class)):
+                break;
+            default:
+                break;
+        }
+    }
+    
+    /**
+     * Da una tupla ricevuta da una query istanzia l'oggetto corrispondente
+     * @param string $target individua il tipo di oggetto da creare
+     * @param unknown $row la tupla
+     * @return NULL
+     */
+    private function createObjectFromRow(string $target, $row){
+        switch($target){
+            case($target=='Musician'):
+                break;
+            case($target=='Listener'):
+                $obj = $listener = new EListener($row['id'], $row['name']); //creazione dell'oggetto EListener
+                break;
+            case($target=='Song'):
+                $obj = new ESong($row ['id_song'], $row['name'], new EMusician($row['id_artist']), $row['genre']); //creazione dell'oggetto Esong
+                
+                //impostazione visibilita'.
+                if ($rows['forall']) $obj->setForAll();
+                elseif ($rows['registered']) $obj->setForRegisteredOnly();
+                elseif ($rows['supporters']) $obj->setForSupportersOnly();
+                else $obj->setHidden();
+                break;
+                
+            case($target=='Comment'):
+                break;
+            default:
+                $obj=NULL;
+                break;
+        }
+        return $obj;
     }
     
 }
