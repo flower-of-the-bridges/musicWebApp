@@ -5,46 +5,27 @@ include_once 'Entity/EObject.php';
 
 class EUser extends EObject
 {
-    protected $name;
-    protected $mail;
-    protected $pwd;
+    protected $nickname;
+    //protected $mail;
+    //protected $pwd;
     protected $type;
     
-    function __construct(int $id = null, string $user = null, string $mail = null, string $pwd = null, string $type = "guest")
+    function __construct(int $id = null, string $user = null, string $type = null)
     {
         parent::__construct($id);
-        $this->name = $user;
-        $this->mail = $mail;
-        $this->pwd = $pwd;
+        $this->nickame = $user;
         $this->type = $type;
     }
     
     function getName () : string
     {
-        return $this->name;
+        return $this->nickname;
     }
     function setName ()
     {
-        $this->name;
+        $this->nickame;
     }
     
-    function getMail () : string
-    {
-        return $this->mail;
-    }
-    function setMail ()
-    {
-        $this->mail;
-    }
-    
-    function getPwd () : string
-    {
-        return $this->pwd;
-    }
-    function setPwd ()
-    {
-        $this->pwd;
-    }
     
     function getType () : string
     {

@@ -15,10 +15,10 @@ class ESong extends EObject
     // attributi generali del brano
     private $name;          //stringa contenente il nome dela canzone
     private $artist;        //stringa contenente l'istanza dell'artista
-    private $lenght;        //time stamp che indica lunghezza del brano
+   // private $lenght;        //time stamp che indica lunghezza del brano
     private $genre; 	    //stringa contenente il genere del brano
-    private $lyrics; 	    //stringa contenente il testo del brano (facoltativo)
-    private $composers;     //stringa contenente i compositori del brano (facoltativo)
+   // private $lyrics; 	    //stringa contenente il testo del brano (facoltativo)
+   // private $composers;     //stringa contenente i compositori del brano (facoltativo)
     
     //attributi booleani che denotano la visibilita' del brano rispetto a...
     private $guests;        //...guest
@@ -26,10 +26,10 @@ class ESong extends EObject
     private $users;         //...utenti registrati
     
     //stringa che contiene il path del brano
-    private $pathMp3; 
+    private $mp3; 
     
-    //numero di ascolti del brano
-    private $listens; 
+    
+    // private $listens; //numero di ascolti del brano
     
     /**
      * Inizializza una canzone. La visibilita' di default e'
@@ -55,10 +55,11 @@ class ESong extends EObject
     }
     
     /**
-     * Metodo che fornisce il path del file .mp3 associato
+     * Metodo che fornisce il file .mp3 associato
      * alla canzone nel filesystem del server.
+     * @return byte del file
      */
-    function getFilePath() : string
+    function getMp3() 
     {
         return $this->pathMp3;
     }
@@ -83,15 +84,7 @@ class ESong extends EObject
         return $this->name;
     }
     
-    /**
-     * Metodo che fornisce la durata in secondi della canzone.
-     * @return DateTime la durata della canzone.
-     */
-    function getLenght() : DateTime
-    {
-        return $this->lenght;
-    }
-    
+
     /**
      * Metodo che fornisce il genere della canzone
      * @return string il genere della canzone
@@ -102,65 +95,26 @@ class ESong extends EObject
     }
     
     /**
-     * @return number
-     */
-    function getListens() : int
-    {
-        return $this->listens;
-    }
-    
-    /**
-     * Metodo che restituisce il testo della canzone
-     * @return string che rappresenta il testo della canzone(puo' essere null).
-     */
-    function getLyrics() : string
-    {
-        return $this->lyrics;
-    }
-    
-    /**
-     * Metodo che restituisce i compositori della canzone
-     * @return string che rappresenta i composuitori (puo' essere null).
-     */
-    function getComposers() : string
-    {
-        return $this->composers;
-    }
-    
-    /**
-     * Metodo che imposta il path del file .mp3 associato
+     * Metodo che imposta il file .mp3 associato
      * alla canzone nel filesystem del server.
-     * @param string $path il path da utilizzare.
+     * @param $bytes il contenuto dell'mp3 (momentaneamente null perche statico
      */
-    function setFilePath(string $path)
+    function setMpe($bytes = null)
     {
-        $this->pathMp3 = $path;
+        $this->pathMp3 = $bytes;
     }
     
     
     
     /**
-     * Metodo che imposta il nome dell'artista che ha
-     * prodotto la canzone.
+     * Metodo che imposta l'artista che ha prodotto la canzone.
      * @param EMusician $artist il musicista che ha realizzato la canzone.
      */
     function setArtist(EMusician $artist)
     {
         $this->artist = $artist;
     }
-    
-    
-    /**
-     * Imposta il numero di ascolti
-     * @param number $listens il numero di ascolti
-     */
-    function setListens(int $listens)
-    {
-        $this->listens = $listens;
-    }
-    
-    
-    
+       
     /**
      * Metodo che imposta il nome della canzone.
      * @param string $name il nome della canzone.
@@ -169,16 +123,7 @@ class ESong extends EObject
     {
         $this->name = $name;
     }
-    
-    /**
-     * Metodo che imposta la durata della canzone.
-     * @param DateTime $lenght la durata della canzone
-     */
-    function setLenght(DateTime $lenght)
-    {
-        $this->lenght = $lenght;
-    }
-    
+       
     /**
      * Metodo che imposta il genere della canzone.
      * @param string $genre il genere musicale della canzone.
@@ -188,32 +133,6 @@ class ESong extends EObject
         $this->genre = $genre;
     }
     
-    /**
-     * Metodo che imposta il testo della canzone
-     * @param string $lyrics il testo della canzone.
-     */
-    function setLyrics(string $lyrics)
-    {
-        $this->lyrics = $lyrics;
-    }
-    
-    /**
-     * Metodo che imposta i compositori della canzone.
-     * @param mixed $composers i compositori della canzone
-     */
-    function setComposers(string $composers)
-    {
-        $this->composers = $composers;
-    }
-    
-    /**
-     * Aggiunge un ascolto al brano
-     */
-    function addListen()
-    {
-        $this->listens++;
-        //update ??
-    }  
     
     /**
      * Metodo che verifica se il brano e' nascosto a tutte le tipologie di utenti.
