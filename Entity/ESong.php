@@ -97,14 +97,20 @@ class ESong extends EObject
     /**
      * Metodo che imposta il file .mp3 associato
      * alla canzone nel filesystem del server.
-     * @param $bytes il contenuto dell'mp3 (momentaneamente null perche statico
+     * @param mixed $bytes il contenuto dell'mp3 (momentaneamente null perche statico
      */
     function setMpe($bytes = null)
     {
-        $this->pathMp3 = $bytes;
+        //momentaneamente il file e' una risorsa statica
+        $mp3=fopen($obj->getFilePath(), 'rb') or die('cant open');    //si apre il file contenuto nel path.
     }
     
-    
+    /**
+     * DEBUG ONLY
+     */
+    function closeMp3(){
+        fclose($mp3); //chiude il file
+    }
     
     /**
      * Metodo che imposta l'artista che ha prodotto la canzone.

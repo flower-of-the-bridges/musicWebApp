@@ -16,7 +16,7 @@ class FPersistantManager {
     private static $instance = null; 	// l'unica istanza della classe
     private $db; 						// oggetto PDO che effettua la connessione al dbms
   
-/**************************METODI DI INIZIALIZZAZIONE*****************************************/
+/**************************    METODI DI INIZIALIZZAZIONE     *********************************/
     
     /**
      * Inizializza un oggetto FPersistantManager. Metodo privato per evitare
@@ -39,7 +39,7 @@ class FPersistantManager {
      */
     function closeDBConnection()
     {
-        $db = null;
+        $this->db = null;
     }
     
     /**
@@ -70,16 +70,18 @@ class FPersistantManager {
     function load(string $target, int $id)
     {
         switch($target){
-            case($target=='Musician'):
+            case($target=='Musician'): // load di un EMusician
                 $sql = FMusician::loadMusician();
                 break;
-            case($target=='Listener'):
+            case($target=='Listener'): // load di un EListener
                 $sql = FListener::loadListener();
                 break;
-            case($target=='Song'):
+            case($target=='Song'): // load di un ESong
                 $sql = FSong::loadSong();
                 break;
-            case($target=='Comment'):
+            case($target=='musicianSongs'): //load di ESong di un musician
+                $sql = FSong::loadMusicianSongs();
+            case($target=='Comment'): //load di un EComment
                 $sql = FComment::loadComment();
                 break;
             default:
@@ -91,27 +93,32 @@ class FPersistantManager {
         else return NULL;
     }
     
-    /**
-     * 
-     * @param string $target
-     * @param int $id
-     * @param string $sql
-     * @return NULL
+       /**
+     * Esegue una SELECT sul database
+     * @param string $target il tipo di richiesta che si sta effettuando
+     * @param string $sql la stringa contenente il comando SQL
+     * @return boolean l'esito della transazione
      */
     private function execLoad(string $target, int $id, string $sql) {
         
-        try {
-            
-            $stmt = $this->db->prepare($sql);
+        try 
+        {    
+            $stmt = $this->db->prepare($sql); // creo PDOStatement
             $stmt->bindValue(":id", $id, PDO::PARAM_INT); //si associa l'id al campo della query
             $stmt->execute();   //viene eseguita la query
             
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);  //salva in un array le colonne della tuple
-            if($stmt->rowCount())
-                return FPersistantManager::createObjectFromRow($target, $row); //ritorna l'oggetto
-                else return null;
+            $rows = $stmt->fetch(PDO::FETCH_ASSOC);  //salva in un array le colonne della tuple
+            
+            if($stmt->rowCount()>1) // se il numero di righe recuperate e' piu di uno, creo un array
+                $obj = array();
+            
+            foreach($rows as $row) // per ogni tupla restituita dal db...
+                $obj = FPersistantManager::createObjectFromRow($target, $row); //...istanzio l'oggetto
+            
+            return $obj;
         }
-        catch (PDOException $e) {
+        catch (PDOException $e) 
+        {
             die($e->errorInfo);
             return null; //ritorna null se ci sono errori
         }
@@ -123,6 +130,7 @@ class FPersistantManager {
      * Metodo che permette di salvare informazioni contenute in un oggetto
      * Entity sul database.
      * @param object $obj il nome dell'oggetto.
+     * @return bool il risultato dell'elaborazione
      */
     function store(&$obj) : bool
     {
@@ -149,10 +157,10 @@ class FPersistantManager {
     }
     
     /**
-     * 
-     * @param unknown $obj
-     * @param string $sql
-     * @return boolean
+     * Esegue una INSERT sul database
+     * @param mixed $obj l'oggetto da salvare
+     * @param string $sql la stringa contenente il comando SQL
+     * @return boolean l'esito della transazione
      */
     private function execStore(&$obj, string $sql){
         $this->db->beginTransaction(); //inizio della transazione
@@ -166,20 +174,25 @@ class FPersistantManager {
             
             $stmt->execute();   //si esegue la query
             
-            if($stmt->rowCount())
-            {
-                
-                $obj->setId( $this->db->lastInsertId() );
+            if($stmt->rowCount()) //si verifica il numero di righe variate nel db...
+            { 
+                //...se il valore e' non nullo, si assegna l'id e si ritorna il risultato del commit
+                $obj->setId( $this->db->lastInsertId() ); //assegna all'oggetto l'ultimo id dato dal dbms
                 
                 return $this->db->commit();
                 
-            } else {
+            } 
+            else 
+            {
+                //...altrimenti si effettua il rollback e si ritorna false
                 $this->db->rollBack();
                 
                 return false;
             }
-        } catch (PDOException $e) {
-            
+        } 
+        catch (PDOException $e) 
+        {
+            //errore: rollback e return false
             echo('Errore: '.$e->getMessage());
             
             $this->db->rollBack();
@@ -196,7 +209,8 @@ class FPersistantManager {
      */
     function update($obj) : bool
     {
-        switch($obj){
+        switch($obj)
+        {
             case(is_a($obj, EMusician::class)):
                 $sql = FMusician::updateMusician();
                 break;
@@ -218,6 +232,12 @@ class FPersistantManager {
             else return false;
     }
     
+    /**
+     * Esegue una UPDATE sul database
+     * @param mixed $obj l'oggetto da salvare
+     * @param string $sql la stringa contenente il comando SQL
+     * @return boolean l'esito della transazione
+     */
     private function execUpdate(&$obj, string $sql) : bool
     {
         $this->db->beginTransaction(); //inizio della transazione
@@ -225,8 +245,8 @@ class FPersistantManager {
         $stmt = $this->db->prepare($sql);
         
         //si prepara la query facendo un bind tra parametri e variabili dell'oggetto
-        try {
-            
+        try 
+        {       
             FPersistantManager::bindValues($stmt, $obj); //si associano i valori dell'oggetto alle entry della query
             $stmt->execute();
             
@@ -240,8 +260,9 @@ class FPersistantManager {
                 
                 return false; //...annulla la transazione e ritorna false
             }
-        } catch (PDOException $e) {
-            
+        } 
+        catch (PDOException $e) 
+        {    
             echo('Errore: '.$e->getMessage());
             
             $this->db->rollBack();
@@ -261,7 +282,8 @@ class FPersistantManager {
      */
     function remove(string $target, int $id) : bool
     {
-        switch($className){
+        switch($className)
+        {
             case($target=='Musician'):
                 $sql = FMusician::removeMusician();
                 break;
@@ -290,8 +312,8 @@ class FPersistantManager {
      */
     static function execRemove(int $id, $sql) : bool {
         
-        try {
-            
+        try 
+        {    
             $stmt = $this->db->prepare($sql); //a partire dalla stringa sql viene creato uno statement
             
             $stmt->bindValue(":id", $id, PDO::PARAM_INT); //si associa l'id al campo della query
@@ -300,7 +322,8 @@ class FPersistantManager {
             return (bool) $stmt->rowCount();
             
         }
-        catch (PDOException $e) {
+        catch (PDOException $e) 
+        {
             die($e->errorInfo);
             return FALSE; //ritorna false se ci sono errori
         }
@@ -317,7 +340,8 @@ class FPersistantManager {
      */
     function truncate(string $className)
     {
-        switch($className){
+        switch($className)
+        {
             case('F'.$className=='FMusician'):
                 break;
             case('F'.$className=='FListener'):
@@ -330,18 +354,21 @@ class FPersistantManager {
         }
     }
     
-/***************************** ASSOCIAZIONI ENTITY - DB ***************************************/    
+/*****************************   ASSOCIAZIONI ENTITY - DB    *********************************/    
+    
     /**
      * Associa ai campi della query i corrispondenti valori dell'oggetto
      * @param PDOStatement $stmt lo statement contenente i campi da riempire
      * @param EListener $listener contenente i valori da associare alla query
      */
-    private function bindValues(PDOStatement &$stmt, &$obj) {
-        switch($obj){
+    private function bindValues(PDOStatement &$stmt, &$obj) 
+    {
+        switch($obj)
+        {
             case(is_a($obj, EMusician::class)):
                 break;
             case(is_a($obj, EListener::class)):
-                
+                FListener::storeListener($stmt, $obj);
                 break;
             case(is_a($obj, ESong::class)):
                 FSong::bindValues($stmt, $obj);
@@ -356,32 +383,30 @@ class FPersistantManager {
     /**
      * Da una tupla ricevuta da una query istanzia l'oggetto corrispondente
      * @param string $target individua il tipo di oggetto da creare
-     * @param unknown $row la tupla
-     * @return NULL
+     * @param $row array la tupla restituita dal dbms
+     * @return mixed l'oggetto risultato dell'elaborazione
      */
-    private function createObjectFromRow(string $target, $row){
-        switch($target){
+    private function createObjectFromRow(string $target, $row)
+    {
+        $obj; //oggetto che conterra' l'istanza dell'elaborazione
+        
+        switch($target)
+        {
             case($target=='Musician'):
                 break;
             case($target=='Listener'):
-                $obj = $listener = new EListener($row['id'], $row['name']); //creazione dell'oggetto EListener
+                $obj = FListener::createOBjectFromRow($row); //creazione dell'oggetto EListener
                 break;
             case($target=='Song'):
-                $obj = new ESong($row ['id_song'], $row['name'], new EMusician($row['id_artist']), $row['genre']); //creazione dell'oggetto Esong
-                
-                //impostazione visibilita'.
-                if ($rows['forall']) $obj->setForAll();
-                elseif ($rows['registered']) $obj->setForRegisteredOnly();
-                elseif ($rows['supporters']) $obj->setForSupportersOnly();
-                else $obj->setHidden();
+                $obj = FSong::createObjectFromRow($row);
                 break;
-                
             case($target=='Comment'):
                 break;
             default:
                 $obj=NULL;
                 break;
         }
+        
         return $obj;
     }
     
