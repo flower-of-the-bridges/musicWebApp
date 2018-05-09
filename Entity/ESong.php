@@ -12,94 +12,62 @@ include_once 'Entity/EObject.php';
  */
 class ESong extends EObject
 {
-    // attributi generali del brano
-    private $name;          //stringa contenente il nome dela canzone
-    private $artist;        //stringa contenente l'istanza dell'artista
-   // private $lenght;        //time stamp che indica lunghezza del brano
-    private $genre; 	    //stringa contenente il genere del brano
-   // private $lyrics; 	    //stringa contenente il testo del brano (facoltativo)
-   // private $composers;     //stringa contenente i compositori del brano (facoltativo)
+    //generics
+    private $name;          //string containing song name
+    private $artist;        //string containing the reference to the EMusician instance
     
-    //attributi booleani che denotano la visibilita' del brano rispetto a...
-    private $guests;        //...guest
-    private $supporters;    //...utenti supporters
-    private $users;         //...utenti registrati
+    private $genre; 	    //string containing genre of the song
     
-    //stringa che contiene il path del brano
+    //booleans used to set privacy settings respect to...
+    private $guest;              //...guest
+    private $supporter;         //...utenti supporters
+    private $registered;        //...utenti registrati
+    
+    //stringa che contiene la maniglia all'oggetto Emp3
     private $mp3; 
     
     
-    // private $listens; //numero di ascolti del brano
+    ///////////////////////////////////////////////////////MP3////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
-    /**
-     * Inizializza una canzone. La visibilita' di default e'
-     * per gli utenti registrati e i supporters.
-     * @param int $id l'id della canzone
-     * @param string $name il nome del brano
-     * @param EMusician $artist il musicista autore della canzone
-     * @param string $genre il genere del brano
-     */
-    function __construct(int $id = null, string $name = null, EMusician $artist = null, string $genre = null)
+    //create a new instance of mp3, fill it with parameters and try to store in the DB
+    function createMp3 (array $file)
     {
-        parent::__construct($id);
+        $this->mp3 = new EMp3();
         
-        $this->name = $name;
-        $this->artist = $artist;
-        $this->genre = $genre;
+        $this->mp3->getSong ($this);
         
-        //la visibilita' viene impostata solo per i registrati al sito (user e supporter)
-        $this->setForRegisteredOnly();
-       
-        // numero di ascolti : di default gli ascolti sono impostati a zero.
-        $this->listens = 0; 
+        $this->mp3->getMp3( file_get_contents ($file['file']['tmp_name']) );
+        $this->mp3->getSize ($file['file']['size']);
+        $this->mp3->getType ($file['file']['type']);
+        
     }
     
-    /**
-     * Metodo che fornisce il file .mp3 associato
-     * alla canzone nel filesystem del server.
-     * @return byte del file
-     */
-    function getMp3() 
+    //return the mp3 instance
+    function getMp3() : EMp3
     {
-        return $this->pathMp3;
+        return $this->mp3;
     }
     
-    /**
-     * Metodo che fornisce il nome dell'artista che ha
-     * prodotto la canzone
-     * @return EMusician il musicista autore della canzone
-     */
-    function getArtist() : EMusician
+    function storeMp3 () : bool
     {
-        return $this->artist;
+        return $this->mp3->storeToDBMp3();
     }
     
-    
-    /**
-     * Metodo che fornisce il nome della canzone
-     * @return string il nome della canzone
-     */
-    function getName() : string
+    function retrieveMp3 () : bool
     {
-        return $this->name;
+        return $this->mp3->loadFromDBMp3();
     }
     
+    
+    /*
 
-    /**
-     * Metodo che fornisce il genere della canzone
-     * @return string il genere della canzone
-     */
-    function getGenre() : string
-    {
-        return $this->genre;
-    }
-    
     /**
      * Metodo che imposta il file .mp3 associato
      * alla canzone nel filesystem del server.
      * @param mixed $bytes il contenuto dell'mp3 (momentaneamente null perche statico
-     */
-    function setMpe($bytes = null)
+     * /
+    function setMp3Old($bytes = null)
     {
         //momentaneamente il file e' una risorsa statica
         $mp3=fopen($obj->getFilePath(), 'rb') or die('cant open');    //si apre il file contenuto nel path.
@@ -107,46 +75,37 @@ class ESong extends EObject
     
     /**
      * DEBUG ONLY
-     */
+     * /
     function closeMp3(){
         fclose($mp3); //chiude il file
     }
+    /**
+     * Metodo che fornisce il file .mp3 associato
+     * alla canzone nel filesystem del server.
+     * return byte del file
+     #*/
     
-    /**
-     * Metodo che imposta l'artista che ha prodotto la canzone.
-     * @param EMusician $artist il musicista che ha realizzato la canzone.
-     */
-    function setArtist(EMusician $artist)
-    {
-        $this->artist = $artist;
-    }
-       
-    /**
-     * Metodo che imposta il nome della canzone.
-     * @param string $name il nome della canzone.
-     */
-    function setName(string $name)
-    {
-        $this->name = $name;
-    }
-       
-    /**
-     * Metodo che imposta il genere della canzone.
-     * @param string $genre il genere musicale della canzone.
-     */
-    function setGenre(string $genre)
-    {
-        $this->genre = $genre;
-    }
+    ///////////////////////////////////////////////////////MP3////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    ///////////////////////////////////////////////////////PRIVACY SETTINGS///////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
      * Metodo che verifica se il brano e' nascosto a tutte le tipologie di utenti.
      * @return bool true se il brano e' nascosto, false altrimenti.
      */
     function isHidden() : bool
     {
-        return !$this->supporters;
+        return !$this->supporter;
     }
     
     /**
@@ -156,7 +115,7 @@ class ESong extends EObject
      */
     function isForAll() : bool
     {
-        return $this->guests;
+        return $this->guest;
     }
     
     /**
@@ -166,7 +125,7 @@ class ESong extends EObject
      */
     function isForSupportersOnly() : bool
     {
-        return $this->supporters;
+        return $this->supporter;
     }
     
     /**
@@ -175,7 +134,7 @@ class ESong extends EObject
      */
     function isForRegisteredOnly() : bool
     {
-        return $this->users;
+        return $this->registered;
     }
     
     /**
@@ -183,9 +142,9 @@ class ESong extends EObject
      */
     function setForAll() 
     {
-        $this->guests = true;
-        $this->supporters = true;
-        $this->users = true;
+        $this->guest = true;
+        $this->supporter = true;
+        $this->registered = true;
     }
     
     /**
@@ -193,9 +152,9 @@ class ESong extends EObject
      */
     function setForSupportersOnly()
     {
-        $this->guests = false;
-        $this->users = false;
-        $this->supporters = true;
+        $this->guest = false;
+        $this->registered = false;
+        $this->supporter = true;
     }
     
     /**
@@ -203,9 +162,9 @@ class ESong extends EObject
      */
     function setForRegisteredOnly() 
     {
-        $this->guests = false;
-        $this->supporters = true;
-        $this->users = true;
+        $this->guest = false;
+        $this->supporter = true;
+        $this->registered = true;
     }
     
     /**
@@ -213,11 +172,88 @@ class ESong extends EObject
      */
     function setHidden() 
     {
-        $this->guests = false;
-        $this->supporters = false;
-        $this->users = false;
+        $this->guest = false;
+        $this->supporter = false;
+        $this->registered = false;
     }
+    ///////////////////////////////////////////////////////PRIVACY SETTINGS///////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    
+    
+    
+/////////////////////////////////////////////////
+    function __construct () {/*Use functions*/}//
+/////////////////////////////////////////////////
+
+    
+    ///////////////////////////////////////////////////////GETTER/////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Metodo che fornisce il nome dell'artista che ha
+     * prodotto la canzone
+     * @return EMusician il musicista autore della canzone
+     */
+    function getArtist() : EMusician
+    {
+        return $this->artist;
+    }
+    /**
+     * Metodo che fornisce il nome della canzone
+     * @return string il nome della canzone
+     */
+    function getName() : string
+    {
+        return $this->name;
+    }
+    /**
+     * Metodo che fornisce il genere della canzone
+     * @return string il genere della canzone
+     */
+    function getGenre() : string
+    {
+        return $this->genre;
+    }
+    ///////////////////////////////////////////////////////GETTER/////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    
+    ///////////////////////////////////////////////////////SETTER/////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Metodo che imposta l'artista che ha prodotto la canzone.
+     * @param EMusician $artist il musicista che ha realizzato la canzone.
+     */
+    function setArtist(EMusician $artist)
+    {
+        $this->artist = $artist;
+    }
+    
+    /**
+     * Metodo che imposta il nome della canzone.
+     * @param string $name il nome della canzone.
+     */
+    function setName(string $name)
+    {
+        $this->name = $name;
+    }
+    
+    /**
+     * Metodo che imposta il genere della canzone.
+     * @param string $genre il genere musicale della canzone.
+     */
+    function setGenre(string $genre)
+    {
+        $this->genre = $genre;
+    }
+    ///////////////////////////////////////////////////////SETTER/////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    
+    
+    
+    ////////////////////////////////////////////////////TO STRING/////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
      * Funzione che trasforma in una stringa l'oggetto.
      * Utile per il debug.
