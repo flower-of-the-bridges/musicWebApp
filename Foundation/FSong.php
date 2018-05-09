@@ -15,8 +15,8 @@ class FSong {
      */
     static function storeSong() : string
     {
-        return "INSERT INTO song(name, artist, genre, mp3, forall, registered, supporters)
-				VALUES(:name,:artist,:genre, :mp3, :forall, :registered,:supporters)";
+        return "INSERT INTO song(name, artist, genre, forall, registered, supporters)
+				VALUES(:name,:artist,:genre, :forall, :registered,:supporters)";
     }
         
     /**

@@ -43,8 +43,17 @@ class ESong extends EObject
         
     }
     
+<<<<<<< HEAD
     //return the mp3 instance
     function getMp3() : EMp3
+=======
+    /**
+     * Metodo che fornisce il file .mp3 associato
+     * alla canzone nel filesystem del server.
+     * @return 
+     */
+    function getMp3() 
+>>>>>>> 503664500c73136faf833f1511c194c01dfff83a
     {
         return $this->mp3;
     }
@@ -66,8 +75,13 @@ class ESong extends EObject
      * Metodo che imposta il file .mp3 associato
      * alla canzone nel filesystem del server.
      * @param mixed $bytes il contenuto dell'mp3 (momentaneamente null perche statico
+<<<<<<< HEAD
      * /
     function setMp3Old($bytes = null)
+=======
+     */
+    function setMp3(string $name, string $type, $byte)
+>>>>>>> 503664500c73136faf833f1511c194c01dfff83a
     {
         //momentaneamente il file e' una risorsa statica
         $mp3=fopen($obj->getFilePath(), 'rb') or die('cant open');    //si apre il file contenuto nel path.
