@@ -8,12 +8,12 @@ $p=FPersistantManager::getInstance(); //creo istanza del manager di connessione 
 $s = $p->load('Song', 3);
 
 $s->setForAll();
-$s->setName('monkey business');
+$s->setName('La Villa Strangiato');
 
 $p->update($s);
 
 echo($p->load('Song', 3));
 
-$p->closeDBConnection();			 //end PDO connection instance
+$p->closeDBConnection()//end PDO connection instance
 
 ?>

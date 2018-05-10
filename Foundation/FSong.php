@@ -122,8 +122,8 @@ class FSong {
         elseif ($row['registered']) $song->setForRegisteredOnly();
         elseif ($row['supporters']) $song->setForSupportersOnly();
         else $song->setHidden();
-        var_dump($song);
-        return $song; // restituisce la canzone
+        // restituisce la canzone
+        return $song; 
     }      
 }
     

@@ -61,8 +61,9 @@ CREATE TABLE listener (
 
 CREATE TABLE moderator (
   id smallint(5) NOT NULL,
-  solved int(11) NOT NULL DEFAULT '0', -- report risolti (Calcolabili come count da report)?
-  active int(11) NOT NULL DEFAULT '0', -- report attivi (Calcolabili come count da report)?
+  nickname varchar(50) NOT NULL,
+  --solved int(11) NOT NULL DEFAULT '0', -- report risolti (Calcolabili come count da report)?
+  --active int(11) NOT NULL DEFAULT '0', -- report attivi (Calcolabili come count da report)?
   PRIMARY KEY (id)
 );
 
@@ -85,7 +86,7 @@ CREATE TABLE musician (
 --
 
 CREATE TABLE song (
-  id_song smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT,
+  id smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT,
   id_artist varchar(30) NOT NULL,
   name varchar(30) NOT NULL,
   genre varchar(40) NOT NULL,
@@ -100,7 +101,7 @@ CREATE TABLE song (
 );
 
 CREATE TABLE mp3 (
-    id_song smallint(5) NOT NULL,
+    id_song smallint(5) UNSIGNED NOT NULL,
     nome varchar(50) NOT NULL default "", -- nome del file
     size varchar(25) NOT NULL default "", -- dimensione
     type varchar(25) NOT NULL default "", -- file mp3 salvato come byte
