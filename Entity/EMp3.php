@@ -1,10 +1,11 @@
 <?php
 
-class EMp3
+require_once 'inc.php';
+include_once 'Entity/EObject.php';
+
+class EMp3 extends EObject
 {
     
-    //ESong reference instance
-    private $song;
     //size of the uploaded song
     private $size;
     //mime type of the blob
@@ -18,51 +19,67 @@ class EMp3
     
     function loadFromDBMp3() : bool {/*someting that put mp3 from db on foundation*/}
     
-    /////////////////////////////////////////end specific methods
-    
-/////////////////////////////////////////////////
-    function __construct () {/*Use functions*/}//
-/////////////////////////////////////////////////
 
-    ////////////////////////////////////////////getter e setter
-    /////////////////////////
-    function getSong () : ESong
+    /**
+     * 
+     */
+    function __construct () {/*Use functions*/}
+
+/****************************************** GETTER **************************************************/
+    
+    /**
+     *
+     * @return mixed
+     */
+    function getMp3 ()
     {
-        return $this->song;
+        return $this->mp3;
     }
-    function setSong (ESong $s)
-    {
-        $this->song = $s;
-    }
-    /////////////////////////
-    /////////////////////////
+    
+    /**
+     *
+     * @return int
+     */
     function getSize () : int
     {
         return $this->size;
     }
-    function setSize (int $s)
-    {
-        $this->size = $s;
-    }
-    /////////////////////////
-    /////////////////////////
+    
+    /**
+     *
+     * @return string
+     */
     function getType () : string
     {
         return $this->type;
     }
-    function setType (string $t)
+    
+/***************************************** SETTER **************************************************/  
+
+    /**
+     * 
+     * @param int $size
+     */
+    function setSize (int $size)
     {
-        $this->type = $t;
+        $this->size = $size;
     }
-    /////////////////////////
-    /////////////////////////
-    function getMp3 () : string
+    
+    /**
+     * 
+     * @param string $type
+     */
+    function setType (string $type)
     {
-        return $this->mp3;
+        $this->type = $type;
     }
-    function setMp3 (string $m)
+    
+    /**
+     * 
+     * @param mixed $mp3
+     */
+    function setMp3 ($mp3)
     {
-        $this->mp3 = $m;
+        $this->mp3 = $mp3;
     }
-    /////////////////////////    
 }

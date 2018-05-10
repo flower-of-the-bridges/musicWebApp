@@ -19,16 +19,10 @@ class EListener extends EUser
     /**
      * Metodo costruttore che istanzia un oggetto EListener
      *
-     * @param int $id
-     *            l'id dell'utente (facoltativo)
-     * @param string $user
-     *            il nome dell'utente (facoltativo)
-     * @param string $mail
-     *            l'email associata all'account (facoltativa)
      */
-    function __construct(int $id = null, string $user = null)
+    function __construct()
     {
-        parent::__construct($id,$user,'listener');
+        $this->setType('listener');
     }
 
 

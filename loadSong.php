@@ -5,9 +5,10 @@ require 'inc.php';
 $p=FPersistantManager::getInstance(); //creo istanza del manager di connessione al dbms
 
 //carico il primo elemento
-$s = $p->load('Song', 1);
-
-echo($s);
+$s = $p->load('Song', 34);
+if($s)
+    echo($s);
+else echo 'canzone non trovata';
 
 $p->closeDBConnection();			 //end PDO connection instance
 

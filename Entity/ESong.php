@@ -26,93 +26,105 @@ class ESong extends EObject
     //stringa che contiene la maniglia all'oggetto Emp3
     private $mp3; 
     
-    
-    ///////////////////////////////////////////////////////MP3////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
-    //create a new instance of mp3, fill it with parameters and try to store in the DB
-    function createMp3 (array $file)
+    function __construct ()
     {
         $this->mp3 = new EMp3();
-        
-        $this->mp3->getSong ($this);
-        
-        $this->mp3->getMp3( file_get_contents ($file['file']['tmp_name']) );
-        $this->mp3->getSize ($file['file']['size']);
-        $this->mp3->getType ($file['file']['type']);
-        
+        $this->artist = new EMusician();
+        $guest = false;
+        $supporter = false;
+        $registered = false;
     }
-    
-<<<<<<< HEAD
-    //return the mp3 instance
-    function getMp3() : EMp3
-=======
-    /**
-     * Metodo che fornisce il file .mp3 associato
-     * alla canzone nel filesystem del server.
-     * @return 
-     */
-    function getMp3() 
->>>>>>> 503664500c73136faf833f1511c194c01dfff83a
-    {
-        return $this->mp3;
-    }
-    
-    function storeMp3 () : bool
-    {
-        return $this->mp3->storeToDBMp3();
-    }
-    
-    function retrieveMp3 () : bool
-    {
-        return $this->mp3->loadFromDBMp3();
-    }
-    
-    
-    /*
 
+/********************************************* GETTER ************************************************/
+    
     /**
-     * Metodo che imposta il file .mp3 associato
-     * alla canzone nel filesystem del server.
-     * @param mixed $bytes il contenuto dell'mp3 (momentaneamente null perche statico
-<<<<<<< HEAD
-     * /
-    function setMp3Old($bytes = null)
-=======
+     * Metodo che fornisce il nome dell'artista che ha
+     * prodotto la canzone
+     * @return EMusician il musicista autore della canzone
      */
-    function setMp3(string $name, string $type, $byte)
->>>>>>> 503664500c73136faf833f1511c194c01dfff83a
+    function getArtist() : EMusician
     {
-        //momentaneamente il file e' una risorsa statica
-        $mp3=fopen($obj->getFilePath(), 'rb') or die('cant open');    //si apre il file contenuto nel path.
+        return $this->artist;
+    }
+    /**
+     * Metodo che fornisce il nome della canzone
+     * @return string il nome della canzone
+     */
+    function getName() : string
+    {
+        return $this->name;
+    }
+    /**
+     * Metodo che fornisce il genere della canzone
+     * @return string il genere della canzone
+     */
+    function getGenre() : string
+    {
+        return $this->genre;
     }
     
     /**
-     * DEBUG ONLY
-     * /
-    function closeMp3(){
-        fclose($mp3); //chiude il file
+     * 
+     * @return EMp3 oggetto EMp3
+     */
+    function getMp3() : EMp3
+    {
+        if($this->mp3) // se l'mp3 e' gia presente, lo restituisce
+            return $this->mp3;
+        else // altrimenti effettua una load dal database
+        {
+            $this->mp3 = FPersistantManager::getInstance()->load('Mp3', $this->id);
+            return $this->mp3;
+        }
     }
+    
+/************************************* SETTER *******************************************************/
     /**
-     * Metodo che fornisce il file .mp3 associato
-     * alla canzone nel filesystem del server.
-     * return byte del file
-     #*/
+     * Metodo che imposta l'artista che ha prodotto la canzone.
+     * @param EMusician $artist il musicista che ha realizzato la canzone.
+     */
+    function setArtist(EMusician &$artist)
+    {
+        $this->artist = $artist;
+    }
     
-    ///////////////////////////////////////////////////////MP3////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Metodo che imposta il nome della canzone.
+     * @param string $name il nome della canzone.
+     */
+    function setName(string $name)
+    {
+        $this->name = $name;
+    }
     
+    /**
+     * Metodo che imposta il genere della canzone.
+     * @param string $genre il genere musicale della canzone.
+     */
+    function setGenre(string $genre)
+    {
+        $this->genre = $genre;
+    }
     
+    /**
+     * create a new instance of mp3, fill it with parameters and try to store in the DB
+     * @param Emp3 $mp3 (optional) l'oggetto mp3 da assegnare al brano
+     */
+    function setMp3 (EMp3 &$mp3=null)
+    {
+        if($mp3 && $mp3->getId()==$this->getId())
+            $this->mp3 = $mp3;
+        else
+        {
+            $this->mp3->setId($this->id);
+            $this->mp3->setMp3( file_get_contents ($_FILES['file']['tmp_name']) );
+            $this->mp3->setSize ($_FILES['file']['size']);
+            $this->mp3->setType ($_FILES['file']['type']);   
+        }
+    }
     
-    
-    
-    
-    
-    
-    
-    
-    ///////////////////////////////////////////////////////PRIVACY SETTINGS///////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*************************************** PRIVACY SETTINGS *******************************************/    
+
     /**
      * Metodo che verifica se il brano e' nascosto a tutte le tipologie di utenti.
      * @return bool true se il brano e' nascosto, false altrimenti.
@@ -190,84 +202,27 @@ class ESong extends EObject
         $this->supporter = false;
         $this->registered = false;
     }
-    ///////////////////////////////////////////////////////PRIVACY SETTINGS///////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     
+/**************************************** DEBUG *****************************************************/
     
-    
-/////////////////////////////////////////////////
-    function __construct () {/*Use functions*/}//
-/////////////////////////////////////////////////
-
-    
-    ///////////////////////////////////////////////////////GETTER/////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
-     * Metodo che fornisce il nome dell'artista che ha
-     * prodotto la canzone
-     * @return EMusician il musicista autore della canzone
+     *
      */
-    function getArtist() : EMusician
+    function setStaticMp3()
     {
-        return $this->artist;
-    }
-    /**
-     * Metodo che fornisce il nome della canzone
-     * @return string il nome della canzone
-     */
-    function getName() : string
-    {
-        return $this->name;
-    }
-    /**
-     * Metodo che fornisce il genere della canzone
-     * @return string il genere della canzone
-     */
-    function getGenre() : string
-    {
-        return $this->genre;
-    }
-    ///////////////////////////////////////////////////////GETTER/////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
-    
-    ///////////////////////////////////////////////////////SETTER/////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /**
-     * Metodo che imposta l'artista che ha prodotto la canzone.
-     * @param EMusician $artist il musicista che ha realizzato la canzone.
-     */
-    function setArtist(EMusician $artist)
-    {
-        $this->artist = $artist;
+        //momentaneamente il file e' una risorsa statica
+        $this->mp3->setMp3(file_get_contents('./prova.mp3'));    //si apre il file contenuto nel path.
+        $this->mp3->setId($this->id);
+        $this->mp3->setSize(200);
+        $this->mp3->setType('mp3');
     }
     
     /**
-     * Metodo che imposta il nome della canzone.
-     * @param string $name il nome della canzone.
+     *
      */
-    function setName(string $name)
-    {
-        $this->name = $name;
+    function closeStaticMp3(){
+        fclose($this->mp3->getMp3()); //chiude il file
     }
-    
-    /**
-     * Metodo che imposta il genere della canzone.
-     * @param string $genre il genere musicale della canzone.
-     */
-    function setGenre(string $genre)
-    {
-        $this->genre = $genre;
-    }
-    ///////////////////////////////////////////////////////SETTER/////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
-    
-    
-    
-    ////////////////////////////////////////////////////TO STRING/////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
      * Funzione che trasforma in una stringa l'oggetto.
      * Utile per il debug.

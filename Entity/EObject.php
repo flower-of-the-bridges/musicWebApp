@@ -20,7 +20,9 @@ class EObject
      * @return int l'identifier dell'oggetto
      */
     function getId() : int {
-        return $this->id;
+        if(!$this->id)
+            return 0;
+        else return $this->id;
     }
     
     /**

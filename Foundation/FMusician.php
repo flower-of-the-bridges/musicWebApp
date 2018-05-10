@@ -8,24 +8,71 @@
  */
  
 class FMusician{
-
+    
+    /**
+     * 
+     * @return string
+     */
     static function storeMusician() : string 
     {
-        //TODO
+        return "INSERT INTO musician(id, nickname) 
+                VALUES (:id,:nickname);";
     }
     
+    /**
+     * 
+     * @return string
+     */
     static function updateMusician() : string
     {
-        //TODO
+        return "UPDATE musician
+                SET nickname = :nickname
+                WHERE id = :id;";
     }
     
+    /**
+     * 
+     * @return string
+     */
     static function loadMusician() : string
     {
-        //TODO
+        return "SELECT *    
+                FROM musician
+                WHERE id = :id;";
     }
     
+    /**
+     * 
+     * @return string
+     */
     static function removeMusician() : string 
     {
-        //TODO
+        return "DELETE 
+                FROM song
+                WHERE id = :id;";
+    }
+    
+    /**
+     * 
+     * @param PDOStatement $stmt
+     * @param EMusician $mus
+     */
+    static function bindValues(PDOStatement &$stmt, EMusician &$mus)
+    {
+        $stmt->bindValue(':id', $mus->getId(), PDO::PARAM_INT);
+        $stmt->bindValue(':nickname', $mus->getName(), PDO::PARAM_STR); 
+    }
+    
+    /**
+     * 
+     * @param array $row
+     * @return EMusician
+     */
+    static function createObjectFromRow($row) : EMusician
+    {
+        $mus = new EMusician();
+        $mus->setId($row['id']);
+        $mus->setName($row['nickname']);
+        return $mus;
     }
 }

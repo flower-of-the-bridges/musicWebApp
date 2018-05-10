@@ -1,6 +1,6 @@
 <?php
 require_once 'inc.php';
-
+include_once 'Entity/EObject.php';
 
 /**
  *
@@ -18,15 +18,10 @@ class EMusician extends EUser
     
     /**
      *
-     * @param int $id
-     * @param string $user
-     * @param string $genre
      */
-    function __construct(int $id, string $user = null, string $genre = null)
+    function __construct()
     {
-        parent::__construct($id, $user, 'musician'); // richiamo il costruttore della classe padre
-        
-        $this->genre = $genre;
+        $this->setType('musician');
     }
 
     /**
@@ -60,7 +55,11 @@ class EMusician extends EUser
      
      function addSong(Esong &$song) : bool
      {
-        // TODO
+         if(FPersistantManager::getInstance()->store($song)){
+             $song->setStaticMp3();
+             return FPersistantManager::getInstance()->store($song->getMp3());
+         }
+         else return false;
      }
      
      /**

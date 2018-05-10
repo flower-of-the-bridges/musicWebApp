@@ -1,7 +1,5 @@
 <?php
 
-use Foundation\FMp3;
-
 /**
  * Description of FPersistantManager
  * Lo scopo di questa classe e' quello di fornire un accesso unico al DBMS, incapsulando
@@ -81,6 +79,9 @@ class FPersistantManager {
             case($target=='Song'): // load di un ESong
                 $sql = FSong::loadSong();
                 break;
+            case($target=='Mp3'): // load di un EMp3
+                $sql = FMp3::loadMp3();
+                break;
             case($target=='musicianSongs'): //load di ESong di un musician
                 $sql = FSong::loadMusicianSongs();
             case($target=='Comment'): //load di un EComment
@@ -108,15 +109,15 @@ class FPersistantManager {
             $stmt = $this->db->prepare($sql); // creo PDOStatement
             $stmt->bindValue(":id", $id, PDO::PARAM_INT); //si associa l'id al campo della query
             $stmt->execute();   //viene eseguita la query
-            
-            $rows = $stmt->fetch(PDO::FETCH_ASSOC);  //salva in un array le colonne della tuple
+            $stmt->setFetchMode(PDO::FETCH_ASSOC); // i risultati del db verranno salvati in un array con indici le colonne della table
+ 
+            $obj=NULL;
             
             if($stmt->rowCount()>1) // se il numero di righe recuperate e' piu di uno, creo un array
                 $obj = array();
             
-            foreach($rows as $row) // per ogni tupla restituita dal db...
+            while($row = $stmt->fetch()) // per ogni tupla restituita dal db...
                 $obj = FPersistantManager::createObjectFromRow($target, $row); //...istanzio l'oggetto
-            
             return $obj;
         }
         catch (PDOException $e) 
@@ -141,8 +142,6 @@ class FPersistantManager {
             case(is_a($obj, EMusician::class)):
                 $sql = FMusician::storeMusician();
                 $result = $this->execStore($obj, $sql);
-                $sql = FMp3::storeMp3();
-                $result = $this->execStore($obj->getMp3(), $sql);
                 break;
             case(is_a($obj, EListener::class)):
                 $sql = FListener::storeListener();
@@ -150,6 +149,10 @@ class FPersistantManager {
                 break;
             case(is_a($obj, ESong::class)):
                 $sql = FSong::storeSong();
+                $result = $this->execStore($obj, $sql);
+                break;
+            case(is_a($obj, EMp3::class)):
+                $sql = FMp3::storeMp3(); //salva l'mp3
                 $result = $this->execStore($obj, $sql);
                 break;
             case(is_a($obj, EComment::class)):
@@ -162,45 +165,46 @@ class FPersistantManager {
         }
         return $result;
     }
-    
+
     /**
      * Esegue una INSERT sul database
-     * @param mixed $obj l'oggetto da salvare
-     * @param string $sql la stringa contenente il comando SQL
+     *
+     * @param mixed $obj
+     *            l'oggetto da salvare
+     * @param string $sql
+     *            la stringa contenente il comando SQL
      * @return boolean l'esito della transazione
      */
-    private function execStore(&$obj, string $sql){
-        $this->db->beginTransaction(); //inizio della transazione
+    private function execStore(&$obj, string $sql)
+    {
+        $this->db->beginTransaction(); // inizio della transazione
         
         $stmt = $this->db->prepare($sql);
         
-        //si prepara la query facendo un bind tra parametri e variabili dell'oggetto
+        // si prepara la query facendo un bind tra parametri e variabili dell'oggetto
         try {
             
-            FPersistantManager::bindValues($stmt, $obj);    //si associano i valori dell'oggetto alle entry della query
+            FPersistantManager::bindValues($stmt, $obj); // si associano i valori dell'oggetto alle entry della query
             
-            $stmt->execute();   //si esegue la query
+            $stmt->execute();
             
-            if($stmt->rowCount()) //si verifica il numero di righe variate nel db...
-            { 
-                //...se il valore e' non nullo, si assegna l'id e si ritorna il risultato del commit
-                $obj->setId( $this->db->lastInsertId() ); //assegna all'oggetto l'ultimo id dato dal dbms
+            if ($stmt->rowCount()) // si esegue la query
+            {
+                if ($obj->getId() == 0) // ...se il valore e' non nullo, si assegna l'id
+                    $obj->setId($this->db->lastInsertId()); // assegna all'oggetto l'ultimo id dato dal dbms
                 
-                return $this->db->commit();
-                
+                return $this->db->commit(); // si ritorna il risultato del commit
             } 
             else 
             {
-                //...altrimenti si effettua il rollback e si ritorna false
+                // ...altrimenti si effettua il rollback e si ritorna false
                 $this->db->rollBack();
                 
                 return false;
             }
-        } 
-        catch (PDOException $e) 
-        {
-            //errore: rollback e return false
-            echo('Errore: '.$e->getMessage());
+        } catch (PDOException $e) {
+            // errore: rollback e return false
+            echo ('Errore: ' . $e->getMessage());
             
             $this->db->rollBack();
             
@@ -255,9 +259,9 @@ class FPersistantManager {
         try 
         {       
             FPersistantManager::bindValues($stmt, $obj); //si associano i valori dell'oggetto alle entry della query
-            $stmt->execute();
+            $stmt->bindValue(":id", $obj->getId(), PDO::PARAM_INT); //si associa l'id al campo della query
             
-            if($stmt->rowCount()) //se la tupla e' alterata...
+            if($stmt->execute()) //se la tupla e' alterata...
             {
                 return $this->db->commit(); //...ritorna il risultato del commit
             }
@@ -289,7 +293,7 @@ class FPersistantManager {
      */
     function remove(string $target, int $id) : bool
     {
-        switch($className)
+        switch($target)
         {
             case($target=='Musician'):
                 $sql = FMusician::removeMusician();
@@ -308,7 +312,7 @@ class FPersistantManager {
                 break;
         }
         if($sql)
-            return $this->execRemove($id, $sql);
+            return FPersistantManager::execRemove($id, $sql);
         else return false;
     }
     
@@ -317,16 +321,15 @@ class FPersistantManager {
      * @param int $id della entry da eliminare
      * @return bool l'esito dell'operazione
      */
-    static function execRemove(int $id, $sql) : bool {
+    private function execRemove(int $id, string $sql) : bool {
         
         try 
         {    
             $stmt = $this->db->prepare($sql); //a partire dalla stringa sql viene creato uno statement
             
             $stmt->bindValue(":id", $id, PDO::PARAM_INT); //si associa l'id al campo della query
-            $stmt->execute(); //esegue lo statement
-            //ritorna true se il numero di tuple eliminate è 1, false altrimenti
-            return (bool) $stmt->rowCount();
+           
+            return $stmt->execute(); //esegue lo statement e ritorna il risultato
             
         }
         catch (PDOException $e) 
@@ -342,18 +345,18 @@ class FPersistantManager {
     
     /**
      * Cancella tutte le entry in un DBMS. A scopo di debug
-     * @param string $className il nome della table da cancellare
+     * @param string $target il nome della table da cancellare
      * @return bool il risultato dell'operazione.
      */
-    function truncate(string $className)
+    function truncate(string $target)
     {
-        switch($className)
+        switch($target)
         {
-            case('F'.$className=='FMusician'):
+            case($target=='Musician'):
                 break;
-            case('F'.$className=='FListener'):
+            case($target=='Listener'):
                 break;
-            case('F'.$className=='FSong'):
+            case($target=='Song'):
                 FSong::emptyTable($this->db);
                 break;
             default:
@@ -373,6 +376,7 @@ class FPersistantManager {
         switch($obj)
         {
             case(is_a($obj, EMusician::class)):
+                FMusician::bindValues($stmt, $obj);
                 break;
             case(is_a($obj, EListener::class)):
                 FListener::storeListener($stmt, $obj);
@@ -380,7 +384,7 @@ class FPersistantManager {
             case(is_a($obj, ESong::class)):
                 FSong::bindValues($stmt, $obj);
                 break;
-            case(is_a($obj)): //mp3
+            case(is_a($obj, EMp3::class)): 
                 FMp3::bindValues($stmt, $obj);
             case(is_a($obj, EComment::class)):
                 break;
@@ -402,6 +406,7 @@ class FPersistantManager {
         switch($target)
         {
             case($target=='Musician'):
+                $obj = FMusician::createObjectFromRow($row);
                 break;
             case($target=='Listener'):
                 $obj = FListener::createOBjectFromRow($row); //creazione dell'oggetto EListener

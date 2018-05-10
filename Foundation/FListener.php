@@ -13,8 +13,8 @@ class FListener {
      */
     static function storeListener() : string
     {
-        return "INSERT INTO user(name)
-				VALUES(:name)";
+        return "INSERT INTO listener(:id, :nickname)
+				VALUES(:id, :name);";
     }
     
     /**
@@ -23,7 +23,9 @@ class FListener {
      */
     static function removeListener() : bool 
     {
-        return " delete  from user where id= :id ;"; //query sql
+        return " DELETE
+                 FROM listener 
+                 WHERE id= :id ;"; //query sql
     }
     
     /**
@@ -33,7 +35,7 @@ class FListener {
     static function updateListener(PDO &$db, EListener &$listener) : bool
     {
         $sql = "UPDATE listener
-                SET name= :name
+                SET nickname= :nickname
                 WHERE id= :id";
     }
     
@@ -43,7 +45,9 @@ class FListener {
      */
     static function loadListener() : string 
     {
-       return "select * from song where id= :id ;"; //query sql
+       return "SELECT * 
+               FROM listener
+               WHERE id= :id ;"; //query sql
     }
     
 /****************************** ASSOCIAZIONI QUERY - TUPLE ************************************/
@@ -55,6 +59,7 @@ class FListener {
      */
     static function bindValues(PDOStatement $stmt, EListener $obj)
     {
+        $stmt->bindValue(':id', $obj->getId(), PDO::PARAM_INT);
         $stmt->bindValue(':name', $obj->getName(), PDO::PARAM_STR);
 
     }
@@ -66,6 +71,8 @@ class FListener {
      */
     static function createOBjectFromRow($row) : EListener 
     {
-        return new EListener($row['id'], $row['name']); //creazione dell'oggetto EListener
+        $list = new EListener(); //creazione dell'oggetto EListener
+        $list->setId($row['id']);
+        $list->setName($row['nickname']);
     }
 }

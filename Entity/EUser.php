@@ -10,20 +10,18 @@ class EUser extends EObject
     //protected $pwd;
     protected $type;
     
-    function __construct(int $id = null, string $user = null, string $type = null)
+    function __construct()
     {
-        parent::__construct($id);
-        $this->nickame = $user;
-        $this->type = $type;
+        
     }
     
     function getName () : string
     {
         return $this->nickname;
     }
-    function setName ()
+    function setName (string $nickname)
     {
-        $this->nickame;
+        $this->nickname = $nickname;
     }
     
     
@@ -31,10 +29,15 @@ class EUser extends EObject
     {
         return $this->type;
     }
-    function setType ()
+    
+    protected function setType (string $type)
     {
-        $this->type;
+        $this->type = $type;
     }
     
+    function __toString()
+    {
+        return "Nome: ".$this->nickname." \nTipo: ".$this->type." \nId: ".$this->id;
+    }
     
 }

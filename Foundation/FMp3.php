@@ -1,5 +1,4 @@
 <?php
-namespace Foundation;
 
 class FMp3
 {
@@ -20,9 +19,12 @@ class FMp3
     
     /*******************************   BIND MODEL - TUPLE **************************************/
     
-    static function bindValues(\PDOStatement &$stmt)
+    static function bindValues(PDOStatement &$stmt, EMp3 &$mp3)
     {
-        
+        $stmt->bindValue(':id',$mp3->getId(), PDO::PARAM_INT);
+        $stmt->bindValue(':size',$mp3->getSize(), PDO::PARAM_INT);
+        $stmt->bindValue(':type',$mp3->getType(), PDO::PARAM_STR);
+        $stmt->bindValue(':mp3',$mp3->getMp3(), PDO::PARAM_LOB);
     }
     
     static function createObjectFromRow($row)

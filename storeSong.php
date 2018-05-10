@@ -4,24 +4,39 @@ require 'inc.php';
 
 $p = FPersistantManager::getInstance(); //creo istanza del manager di connessione al dbms
 
-$mus = new EMusician(1, "Rush", null, null, "Rock");
+$mus = new EMusician();
+$mus->setId(22);
+$mus->setName('Rush');
+if(FPersistantManager::getInstance()->store($mus))
+    echo 'caricamento ok';
+else echo 'caricamento fallito';
 
 //prima insert
-$s = new ESong(null, "2112", $mus,"Rock");
-$s->setFilePath('./prova.mp3');
-if ($p->store($s)) { echo($s); }
+$s = new ESong();
+$s->setName("2112");
+$s->setArtist($mus);
+$s->setGenre('Rock');
+$s->setForAll();
+
+if ($mus->addSong($s)) { echo($s); }
 
 //seconda insert
-$s=new ESong(null, "Tom Sawyer", $mus,"Rock");
-$s->setForSupportersOnly();
-$s->setFilePath('./prova.mp3');
-if ($p->store($s)) { echo($s); }
+$s = new ESong();
+$s->setName("Tom Sawyer");
+$s->setArtist($mus);
+$s->setGenre('Rock');
+$s->setForRegisteredOnly();
+
+if ($mus->addSong($s)) { echo($s); }
 
 //terza insert
-$s=new ESong(null, "YXZ", $mus,"Rock");
+$s = new ESong();
+$s->setName("YXZ");
+$s->setArtist($mus);
+$s->setGenre('Rock');
 $s->setForSupportersOnly();
-$s->setFilePath('./prova.mp3');
-if ($p->store($s)) { echo($s); }
+
+if ($mus->addSong($s)) { echo($s); }
 
 $p->closeDBConnection();			 //end PDO connection instance
 

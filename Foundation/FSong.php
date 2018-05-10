@@ -15,8 +15,8 @@ class FSong {
      */
     static function storeSong() : string
     {
-        return "INSERT INTO song(name, artist, genre, forall, registered, supporters)
-				VALUES(:name,:artist,:genre, :forall, :registered,:supporters)";
+        return "INSERT INTO song(id_artist, name, genre, forall, registered, supporters)
+				VALUES(:id_artist, :name, :genre, :forall, :registered, :supporters)";
     }
         
     /**
@@ -27,7 +27,9 @@ class FSong {
      */
     static function loadSong( ) : string
     {
-        return "select * from song where id_song= :id ;"; //query sql
+        return "SELECT song.*, musician.nickname 
+                FROM song, musician
+                where song.id= :id AND song.id_artist = musician.id;"; //query sql
     }
     
     /**
@@ -38,7 +40,9 @@ class FSong {
      */
     static function loadMusicianSongs() : string
     {
-        return "select * from song where id_artist= :id ;"; //query sql
+        return "SELECT .*, musician.nickname 
+                FROM song 
+                where song.id_artist= :id AND song.id_artist= musician.id;"; //query sql
     }
     
     /**
@@ -47,9 +51,9 @@ class FSong {
      */
     static function updateSong() : string
     {
-        $sql = "UPDATE song
-                SET name= :name, genre= :genre, forall= :forall, registered= :registered, supporters= :supporters
-                WHERE id_artist= :id";
+        return "UPDATE song
+                SET id_artist= :id_artist, name= :name, genre= :genre, forall= :forall, registered= :registered, supporters= :supporters
+                WHERE id= :id ;";
     }
     
     /**
@@ -57,9 +61,11 @@ class FSong {
      * @param PDO $db la connessione al dbms
      * @param int $id la canzone da eliminare
      */
-    static function removeSong(PDO &$db, int $id) : string
+    static function removeSong() : string
     {
-        return " delete  from song where ID= :id ;"; //query sql
+        return " DELETE
+                 FROM song 
+                 WHERE id= :id ;"; //query sql
     }
     
     /**
@@ -86,10 +92,9 @@ class FSong {
      */
     static function bindValues(PDOStatement &$stmt, ESong &$obj) 
     {
-        $stmt->bindValue(':name', $obj->getName(), PDO::PARAM_STR);
         $stmt->bindValue(':id_artist', $obj->getArtist()->getId(), PDO::PARAM_INT);
+        $stmt->bindValue(':name', $obj->getName(), PDO::PARAM_STR);
         $stmt->bindValue(':genre', $obj->getGenre(), PDO::PARAM_STR);
-        $stmt->bindValue(':mp3', $obj->getMp3(), PDO::PARAM_LOB);
         $stmt->bindValue(':forall', (int) $obj->isForAll(), PDO::PARAM_INT);
         $stmt->bindValue(':registered', (int) $obj->isForRegisteredOnly(), PDO::PARAM_INT);
         $stmt->bindValue(':supporters', (int) $obj->isForSupportersOnly(), PDO::PARAM_INT);
@@ -102,14 +107,22 @@ class FSong {
      */
     static function createObjectFromRow($row)
     {
-        $musician = FPersistantManager::getInstance()->load('Musician', $row[id_artist]); // istanzia il musicista autore dell'artista
-        $song = new ESong($row ['id_song'], $row['name'], $musician, $row['genre']); // creazione dell'oggetto Esong
-        
+        // istanzia il musicista autore dell'artista
+        $musician = new EMusician();
+        $musician->setId($row['id_artist']);
+        $musician->setName($row['nickname']); 
+        // creazione dell'oggetto Esong
+        $song = new ESong(); 
+        $song->setId($row['id']);
+        $song->setName($row['name']);
+        $song->setArtist($musician);
+        $song->setGenre($row['genre']);
         //impostazione visibilita'.
-        if ($rows['forall']) $song->setForAll();
-        elseif ($rows['registered']) $song->setForRegisteredOnly();
-        elseif ($rows['supporters']) $song->setForSupportersOnly();
-        else $obj->setHidden();
+        if ($row['forall']) $song->setForAll();
+        elseif ($row['registered']) $song->setForRegisteredOnly();
+        elseif ($row['supporters']) $song->setForSupportersOnly();
+        else $song->setHidden();
+        var_dump($song);
         return $song; // restituisce la canzone
     }      
 }

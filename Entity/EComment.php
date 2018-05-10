@@ -1,5 +1,4 @@
 <?php
-use Entity\EObject;
 
 /**
  * @author gruppo 2
