@@ -1,8 +1,17 @@
 <?php
-
+define('WHO', 'davide');
 class SmartyConfig
 {
-
+    
+    static function configure() : Smarty
+    {
+        if(WHO == 'marco'){ return SmartyConfig::marcoConf(); }
+        else if(WHO == 'davide')
+        { return SmartyConfig::davideConf(); }
+        else if(WHO == 'giovanni'){ return SmartyConfig::giovConf(); }
+    }
+    
+    
     static function giovConf() : Smarty
     {
         require('/opt/lampp/php/Smarty/Smarty.class.php');

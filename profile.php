@@ -3,7 +3,7 @@
 require_once 'inc.php';
 require_once 'config.inc.php';
 
-$smarty = SmartyConfig::giovConf(); 
+$smarty = SmartyConfig::configure(); 
 
 $loggedUser = new EUser();
 $loggedUser->setName('Giov');

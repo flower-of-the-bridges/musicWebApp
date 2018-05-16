@@ -3,4 +3,5 @@
 	<buildpathentry external="true" kind="lib" path="/opt/lampp/php/Smarty"/>
 	<buildpathentry kind="src" path=""/>
 	<buildpathentry kind="con" path="org.eclipse.php.core.LANGUAGE"/>
+	<buildpathentry external="true" kind="lib" path="C:/xampp/php/lib/smarty-3.1.32"/>
 </buildpath>

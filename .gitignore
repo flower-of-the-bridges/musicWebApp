@@ -6,6 +6,7 @@
 *.exe
 *.o
 *.so
+todo.txt
 
 # Packages #
 ############
@@ -36,3 +37,4 @@ Thumbs.db
 .settings
 cpjs/
 other/
+
