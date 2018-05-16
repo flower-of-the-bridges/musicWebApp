@@ -3,13 +3,8 @@
 session_start();
 require_once 'inc.php';
 require_once 'config.inc.php';
-require('/opt/lampp/php/Smarty/Smarty.class.php');
-$smarty = new Smarty();
 
-$smarty->setTemplateDir('/opt/lampp/htdocs/DeepMusic/smarty/templates');
-$smarty->setCompileDir('/opt/lampp/htdocs/DeepMusic/smarty/templates_c');
-$smarty->setCacheDir('/opt/lampp/htdocs/DeepMusic/smarty/cache');
-$smarty->setConfigDir('/opt/lampp/htdocs/DeepMusic/smarty/configs');
+$smarty = SmartyConfig::giovConf();
 
 
 $loggedUser = new EUser();

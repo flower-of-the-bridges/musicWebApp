@@ -72,17 +72,18 @@ class EMusician extends EUser
      {
      // TODO
      }
-     
-     /**
+
+    /**
      * Restituisce le canzoni dell'artista
      *
      * @return array le canzoni del musicista
      */
-     function getSongs() 
-     {
-        $songs=FPersistantManager::getInstance()->load('musicianSongs', $this->id);
-	if($songs==NULL)
-	  return null;
-        else return $songs;
-     }
+    function getSongs()
+    {
+        $songs = FPersistantManager::getInstance()->load('musicianSongs', $this->id);
+        if ($songs == NULL)
+            return null;
+        else
+            return $songs;
+    }
 }

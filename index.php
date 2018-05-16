@@ -1,9 +1,8 @@
 <?php
 
-// put full path to Smarty.class.php
-require('/opt/lampp/php/Smarty/Smarty.class.php');
+
 require_once('inc.php');
-$smarty = new Smarty();
+$smarty = SmartyConfig::giovConf();
 
 $smarty->setTemplateDir('/opt/lampp/htdocs/DeepMusic/smarty/templates');
 $smarty->setCompileDir('/opt/lampp/htdocs/DeepMusic/smarty/templates_c');

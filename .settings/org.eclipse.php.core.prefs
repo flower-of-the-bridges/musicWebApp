@@ -1,2 +1,2 @@
 eclipse.preferences.version=1
-include_path=0;/sito_web
+include_path=1;/opt/lampp/php/Smarty

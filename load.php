@@ -12,7 +12,7 @@ if($_POST['name'] && $_POST['genre'] && $_FILES['file']['type']=='audio/mpeg'){
   $song->setArtist($mus);
   $song->setName($_POST['name']);
   $song->setGenre($_POST['genre']);
-  if($_POST['view']=='forall') 
+  if($_POST['view']=='all') 
     $song->setForAll();
   if($_POST['view']=='registered')
     $song->setForRegisteredOnly();
