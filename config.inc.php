@@ -1,4 +1,5 @@
 <?php
+
 /*
 $address= 'localhost';
 $database= 'musicwebapp';
