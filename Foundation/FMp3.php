@@ -24,12 +24,17 @@ class FMp3
         $stmt->bindValue(':id',$mp3->getId(), PDO::PARAM_INT);
         $stmt->bindValue(':size',$mp3->getSize(), PDO::PARAM_INT);
         $stmt->bindValue(':type',$mp3->getType(), PDO::PARAM_STR);
-        $stmt->bindValue(':mp3',$mp3->getMp3(), PDO::PARAM_LOB);
+        $stmt->bindParam(':mp3',$mp3->getMp3(), PDO::PARAM_LOB);
     }
     
-    static function createObjectFromRow($row)
+    static function createObjectFromRow($row) : EMp3
     {
-        
+        $mp3 = new EMp3();
+        $mp3->setId($row['id_song']);
+        $mp3->setType($row['type']);
+        $mp3->setSize($row['size']);
+        $mp3->setMp3($row['mp3']);
+        return $mp3;
     }
 }
 

@@ -95,7 +95,7 @@ CREATE TABLE song (
   forall tinyint(1) DEFAULT 0,
   registered tinyint(1) DEFAULT 1,
   supporters tinyint(1) DEFAULT 1,
-  PRIMARY KEY (id_song),
+  PRIMARY KEY (id),
   UNIQUE KEY (name,id_artist) -- un artista non ha piu canzoni con nomi simili
 
 );

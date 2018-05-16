@@ -1,6 +1,6 @@
 <?php
 
-require 'inc.php';
+require '../../inc.php';
 
 $p=FPersistantManager::getInstance(); //creo istanza del manager di connessione al dbms
 

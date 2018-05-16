@@ -40,9 +40,9 @@ class FSong {
      */
     static function loadMusicianSongs() : string
     {
-        return "SELECT .*, musician.nickname 
-                FROM song 
-                where song.id_artist= :id AND song.id_artist= musician.id;"; //query sql
+        return "SELECT song.*, musician.nickname 
+                FROM song, musician 
+                where song.id_artist= :id AND song.id_artist = musician.id;"; //query sql
     }
     
     /**

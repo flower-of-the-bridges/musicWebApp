@@ -27,7 +27,7 @@ class FPersistantManager {
         try{
             global $address,$user,$pass,$database;
             $this->db = new PDO ("mysql:host=$address;dbname=$database", $user, $pass);
-            // connessione non persistente
+
         }catch (PDOException $e){
             echo "Errore : " . $e->getMessage();
             die;
@@ -84,8 +84,6 @@ class FPersistantManager {
                 break;
             case($target=='musicianSongs'): //load di ESong di un musician
                 $sql = FSong::loadMusicianSongs();
-            case($target=='Comment'): //load di un EComment
-                $sql = FComment::loadComment();
                 break;
             default:
                 $sql = NULL;
@@ -113,11 +111,11 @@ class FPersistantManager {
  
             $obj=NULL;
             
-            if($stmt->rowCount()>1) // se il numero di righe recuperate e' piu di uno, creo un array
-                $obj = array();
-            
-            while($row = $stmt->fetch()) // per ogni tupla restituita dal db...
-                $obj = FPersistantManager::createObjectFromRow($target, $row); //...istanzio l'oggetto
+            while($row = $stmt->fetch()){ // per ogni tupla restituita dal db...
+                if($stmt->rowCount()>1) // se il numero di righe recuperate e' piu di uno, creo un array
+                    $obj[] = FPersistantManager::createObjectFromRow($target, $row); //...istanzio l'oggetto
+                else $obj = FPersistantManager::createObjectFromRow($target, $row);           
+            }
             return $obj;
         }
         catch (PDOException $e) 
@@ -187,7 +185,7 @@ class FPersistantManager {
             FPersistantManager::bindValues($stmt, $obj); // si associano i valori dell'oggetto alle entry della query
             
             $stmt->execute();
-            
+
             if ($stmt->rowCount()) // si esegue la query
             {
                 if ($obj->getId() == 0) // ...se il valore e' non nullo, si assegna l'id
@@ -411,10 +409,11 @@ class FPersistantManager {
             case($target=='Listener'):
                 $obj = FListener::createOBjectFromRow($row); //creazione dell'oggetto EListener
                 break;
-            case($target=='Song'):
+            case($target=='Song' || $target=='musicianSongs'):
                 $obj = FSong::createObjectFromRow($row);
                 break;
-            case($target=='Comment'):
+            case($target=='Mp3'):
+                $obj= FMp3::createObjectFromRow($row);
                 break;
             default:
                 $obj=NULL;

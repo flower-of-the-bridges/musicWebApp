@@ -56,7 +56,7 @@ class EMusician extends EUser
      function addSong(Esong &$song) : bool
      {
          if(FPersistantManager::getInstance()->store($song)){
-             $song->setStaticMp3();
+             $song->setMp3();
              return FPersistantManager::getInstance()->store($song->getMp3());
          }
          else return false;
@@ -78,8 +78,11 @@ class EMusician extends EUser
      *
      * @return array le canzoni del musicista
      */
-     function getSongs(): array
+     function getSongs() 
      {
-     // TODO
+        $songs=FPersistantManager::getInstance()->load('musicianSongs', $this->id);
+	if($songs==NULL)
+	  return null;
+        else return $songs;
      }
 }

@@ -30,7 +30,7 @@ class EUser extends EObject
         return $this->type;
     }
     
-    protected function setType (string $type)
+    function setType (string $type)
     {
         $this->type = $type;
     }

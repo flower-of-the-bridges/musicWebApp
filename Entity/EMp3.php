@@ -78,7 +78,7 @@ class EMp3 extends EObject
      * 
      * @param mixed $mp3
      */
-    function setMp3 ($mp3)
+    function setMp3 (&$mp3)
     {
         $this->mp3 = $mp3;
     }
