@@ -83,6 +83,20 @@ class FSong {
         $db->commit();    
     }
     
+    static function searchSongByName() : string
+    {
+        return "SELECT song.*, musician.nickname
+                FROM song, musician
+                WHERE song.name = :Name AND song.id_artist = musician.id;";
+    }
+    
+    static function searchSongByGenre() : string
+    {
+        return "SELECT song.*, musician.nickname
+                FROM song, musician
+                WHERE song.genre = :Genre AND song.id_artist = musician.id;";
+    }
+    
 /***************************** METODI ASSOCIAZIONI ENTITY - TUPLE *****************************/
     
     /**

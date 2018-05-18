@@ -16,7 +16,7 @@ class FPersistantManager {
     private static $instance = null; 	// l'unica istanza della classe
     private $db; 						// oggetto PDO che effettua la connessione al dbms
   
-/**************************    METODI DI INIZIALIZZAZIONE     *********************************/
+/***********************************    METODI DI INIZIALIZZAZIONE     *********************************/
     
     /**
      * Inizializza un oggetto FPersistantManager. Metodo privato per evitare
@@ -59,7 +59,7 @@ class FPersistantManager {
         return static::$instance;
     }
     
-/********************************* METODI LOAD ****************************************/ 
+/****************************************** LOAD *****************************************************/ 
     
     /**
      * Metodo che carica dal dbms informazioni nel corrispettivo
@@ -125,6 +125,73 @@ class FPersistantManager {
         }
     }
     
+/****************************************** SEARCH **************************************************/
+    
+    /**
+     * Effettua una ricerca sul database secondo vari parametri. Tale metodo e' scaturito a seguito
+     * di una ricerca da parte dell'utente, puo' essere relativa a canzoni o musicisti secondo diversi 
+     * parametri, come nome o genere musicale.
+     * @param string $key la table da cui prelevare i dati
+     * @param string $value il valore per cui cercare i valori
+     * @param string $str il dato richiesto dall'utente
+     * @return array|NULL i risultati ottenuti dalla ricerca. Se la richiesta non ha match, ritorna NULL.
+     */
+    function search(string $key, string $value, string $str) 
+    {
+        switch($key){
+            case($key=='Musician'): // search di EMusicians
+                
+                if($value=='Name')
+                    $sql = FMusician::searchMusicianByName();
+                if($value=='Genre')
+                    $sql = FMusician::searchMusicianByGenre();
+                
+                break;
+                
+            case($key=='Song'): // search di un ESongs
+                
+                if($value=='Name')
+                    $sql = FSong::searchSongByName();
+                if($value=='Genre')
+                    $sql = FSong::searchSongByGenre();
+                
+                break;
+                
+            default:
+                
+                $sql = NULL;
+                break;
+        }
+        
+        if($sql)
+            return $this->execSearch($key, $value, $str, $sql);
+        else return NULL;
+    }
+    
+    private function execSearch(string $key, string $value, string $str, string $sql)
+    {
+        try
+        {
+            $stmt = $this->db->prepare($sql); // creo PDOStatement
+            $stmt->bindValue(":".$value, $str, PDO::PARAM_STR); //si associa l'id al campo della query
+            $stmt->execute();   //viene eseguita la query
+            $stmt->setFetchMode(PDO::FETCH_ASSOC); // i risultati del db verranno salvati in un array con indici le colonne della table
+            
+            $obj = NULL; // l'oggetto di ritorno viene definito come NULL
+            
+            while($row = $stmt->fetch())
+            { // per ogni tupla restituita dal db...
+                $obj[] = FPersistantManager::createObjectFromRow($key, $row); //...istanzio l'oggetto
+            }
+            
+            return $obj;
+        }
+        catch (PDOException $e)
+        {
+            die($e->errorInfo);
+            return null; // ritorna null se ci sono errori
+        }
+    }
 /****************************************** STORE ********************************************/    
    
     /**
@@ -422,6 +489,7 @@ class FPersistantManager {
         
         return $obj;
     }
+    
     
 }
 

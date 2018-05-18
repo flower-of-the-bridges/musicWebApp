@@ -22,24 +22,32 @@
 
 	{include file="navbar.tpl"}
 	
-	{profile->getType assign='pType'} 
-	{profile->getName assign='pName'}
 	<div class="container text-center">
 		<div class="col-sm-3">
-			{include file="userInfo.tpl"}
+		
         </div>
-			<div class="col-sm-7 well">
-				{if $content eq 'Song List'}
-					{include file="SongList.tpl"}
-				{elseif $content eq 'Song'}
-					{include file="Song.tpl"}
-				{/if}
-			</div>
-		<div class="col-sm-2">
-			{include file="followOptions.tpl"}				
+		<div class="col-sm-7 well">
+			<h4>Search Results for {$key}'s {$value} {$string}: </h4>
+			{if $objects!=NULL}
+			<table class="table table-responsive">
+				<tbody>
+				{foreach $objects as $object}
+					<tr>
+						<td><a href="song.php?id={$object->getId()}">{$object->getName()}</a></td>
+						<td>{$object->getGenre()}</td>
+					</tr>
+				{/foreach}
+				</tbody>
+			</table>
+			{else}
+			<p>No {$key} found for {$value} {$string} .</p> 
+			{/if}
+
 		</div>
+	<div class="col-sm-3">
 		
 	</div>
 	
 </body>
 </html>
+

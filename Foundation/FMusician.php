@@ -52,6 +52,20 @@ class FMusician{
                 WHERE id = :id;";
     }
     
+    static function searchMusicianByName() : string
+    {
+        return "SELECT *
+                FROM musician
+                WHERE name = :Name;";
+    }
+    
+    static function searchMusicianByGenre() : string
+    {
+        return "SELECT musician.*
+                FROM musician
+                WHERE musician.genre = :Genre;";
+    }
+    
     /**
      * 
      * @param PDOStatement $stmt
