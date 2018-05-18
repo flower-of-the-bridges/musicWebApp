@@ -1,17 +1,17 @@
 <?php
-/* Smarty version 3.1.32, created on 2018-05-17 23:01:36
-  from '/opt/lampp/htdocs/DeepMusic/smarty/templates/index.tpl' */
+/* Smarty version 3.1.32, created on 2018-05-17 17:20:22
+  from '/opt/lampp/htdocs/programmazione_web/smarty/templates/index.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.32',
-  'unifunc' => 'content_5afdedb07a14c7_18422041',
+  'unifunc' => 'content_5afd9db6731ed7_74335399',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
-    'e754dca9e678eb081aa6af2bd7cd223027f5b44d' => 
+    'ad6f3485ef4673f636f888d3c8ae4b8b2a47f9e2' => 
     array (
-      0 => '/opt/lampp/htdocs/DeepMusic/smarty/templates/index.tpl',
+      0 => '/opt/lampp/htdocs/programmazione_web/smarty/templates/index.tpl',
       1 => 1526569321,
       2 => 'file',
     ),
@@ -21,7 +21,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
     'file:navbar.tpl' => 1,
   ),
 ),false)) {
-function content_5afdedb07a14c7_18422041 (Smarty_Internal_Template $_smarty_tpl) {
+function content_5afd9db6731ed7_74335399 (Smarty_Internal_Template $_smarty_tpl) {
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
