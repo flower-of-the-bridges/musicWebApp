@@ -26,7 +26,7 @@ class FMusician{
     static function updateMusician() : string
     {
         return "UPDATE musician
-                SET nickname = :nickname
+                SET nickname = :nickname, genre = :genre
                 WHERE id = :id;";
     }
     
@@ -56,14 +56,14 @@ class FMusician{
     {
         return "SELECT *
                 FROM musician
-                WHERE name = :Name;";
+                WHERE nickname = :Name;";
     }
     
     static function searchMusicianByGenre() : string
     {
-        return "SELECT musician.*
+        return "SELECT *
                 FROM musician
-                WHERE musician.genre = :Genre;";
+                WHERE LOCATE( :Genre , genre) > 0;";
     }
     
     /**
@@ -75,6 +75,10 @@ class FMusician{
     {
         $stmt->bindValue(':id', $mus->getId(), PDO::PARAM_INT);
         $stmt->bindValue(':nickname', $mus->getName(), PDO::PARAM_STR); 
+        
+        if($mus->getGenre()!=NULL)
+            $stmt->bindValue(':genre', $mus->getGenre(), PDO::PARAM_STR);
+        
     }
     
     /**
@@ -87,6 +91,8 @@ class FMusician{
         $mus = new EMusician();
         $mus->setId($row['id']);
         $mus->setName($row['nickname']);
+        $mus->setGenre($row['genre']);
+        
         return $mus;
     }
 }

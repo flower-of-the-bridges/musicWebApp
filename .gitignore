@@ -37,4 +37,5 @@ Thumbs.db
 .settings
 cpjs/
 other/
-
+smarty/templates_c
+SmartyConfig.php

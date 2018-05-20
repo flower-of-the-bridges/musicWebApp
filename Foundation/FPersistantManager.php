@@ -111,11 +111,13 @@ class FPersistantManager {
  
             $obj=NULL;
             
-            while($row = $stmt->fetch()){ // per ogni tupla restituita dal db...
-                if($stmt->rowCount()>1) // se il numero di righe recuperate e' piu di uno, creo un array
-                    $obj[] = FPersistantManager::createObjectFromRow($target, $row); //...istanzio l'oggetto
-                else $obj = FPersistantManager::createObjectFromRow($target, $row);           
+            while($row = $stmt->fetch())
+            { // per ogni tupla restituita dal db viene istanziato un oggetto
+               if($target == 'musicianSongs') //inserire qui target che richiedono un array come ritorno
+                   $obj[] = FPersistantManager::createObjectFromRow($target, $row);
+               else $obj = FPersistantManager::createObjectFromRow($target, $row);            
             }
+            
             return $obj;
         }
         catch (PDOException $e) 
@@ -305,7 +307,7 @@ class FPersistantManager {
         }
         if($sql)
             return $this->execUpdate($obj, $sql);
-            else return false;
+        else return false;
     }
     
     /**
@@ -489,7 +491,6 @@ class FPersistantManager {
         
         return $obj;
     }
-    
-    
+        
 }
 

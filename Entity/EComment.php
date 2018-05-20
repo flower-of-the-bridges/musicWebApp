@@ -1,9 +1,8 @@
 <?php
 
-/**
- * @author gruppo 2
- */
-class EComment extends EObject{
+
+class EComment extends EObject
+{
     
     private $songId; //l'id della canzone commentata
     

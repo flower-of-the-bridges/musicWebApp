@@ -27,25 +27,33 @@
 		
         </div>
 		<div class="col-sm-7 well">
-			<h4>Search Results for {$key}'s {$value} {$string}: </h4>
-			{if $objects!=NULL}
-			<table class="table table-responsive">
-				<tbody>
-				{foreach $objects as $object}
-					<tr>
-						{if $key eq "Song"}
-						<td><a href="song.php?id={$object->getId()}">{$object->getName()}</a></td>
-						{elseif $key eq "Musician"}
-						<td><a href="profile.php?id={$object->getId()}">{$object->getName()}</a></td>
-						{/if}
-						<td>{$object->getGenre()}</td>
-					</tr>
-				{/foreach}
-				</tbody>
-			</table>
-			{else}
-			<p>No {$key} found for {$value} {$string} .</p> 
-			{/if}
+			<h2>Login</h2>
+					<form class="form-horizontal" method="post" action="auth.php">
+						<div class="form-group">
+							<label class="control-label " for="user">User Name:</label> <input
+								type="text" class="form-control" id="user"
+								placeholder="Enter UserName" name="user">
+
+						</div>
+						<div class="form-group">
+							<label class="control-label" for="pwd">Password:</label> <input
+								type="password" class="form-control" id="pwd"
+								placeholder="Enter password" name="pwd">
+
+						</div>
+						<div class="form-group">
+
+							<div class="checkbox">
+								<label><input type="checkbox" name="remember">
+									Remember me</label>
+							</div>
+
+						</div>
+						<div class="form-group">
+
+							<button type="submit" class="btn btn-default">Submit</button>
+						</div>
+					</form>
 
 		</div>
 	<div class="col-sm-3">

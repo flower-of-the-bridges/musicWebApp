@@ -25,9 +25,9 @@ class FSong {
      * @param int $id l'id della canzone
      * @return object string la query sql da eseguire
      */
-    static function loadSong( ) : string
+    static function loadSong() : string
     {
-        return "SELECT song.*, musician.nickname 
+        return "SELECT song.*, musician.nickname
                 FROM song, musician
                 where song.id= :id AND song.id_artist = musician.id;"; //query sql
     }
@@ -40,7 +40,7 @@ class FSong {
      */
     static function loadMusicianSongs() : string
     {
-        return "SELECT song.*, musician.nickname 
+        return "SELECT song.*, musician.nickname
                 FROM song, musician 
                 where song.id_artist= :id AND song.id_artist = musician.id;"; //query sql
     }

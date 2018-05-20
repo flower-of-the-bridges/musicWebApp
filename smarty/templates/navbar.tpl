@@ -23,7 +23,7 @@
 				</ul>
 				<form class="navbar-form navbar-right" role="search" action="search.php?">
 					<div class="form-group input-group">
-						<input type="text" class="form-control" name="value"  placeholder="Search..">
+						<input type="text" class="form-control" name="str"  placeholder="Search..">
 						<span class="input-group-btn">
 							<button class="btn btn-default" type="submit">
 								<span class="glyphicon glyphicon-search"></span>
@@ -33,7 +33,7 @@
 				</form>
 				{if $uType != "guest"}
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="#">Advanced Search</a></li>
+					<li><a href="AdvancedSearch.php">Advanced Search</a></li>
 				</ul>
 				{/if}
 			</div>

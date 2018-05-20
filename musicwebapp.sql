@@ -62,8 +62,8 @@ CREATE TABLE listener (
 CREATE TABLE moderator (
   id smallint(5) NOT NULL,
   nickname varchar(50) NOT NULL,
-  --solved int(11) NOT NULL DEFAULT '0', -- report risolti (Calcolabili come count da report)?
-  --active int(11) NOT NULL DEFAULT '0', -- report attivi (Calcolabili come count da report)?
+  -- solved int(11) NOT NULL DEFAULT '0', -- report risolti (Calcolabili come count da report)?
+  -- active int(11) NOT NULL DEFAULT '0', -- report attivi (Calcolabili come count da report)?
   PRIMARY KEY (id)
 );
 
@@ -76,6 +76,7 @@ CREATE TABLE moderator (
 CREATE TABLE musician (
   id smallint(5) NOT NULL,
   nickname varchar(50) NOT NULL,
+  genre varchar(250) DEFAULT 'Undefined',
   PRIMARY KEY (id)
 );
 

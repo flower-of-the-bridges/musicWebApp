@@ -42,7 +42,25 @@ class EMusician extends EUser
      */
     function setGenre(string $genre = null): void
     {
-        // TODO
+        if($genre!=NULL)
+        {
+            $this->genre = $genre;
+        }
+        else 
+        {
+            $this->genre = ''; //inizializza il genere
+            $songs = FPersistantManager::getInstance()->load('musicianSongs', $this->id);
+            if($songs)
+            {
+                foreach ($songs as $song)
+                {
+                    $songGenre = $song->getGenre();
+                    if(!preg_match('/\b'.$songGenre.'\b/',$this->genre)) //verifica che il genere non sia gia stato inserito
+                      $this->genre.=$songGenre." "; // aggiunge il valore al genere
+                }
+            }
+            FPersistantManager::getInstance()->update($this);
+        }
     }
 
   

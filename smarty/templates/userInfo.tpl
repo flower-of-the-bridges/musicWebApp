@@ -6,7 +6,7 @@
 {if $pType=='musician'}
 <div class="well">
 	<p id="important">Genre</p>
-	<p>	<span class="label label-primary">Rock n Roll</span> </p>
+	<p>	<span class="label label-primary">{profile->getGenre}</span> </p>
 </div>
 {/if}
 <div class="well">

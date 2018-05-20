@@ -27,14 +27,14 @@
 	<div class="container text-center">
 		<div class="col-sm-3">
 			{include file="userInfo.tpl"}
-        	</div>
-		<div class="col-sm-7 well">
-			{if $content eq 'Song List'}
-				{include file="SongList.tpl"}
-			{elseif $content eq 'Song'}
-				{include file="Song.tpl"}
-			{/if}
-		</div>
+        </div>
+			<div class="col-sm-7 well">
+				{if $content eq 'Song List'}
+					{include file="SongList.tpl"}
+				{elseif $content eq 'Song'}
+					{include file="Song.tpl"}
+				{/if}
+			</div>
 		<div class="col-sm-2">
 			{include file="followOptions.tpl"}				
 		</div>

@@ -13,8 +13,9 @@ $loggedUser->setId(22);
 $loggedUser->setType('musician');
 
 $profile = new EMusician();
-$profile->setName('Giov');
+$profile->setName('Rush');
 $profile->setId(22);
+$profile->setGenre();
 
 $smarty->assign('content', $content);
 $smarty->registerObject('user', $loggedUser);

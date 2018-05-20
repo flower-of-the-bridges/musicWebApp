@@ -27,31 +27,31 @@
 		
         </div>
 		<div class="col-sm-7 well">
-			<h4>Search Results for {$key}'s {$value} {$string}: </h4>
-			{if $objects!=NULL}
-			<table class="table table-responsive">
-				<tbody>
-				{foreach $objects as $object}
-					<tr>
-						{if $key eq "Song"}
-						<td><a href="song.php?id={$object->getId()}">{$object->getName()}</a></td>
-						{elseif $key eq "Musician"}
-						<td><a href="profile.php?id={$object->getId()}">{$object->getName()}</a></td>
-						{/if}
-						<td>{$object->getGenre()}</td>
-					</tr>
-				{/foreach}
-				</tbody>
-			</table>
-			{else}
-			<p>No {$key} found for {$value} {$string} .</p> 
-			{/if}
+			<form action="search.php">
+				<div class="form-row">
+					<div class="form-group col-md-6">
+						<input type="text" class="form-control" id="search" name="str" placeholder="Search...">
+					</div>
+					<div class="form-group col-md-3">
+						<select id="inputKey" class="form-control" name="key">
+							<option value="song" selected>Song</option>
+							<option value="musician">Musician</option>
+						</select>
+					</div>
+					<div class="form-group col-md-3">
+						<select id="inputKey" class="form-control" name="value">
+							<option value="genre" selected>Genre</option>
+							<option value="name">Name</option>
+						</select>
+					</div>
+					<button class="btn btn-primary" type="submit">Search</button>
 
+				</div>
+			</form>
 		</div>
-	<div class="col-sm-3">
+		<div class="col-sm-3">
 		
+		</div>
 	</div>
-	
 </body>
 </html>
-

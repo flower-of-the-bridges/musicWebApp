@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.32, created on 2018-05-17 23:01:36
+/* Smarty version 3.1.32, created on 2018-05-20 19:16:11
   from '/opt/lampp/htdocs/DeepMusic/smarty/templates/navbar.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.32',
-  'unifunc' => 'content_5afdedb0813c49_52114398',
+  'unifunc' => 'content_5b01ad5bd31a33_03372245',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'c235dbee611e2f57a4a4c8fcdd64c08306fc4e7e' => 
     array (
       0 => '/opt/lampp/htdocs/DeepMusic/smarty/templates/navbar.tpl',
-      1 => 1526572597,
+      1 => 1526836479,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_5afdedb0813c49_52114398 (Smarty_Internal_Template $_smarty_tpl) {
+function content_5b01ad5bd31a33_03372245 (Smarty_Internal_Template $_smarty_tpl) {
 ?><nav class="navbar navbar-inverse-dark">
 		<div class="container-fluid">
 			<div class="navbar-header">
@@ -47,7 +47,7 @@ function content_5afdedb0813c49_52114398 (Smarty_Internal_Template $_smarty_tpl)
 				</ul>
 				<form class="navbar-form navbar-right" role="search" action="search.php?">
 					<div class="form-group input-group">
-						<input type="text" class="form-control" name="value"  placeholder="Search..">
+						<input type="text" class="form-control" name="str"  placeholder="Search..">
 						<span class="input-group-btn">
 							<button class="btn btn-default" type="submit">
 								<span class="glyphicon glyphicon-search"></span>
@@ -57,7 +57,7 @@ function content_5afdedb0813c49_52114398 (Smarty_Internal_Template $_smarty_tpl)
 				</form>
 				<?php if ($_smarty_tpl->tpl_vars['uType']->value != "guest") {?>
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="#">Advanced Search</a></li>
+					<li><a href="AdvancedSearch.php">Advanced Search</a></li>
 				</ul>
 				<?php }?>
 			</div>
