@@ -85,6 +85,9 @@ class FPersistantManager {
             case($target=='musicianSongs'): //load di ESong di un musician
                 $sql = FSong::loadMusicianSongs();
                 break;
+            case($target=='SupInfo'): //load di ESong di un musician
+                $sql = FSupInfo::loadSupportInfo();
+                break;
             default:
                 $sql = NULL;
                 break;
@@ -226,6 +229,10 @@ class FPersistantManager {
                 $sql = FComment::storeComment();
                 $result = $this->execStore($obj, $sql);
                 break;
+            case(is_a($obj, ESupInfo::class)):
+                $sql = FSupInfo::storeSupportInfo();
+                $result = $this->execStore($obj, $sql);
+                break;
             default:
                 $sql = null;
                 break;
@@ -301,6 +308,9 @@ class FPersistantManager {
             case(is_a($obj, EComment::class)):
                 $sql = FComment::updateComment();
                 break;
+            case(is_a($obj, ESupInfo::class)):
+                $sql = FSupInfo::updateSupInfo();
+                break;
             default:
                 $sql = null;
                 break;
@@ -321,13 +331,12 @@ class FPersistantManager {
         $this->db->beginTransaction(); //inizio della transazione
         
         $stmt = $this->db->prepare($sql);
-        
+   
         //si prepara la query facendo un bind tra parametri e variabili dell'oggetto
         try 
         {       
             FPersistantManager::bindValues($stmt, $obj); //si associano i valori dell'oggetto alle entry della query
-            $stmt->bindValue(":id", $obj->getId(), PDO::PARAM_INT); //si associa l'id al campo della query
-            
+
             if($stmt->execute()) //se la tupla e' alterata...
             {
                 return $this->db->commit(); //...ritorna il risultato del commit
@@ -453,6 +462,10 @@ class FPersistantManager {
                 break;
             case(is_a($obj, EMp3::class)): 
                 FMp3::bindValues($stmt, $obj);
+                break;
+            case(is_a($obj, ESupInfo::class)):
+                FSupInfo::bindValues($stmt, $obj);
+                break;
             case(is_a($obj, EComment::class)):
                 break;
             default:
@@ -483,6 +496,9 @@ class FPersistantManager {
                 break;
             case($target=='Mp3'):
                 $obj= FMp3::createObjectFromRow($row);
+                break;
+            case($target=='SupInfo'):
+                $obj= FSupInfo::createObjectFromRow($row);
                 break;
             default:
                 $obj=NULL;
