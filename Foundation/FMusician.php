@@ -74,11 +74,11 @@ class FMusician{
     static function bindValues(PDOStatement &$stmt, EMusician &$mus)
     {
         $stmt->bindValue(':id', $mus->getId(), PDO::PARAM_INT);
-        $stmt->bindValue(':nickname', $mus->getName(), PDO::PARAM_STR); 
+        $stmt->bindValue(':nickname', $mus->getName(), PDO::PARAM_STR);
         
         if($mus->getGenre()!=NULL)
             $stmt->bindValue(':genre', $mus->getGenre(), PDO::PARAM_STR);
-        
+            
     }
     
     /**

@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_5b01ad61031ac1_49611635 (Smarty_Internal_Template $_smarty_tpl) {
+    function content_5b01ad61031ac1_49611635 (Smarty_Internal_Template $_smarty_tpl) {
 ?><div class="well">				
 	<p id="important"><?php echo $_smarty_tpl->smarty->registered_objects['profile'][0]->getName(array(),$_smarty_tpl);?>
 </p>
