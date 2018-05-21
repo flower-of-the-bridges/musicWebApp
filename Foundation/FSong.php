@@ -27,9 +27,9 @@ class FSong {
      */
     static function loadSong() : string
     {
-        return "SELECT song.*, musician.nickname
-                FROM song, musician
-                where song.id= :id AND song.id_artist = musician.id;"; //query sql
+        return "SELECT song.*, users.nickname
+                FROM song, users
+                where song.id= :id AND song.id_artist = users.id;"; //query sql
     }
     
     /**
@@ -40,9 +40,9 @@ class FSong {
      */
     static function loadMusicianSongs() : string
     {
-        return "SELECT song.*, musician.nickname
-                FROM song, musician 
-                where song.id_artist= :id AND song.id_artist = musician.id;"; //query sql
+        return "SELECT song.*, users.nickname
+                FROM song, users
+                where song.id_artist= :id AND song.id_artist = users.id;"; //query sql
     }
     
     /**
@@ -85,16 +85,16 @@ class FSong {
     
     static function searchSongByName() : string
     {
-        return "SELECT song.*, musician.nickname
-                FROM song, musician
-                WHERE song.name = :Name AND song.id_artist = musician.id;";
+        return "SELECT song.*, users.nickname
+                FROM song, users
+                WHERE song.name = :Name AND song.id_artist = users.id;";
     }
     
     static function searchSongByGenre() : string
     {
-        return "SELECT song.*, musician.nickname
-                FROM song, musician
-                WHERE song.genre = :Genre AND song.id_artist = musician.id;";
+        return "SELECT song.*, users.nickname
+                FROM song, users
+                WHERE song.genre = :Genre AND song.id_artist = users.id;";
     }
     
 /***************************** METODI ASSOCIAZIONI ENTITY - TUPLE *****************************/
