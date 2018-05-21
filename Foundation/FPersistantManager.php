@@ -70,11 +70,8 @@ class FPersistantManager {
     function load(string $target, int $id)
     {
         switch($target){
-            case($target=='Musician'): // load di un EMusician
-                $sql = FMusician::loadMusician();
-                break;
-            case($target=='Listener'): // load di un EListener
-                $sql = FListener::loadListener();
+            case($target=='User'): // load di un EUser
+                $sql = FUser::loadUser();
                 break;
             case($target=='Song'): // load di un ESong
                 $sql = FSong::loadSong();
@@ -144,10 +141,9 @@ class FPersistantManager {
             case($key=='Musician'): // search di EMusicians
                 
                 if($value=='Name')
-                    $sql = FMusician::searchMusicianByName();
+                    $sql = FUser::searchMusicianByName();
                 if($value=='Genre')
-                    $sql = FMusician::searchMusicianByGenre();
-                
+                    $sql = FUserInfo::searchMusicianByGenre();
                 break;
                 
             case($key=='Song'): // search di un ESongs
@@ -362,16 +358,13 @@ class FPersistantManager {
     {
         switch($target)
         {
-            case($target=='Musician'):
-                $sql = FMusician::removeMusician();
+            case($target=='User'): // rimozione di un users dal db
+                $sql = FUser::removeUser();
                 break;
-            case($target=='Listener'):
-                $sql = FListener::removeListener();
-                break;
-            case($target=='Song'):
+            case($target=='Song'): // rimozione di una song dal db
                 $sql = FSong::removeSong();
                 break;
-            case($target=='Comment'):
+            case($target=='Comment'): // rimozione di un comment dal db
                 $sql = FComment::removeComment();
                 break;
             default:
@@ -406,8 +399,62 @@ class FPersistantManager {
         }
     }
     
-
-/*************************************** TRUNCATE *********************************************/    
+    
+/***************************************  EXISTS  ****************************************************/
+    
+    /**
+     * Metodo che verifica l'esistenza di un valore in una entry di una table 
+     * @param string $target il tipo di dato di cui si vuole controllare l'esistenza
+     * @param string | int $value il valore di cui controllare l'unicita'
+     * @return bool true se il dato esiste, false altrimenti
+     */
+    function exists(string $target, $value) : bool
+    {
+        switch($target)
+        {
+            case($target=='Mail'):
+                $sql = FUser::existUserMail();
+                break;
+            case($target=='NickName'):
+                $sql = FUser::existUserName();
+                break;
+            case($target=='Song'):
+                break;
+            default:
+                $sql = NULL;
+                break;
+        }
+        if($sql)
+            return FPersistantManager::execExists($sql, $value);
+    }
+    
+    /**
+     * Esegue l'operazione di controllo di esistenza
+     * @param string $sql
+     * @param int | string $value
+     * @return bool
+     */
+    private function execExists(string $sql, $value) : bool {
+        
+        try
+        {
+            $stmt = $this->db->prepare($sql); //a partire dalla stringa sql viene creato uno statement
+            
+            if(is_int($value))
+                $stmt->bindValue(":value", $id, PDO::PARAM_INT); //si associa l'intero al campo della query
+            if(is_string($value))
+                $stmt->bindValue(":value", $id, PDO::PARAM_STR); //si associa la stringa al campo della query
+            return $stmt->execute(); //esegue lo statement e ritorna il risultato
+            
+        }
+        catch (PDOException $e)
+        {
+            die($e->errorInfo);
+            return FALSE; //ritorna false se ci sono errori
+        }
+    }
+    
+/*************************************** TRUNCATE ***************************************************/    
 
     
     /**
@@ -442,18 +489,16 @@ class FPersistantManager {
     {
         switch($obj)
         {
-            case(is_a($obj, EMusician::class)):
-                FMusician::bindValues($stmt, $obj);
+            case(is_a($obj, EUser::class)): // associazione statement - EUser
+                FUser::bindValues($stmt, $obj);
                 break;
-            case(is_a($obj, EListener::class)):
-                FListener::storeListener($stmt, $obj);
-                break;
-            case(is_a($obj, ESong::class)):
+            case(is_a($obj, ESong::class)): // associazione statement - ESong
                 FSong::bindValues($stmt, $obj);
                 break;
-            case(is_a($obj, EMp3::class)): 
+            case(is_a($obj, EMp3::class)): // associazione statement - EMp3
                 FMp3::bindValues($stmt, $obj);
-            case(is_a($obj, EComment::class)):
+                break;
+            case(is_a($obj, EComment::class)): // associazione statement - EComment
                 break;
             default:
                 break;
@@ -472,16 +517,12 @@ class FPersistantManager {
         
         switch($target)
         {
-            case($target=='Musician'):
-                $obj = FMusician::createObjectFromRow($row);
-                break;
-            case($target=='Listener'):
-                $obj = FListener::createOBjectFromRow($row); //creazione dell'oggetto EListener
-                break;
-            case($target=='Song' || $target=='musicianSongs'):
+            case($target=='User'): // creazione di un oggetto EUser
+                $obj = FUser::createObjectFromRow($row);
+            case($target=='Song' || $target=='musicianSongs'): // creazione di un oggetto ESong
                 $obj = FSong::createObjectFromRow($row);
                 break;
-            case($target=='Mp3'):
+            case($target=='Mp3'): // creazione di un oggetto EMp3
                 $obj= FMp3::createObjectFromRow($row);
                 break;
             default:

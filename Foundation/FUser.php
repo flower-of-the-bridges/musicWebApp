@@ -6,14 +6,14 @@ class FUser
     
     static function existUserName() : string
     {
-        return "EXIST(SELECT *
+        return "EXISTS(SELECT *
                       FROM users
                       WHERE nickname = :value;)";
     }
     
     static function existUserMail() : string
     {
-        return "EXIST(SELECT *
+        return "EXISTS(SELECT *
                       FROM users
                       WHERE mail = :value;)";
     }
