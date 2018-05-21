@@ -4,6 +4,20 @@
 class FUser
 {
     
+    static function existUserName() : string
+    {
+        return "EXIST(SELECT *
+                      FROM users
+                      WHERE nickname = :value;)";
+    }
+    
+    static function existUserMail() : string
+    {
+        return "EXIST(SELECT *
+                      FROM users
+                      WHERE mail = :value;)";
+    }
+    
     static function storeUser() : string
     {
         return "INSERT INTO users(nickname, password, type, mail)
