@@ -17,7 +17,6 @@ class EUserInfo extends EObject
         parent::__construct();
     }
     
-    ///////PLS GIO FIX THIS
     function generateGenre(string $genre = null)
     {
         if($genre!=NULL)
@@ -25,7 +24,7 @@ class EUserInfo extends EObject
             $this->genre = $genre;
         }
         else
-        {//////////what to do here???????
+        {
             $this->genre = ''; //inizializza il genere
             $songs = FPersistantManager::getInstance()->load('musicianSongs', $this->id);
             if($songs)

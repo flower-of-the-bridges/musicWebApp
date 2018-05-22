@@ -79,6 +79,9 @@ class FPersistantManager {
             case($target=='Mp3'): // load di un EMp3
                 $sql = FMp3::loadMp3();
                 break;
+            case($target=='Img'): // load di un immagine
+                $sql = FImg::loadImg();
+                break;
             case($target=='musicianSongs'): //load di ESong di un musician
                 $sql = FSong::loadMusicianSongs();
                 break;
@@ -221,6 +224,10 @@ class FPersistantManager {
                 $sql = FMp3::storeMp3(); //salva l'mp3
                 $result = $this->execStore($obj, $sql);
                 break;
+            case(is_a($obj, EImg::class)):
+                $sql = FImg::storeImg(); //salva l'mp3
+                $result = $this->execStore($obj, $sql);
+                break;
             case(is_a($obj, EComment::class)):
                 $sql = FComment::storeComment();
                 $result = $this->execStore($obj, $sql);
@@ -301,6 +308,9 @@ class FPersistantManager {
             case(is_a($obj, ESong::class)):
                 $sql = FSong::updateSong();
                 break;
+            case(is_a($obj, EImg::class)):
+                $sql = FImg::updateImg();
+                break;
             case(is_a($obj, EComment::class)):
                 $sql = FComment::updateComment();
                 break;
@@ -372,6 +382,9 @@ class FPersistantManager {
                 break;
             case($target=='Song'): // rimozione di una song dal db
                 $sql = FSong::removeSong();
+                break;
+            case($target=='Img'): // rimozione di una song dal db
+                $sql = FImg::removeImg();
                 break;
             case($target=='Comment'): // rimozione di un comment dal db
                 $sql = FComment::removeComment();
@@ -507,6 +520,9 @@ class FPersistantManager {
             case(is_a($obj, EMp3::class)): // associazione statement - EMp3
                 FMp3::bindValues($stmt, $obj);
                 break;
+            case(is_a($obj, EImg::class)): // associazione statement - Img
+                FImg::bindValues($stmt, $obj);
+                break;
             case(is_a($obj, ESupInfo::class)):
                 FSupInfo::bindValues($stmt, $obj);
                 break;
@@ -536,6 +552,9 @@ class FPersistantManager {
                 break;
             case($target=='Mp3'): // creazione di un oggetto EMp3
                 $obj= FMp3::createObjectFromRow($row);
+                break;
+            case($target=='Img'): // creazione di un oggetto EImg
+                $obj= FImg::createObjectFromRow($row);
                 break;
             case($target=='SupInfo'):
                 $obj= FSupInfo::createObjectFromRow($row);
