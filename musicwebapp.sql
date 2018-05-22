@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Mag 07, 2018 alle 12:21
+-- Creato il: Mag 22, 2018 alle 18:53
 -- Versione del server: 10.1.30-MariaDB
 -- Versione PHP: 7.2.2
 
@@ -21,37 +21,17 @@ SET time_zone = "+00:00";
 --
 -- Database: `musicwebapp`
 --
-DROP DATABASE IF EXISTS musicwebapp;
-CREATE DATABASE IF NOT EXISTS musicwebapp;
-USE musicwebapp;
+
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `user`
+-- Struttura della tabella `listener`
 --
 
-CREATE TABLE users (
-  id smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT,
-  nickname varchar(50),
--- tipologia dell'utente. puo' essere:
--- 0 - guest
--- 1 - listener
--- 2 - musician
--- 3 - moderator
-  type SET ('0','1','2','3') NOT NULL DEFAULT 0,
-  PRIMARY KEY (id),
-  UNIQUE KEY (nickname)
-);
-
---
--- Struttura della tabella `ascoltatore`
---
-
-CREATE TABLE listener (
-  id smallint(5) NOT NULL,
-  nickname varchar(50) NOT NULL,
-  PRIMARY KEY (id)
-);
+CREATE TABLE `listener` (
+  `id` smallint(5) NOT NULL,
+  `nickname` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -59,13 +39,24 @@ CREATE TABLE listener (
 -- Struttura della tabella `moderator`
 --
 
-CREATE TABLE moderator (
-  id smallint(5) NOT NULL,
-  nickname varchar(50) NOT NULL,
-  -- solved int(11) NOT NULL DEFAULT '0', -- report risolti (Calcolabili come count da report)?
-  -- active int(11) NOT NULL DEFAULT '0', -- report attivi (Calcolabili come count da report)?
-  PRIMARY KEY (id)
-);
+CREATE TABLE `moderator` (
+  `id` smallint(5) NOT NULL,
+  `nickname` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `mp3`
+--
+
+CREATE TABLE `mp3` (
+  `id_song` smallint(5) UNSIGNED NOT NULL,
+  `nome` varchar(50) NOT NULL DEFAULT '',
+  `size` varchar(25) NOT NULL DEFAULT '',
+  `type` varchar(25) NOT NULL DEFAULT '',
+  `mp3` blob NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -73,58 +64,147 @@ CREATE TABLE moderator (
 -- Struttura della tabella `musician`
 --
 
-CREATE TABLE musician (
-  id smallint(5) NOT NULL,
-  nickname varchar(50) NOT NULL,
-  genre varchar(250) DEFAULT 'Undefined',
-  PRIMARY KEY (id)
-);
+CREATE TABLE `musician` (
+  `id` smallint(5) NOT NULL,
+  `nickname` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dump dei dati per la tabella `musician`
+--
+
+INSERT INTO `musician` (`id`, `nickname`) VALUES
+(22, 'Rush');
 
 -- --------------------------------------------------------
 
 --
--- Struttura per la tabella `song`
+-- Struttura della tabella `song`
 --
 
-CREATE TABLE song (
-  id smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT,
-  id_artist varchar(30) NOT NULL,
-  name varchar(30) NOT NULL,
-  genre varchar(40) NOT NULL,
--- listens smallint(5) UNSIGNED DEFAULT 0, -- numero di ascolti
--- campi booleani che denotano la visibilita' del brano
-  forall tinyint(1) DEFAULT 0,
-  registered tinyint(1) DEFAULT 1,
-  supporters tinyint(1) DEFAULT 1,
-  PRIMARY KEY (id),
-  UNIQUE KEY (name,id_artist) -- un artista non ha piu canzoni con nomi simili
+CREATE TABLE `song` (
+  `id` smallint(5) UNSIGNED NOT NULL,
+  `id_artist` varchar(30) NOT NULL,
+  `name` varchar(30) NOT NULL,
+  `genre` varchar(40) NOT NULL,
+  `forall` tinyint(1) DEFAULT '0',
+  `registered` tinyint(1) DEFAULT '1',
+  `supporters` tinyint(1) DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-);
+-- --------------------------------------------------------
 
-CREATE TABLE mp3 (
-    id_song smallint(5) UNSIGNED NOT NULL,
-    nome varchar(50) NOT NULL default "", -- nome del file
-    size varchar(25) NOT NULL default "", -- dimensione
-    type varchar(25) NOT NULL default "", -- file mp3 salvato come byte
-    mp3 blob NOT NULL,
-    PRIMARY KEY (id_song)
-);
 --
--- Struttura della tabella `report`
+-- Struttura della tabella `supporter`
 --
 
-/*
-CREATE TABLE report (
-  id_report smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT,
-  id_moderator smallint(5) , -- id moderatore che ha in carico il report
-  title varchar(30) NOT NULL, -- titolo del report
-  description varchar(65000) NOT NULL DEFAULT '""', -- descrizione del report
-  id_user int(11) NOT NULL, -- id dell'utente che ha segnalato il contenuto  
-  state set(0,1,2) NOT NULL DEFAULT 0, -- stati della segnalazione
-  PRIMARY KEY (id_report)
-);
-*/
+CREATE TABLE `supporter` (
+  `id_artist` smallint(5) NOT NULL,
+  `id_supporter` smallint(5) NOT NULL,
+  `expiration_date` date NOT NULL,
+  `renewal` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `support_info`
+--
+
+CREATE TABLE `support_info` (
+  `id_artist` smallint(5) NOT NULL,
+  `contribute` varchar(10) NOT NULL,
+  `period` smallint(5) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dump dei dati per la tabella `support_info`
+--
+
+INSERT INTO `support_info` (`id_artist`, `contribute`, `period`) VALUES
+(22, '1 $', 365);
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `users`
+--
+
+CREATE TABLE `users` (
+  `id` smallint(5) UNSIGNED NOT NULL,
+  `nickname` varchar(50) DEFAULT NULL,
+  `type` set('0','1','2','3') NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Indici per le tabelle scaricate
+--
+
+--
+-- Indici per le tabelle `listener`
+--
+ALTER TABLE `listener`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indici per le tabelle `moderator`
+--
+ALTER TABLE `moderator`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indici per le tabelle `mp3`
+--
+ALTER TABLE `mp3`
+  ADD PRIMARY KEY (`id_song`);
+
+--
+-- Indici per le tabelle `musician`
+--
+ALTER TABLE `musician`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indici per le tabelle `song`
+--
+ALTER TABLE `song`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`,`id_artist`);
+
+--
+-- Indici per le tabelle `supporter`
+--
+ALTER TABLE `supporter`
+  ADD PRIMARY KEY (`id_artist`,`id_supporter`);
+
+--
+-- Indici per le tabelle `support_info`
+--
+ALTER TABLE `support_info`
+  ADD PRIMARY KEY (`id_artist`);
+
+--
+-- Indici per le tabelle `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `nickname` (`nickname`);
+
+--
+-- AUTO_INCREMENT per le tabelle scaricate
+--
+
+--
+-- AUTO_INCREMENT per la tabella `song`
+--
+ALTER TABLE `song`
+  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT per la tabella `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
