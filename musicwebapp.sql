@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Mag 22, 2018 alle 19:26
+-- Creato il: Mag 22, 2018 alle 22:41
 -- Versione del server: 10.1.30-MariaDB
 -- Versione PHP: 7.2.2
 
@@ -25,14 +25,17 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `image`
+-- Struttura della tabella `report`
 --
 
-CREATE TABLE `image` (
-  `id` int(10) NOT NULL,
-  `size` varchar(25) NOT NULL,
-  `type` varchar(25) NOT NULL,
-  `img` blob NOT NULL
+CREATE TABLE `report` (
+  `id` smallint(5) NOT NULL,
+  `id_moderatore` smallint(5) DEFAULT NULL,
+  `title` varchar(30) NOT NULL,
+  `description` varchar(63000) NOT NULL DEFAULT '"no decription needed"',
+  `id_segnalatore` smallint(5) NOT NULL,
+  `id_object` smallint(5) NOT NULL,
+  `object_type` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -40,10 +43,20 @@ CREATE TABLE `image` (
 --
 
 --
--- Indici per le tabelle `image`
+-- Indici per le tabelle `report`
 --
-ALTER TABLE `image`
+ALTER TABLE `report`
   ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT per le tabelle scaricate
+--
+
+--
+-- AUTO_INCREMENT per la tabella `report`
+--
+ALTER TABLE `report`
+  MODIFY `id` smallint(5) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

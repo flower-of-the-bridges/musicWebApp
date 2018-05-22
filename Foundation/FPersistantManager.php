@@ -85,8 +85,14 @@ class FPersistantManager {
             case($target=='musicianSongs'): //load di ESong di un musician
                 $sql = FSong::loadMusicianSongs();
                 break;
-            case($target=='SupInfo'): //load di ESong di un musician
+            case($target=='SupInfo'): //load delle info del supporto
                 $sql = FSupInfo::loadSupportInfo();
+                break;
+            case($target=='Report'): //load delle info del supporto
+                $sql = FReport::loadReport();
+                break;
+            case($target=='modReports'): //load delle info del supporto
+                $sql = FReport::loadReportByIdMod();
                 break;
             default:
                 $sql = NULL;
@@ -116,7 +122,7 @@ class FPersistantManager {
             
             while($row = $stmt->fetch())
             { // per ogni tupla restituita dal db viene istanziato un oggetto
-               if($target == 'musicianSongs') //inserire qui target che richiedono un array come ritorno
+                if($target == 'musicianSongs' || $target == 'modReports') //inserire qui target che richiedono un array come ritorno
                    $obj[] = FPersistantManager::createObjectFromRow($target, $row);
                else $obj = FPersistantManager::createObjectFromRow($target, $row);            
             }
@@ -236,6 +242,10 @@ class FPersistantManager {
                 $sql = FSupInfo::storeSupportInfo();
                 $result = $this->execStore($obj, $sql);
                 break;
+            case(is_a($obj, EReport::class)):
+                $sql = FReport::storeReport();
+                $result = $this->execStore($obj, $sql);
+                break;
             default:
                 $sql = null;
                 break;
@@ -317,6 +327,9 @@ class FPersistantManager {
             case(is_a($obj, ESupInfo::class)):
                 $sql = FSupInfo::updateSupInfo();
                 break;
+            case(is_a($obj, EReport::class)):
+                $sql = FReport::updateReport();
+                break;
             default:
                 $sql = null;
                 break;
@@ -388,6 +401,9 @@ class FPersistantManager {
                 break;
             case($target=='Comment'): // rimozione di un comment dal db
                 $sql = FComment::removeComment();
+                break;
+            case($target=='Report'): // rimozione di un comment dal db
+                $sql = FReport::removeReport();
                 break;
             default:
                 $sql = NULL;
@@ -526,6 +542,9 @@ class FPersistantManager {
             case(is_a($obj, ESupInfo::class)):
                 FSupInfo::bindValues($stmt, $obj);
                 break;
+            case(is_a($obj, EReport::class)):
+                FReport::bindValues($stmt, $obj);
+                break;
             case(is_a($obj, EComment::class)):
                 break;
             default:
@@ -558,6 +577,9 @@ class FPersistantManager {
                 break;
             case($target=='SupInfo'):
                 $obj= FSupInfo::createObjectFromRow($row);
+                break;
+            case($target=='Report'):
+                $obj= FReport::createObjectFromRow($row);
                 break;
             default:
                 $obj=NULL;
