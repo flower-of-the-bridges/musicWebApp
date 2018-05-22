@@ -15,27 +15,10 @@ class EUser extends EObject
         parent::__construct();
     }
     
-    function isPwdOk() : bool
+    function isStringOk(string $toCheck) : bool
     {          
-        $len = strlen($this->password);
-        if (len<8 || len>32) {return false;}
-        if(    strstr($this->password, '.')== true 
-            || strstr($this->password, ',')== true 
-            || strstr($this->password, '/')== true 
-            || strstr($this->password, '(')== true 
-            || strstr($this->password, '[')== true
-            || strstr($this->password, '{')== true 
-            || strstr($this->password, '}')== true 
-            || strstr($this->password, ']')== true 
-            || strstr($this->password, ')')== true 
-            || strstr($this->password, "'")== true 
-            || strstr($this->password, '&')== true 
-            || strstr($this->password, ';')== true 
-            || strstr($this->password, '?')== true 
-            || strstr($this->password, trim(' \ ' , null)) == true 
-            || strstr($this->password, ':')== true 
-            || strstr($this->password, '"')== true ) 
-        {return false;}
+        if( preg_match('/[.,/({][})"'."'".'&|!$;?\:]{8,32}/', $toCheck) )
+            {return false;}
         return true;
     }
     
