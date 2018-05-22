@@ -3,8 +3,9 @@
 require_once 'inc.php';
 ini_set( "upload_max_filesize","120M");
 // utente statico
-$mus = new EMusician();
+$mus = new EUser();
 $mus->setName('Rush');
+$mus->setType('musician');
 $mus->setId(22);
 
 $song = new ESong();

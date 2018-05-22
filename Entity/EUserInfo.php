@@ -13,12 +13,10 @@ class EUserInfo extends EObject
     private $imgID;
     private $genre;
     
-    
-    
-    
-    
-    
-    
+    function __construct()
+    {
+        parent::__construct();
+    }
     
     function setFirstName (string $firstName)
     {

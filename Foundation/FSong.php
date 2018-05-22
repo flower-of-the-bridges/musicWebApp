@@ -122,8 +122,9 @@ class FSong {
     static function createObjectFromRow($row)
     {
         // istanzia il musicista autore dell'artista
-        $musician = new EMusician();
-        $musician->setId($row['id_artist']);
+        $musician = new EUser();
+        $musician->setType('Musician');
+        $musician->setId($row['id_artist']); 
         $musician->setName($row['nickname']); 
         // creazione dell'oggetto Esong
         $song = new ESong(); 

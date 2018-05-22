@@ -18,7 +18,7 @@ $loggedUser->setType('listener');
 $song = FPersistantManager::getInstance()->load('Song', $_GET['id']);
 $mp3 = FPersistantManager::getInstance()->load('Mp3', $_GET['id']);
 $profile = $song->getArtist();
-$profile->setGenre();
+//$profile->setGenre();
 $smarty->assign('song', $song);
 $smarty->assign('mp3',$mp3);
 

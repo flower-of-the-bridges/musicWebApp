@@ -10,6 +10,11 @@ class EUser extends EObject
     protected $password;
     protected $type;
         
+    function __construct()
+    {
+        parent::__construct();
+    }
+    
     function isPwdOk() : bool
     {          
         $len = strlen($this->password);

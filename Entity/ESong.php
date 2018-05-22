@@ -29,7 +29,7 @@ class ESong extends EObject
     function __construct ()
     {
         $this->mp3 = new EMp3();
-        $this->artist = new EMusician();
+        $this->artist = new EUser();
         $guest = false;
         $supporter = false;
         $registered = false;
@@ -42,7 +42,7 @@ class ESong extends EObject
      * prodotto la canzone
      * @return EMusician il musicista autore della canzone
      */
-    function getArtist() : EMusician
+    function getArtist() : EUser
     {
         return $this->artist;
     }
@@ -83,7 +83,7 @@ class ESong extends EObject
      * Metodo che imposta l'artista che ha prodotto la canzone.
      * @param EMusician $artist il musicista che ha realizzato la canzone.
      */
-    function setArtist(EMusician &$artist)
+    function setArtist(EUser &$artist)
     {
         $this->artist = $artist;
     }
