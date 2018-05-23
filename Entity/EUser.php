@@ -2,6 +2,9 @@
 require_once 'inc.php';
 include_once 'Entity/EObject.php';
 
+//This is the EUser Class, a class made to handle all 
+//kind of users of the application,
+//this is going to be the main class for every action performed
 
 class EUser extends EObject
 {

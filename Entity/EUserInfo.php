@@ -2,21 +2,25 @@
 require_once 'inc.php';
 include_once 'Entity/EObject.php';
 
+//this class is made to be a container for all the
+//informations about the users that are not crucial or necessary
 
 class EUserInfo extends EObject
 {
-    private $firstName;
-    private $lastName;
-    private $birthPlace;
-    private $birthDate;
-    private $bio;
-    private $genre;
+    private $firstName;         //the first name of the user
+    private $lastName;          //the last name of the user
+    private $birthPlace;        //the birth place of the user    
+    private $birthDate;         //the birth date of the user    
+    private $bio;               //a self made introduction of the user himself
+    private $genre;             //the generated genre of this user
     
     function __construct()
     {
         parent::__construct();
     }
     
+    
+    //this method make a new genre based on user preferences
     function generateGenre(string $genre = null)
     {
         if($genre!=NULL)

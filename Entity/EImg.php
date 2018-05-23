@@ -6,7 +6,7 @@ include_once 'Entity/EObject.php';
 class EImg extends EObject
 {
     
-    //size of the uploaded song
+    //size of the uploaded image
     private $size;
     //mime type of the blob
     private $type;
@@ -69,7 +69,7 @@ class EImg extends EObject
     
     /**
      *
-     * @param mixed $mp3
+     * @param mixed $img
      */
     function setImg (&$img)
     {

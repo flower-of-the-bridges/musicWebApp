@@ -1,5 +1,7 @@
 <?php
 
+require_once 'inc.php';
+
 /**
  * La classe EFollower fornisce un modello per la funzionalità Segui. Un'istanza di tale classe mette in
  * relazione un utente con un ulteriore utente, che ha deciso di seguirlo. 

@@ -3,15 +3,18 @@
 require_once 'inc.php';
 include_once 'Entity/EObject.php';
 
-
+/**
+ * The EReport Class make possible to manage reports made by the user base
+ * @author gruppo2
+ */
 class EReport extends EObject
 {
-    private $idModeratore;
-    private $title;
-    private $description;
-    private $idSegnalatore;
-    private $idObject;
-    private $objectTtype;
+    private $idModeratore;      //Id of the moderatore who accepted this report (if exist)
+    private $title;             //brief intro for the report
+    private $description;       //description of the problem
+    private $idSegnalatore;     //id of the user who send the report
+    private $idObject;          //id of the reported object
+    private $objectTtype;       //provenience class of the reported object
     
        
     function __construct()
