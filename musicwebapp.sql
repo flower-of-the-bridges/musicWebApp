@@ -21,6 +21,9 @@ SET time_zone = "+00:00";
 --
 -- Database: `musicwebapp`
 --
+DROP DATABASE IF EXISTS musicwebapp;
+CREATE DATABASE IF NOT EXISTS musicwebapp;
+USE musicwebapp;
 
 -- --------------------------------------------------------
 
