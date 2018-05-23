@@ -20,7 +20,7 @@ class EUser extends EObject
     
     function isStringOk(string $toCheck) : bool
     {          
-        if( preg_match('/[.,/({][})"'."'".'&|!$;?\:]{8,32}/', $toCheck) )
+        if( !preg_match('/^[a-zA-Z0-9_-]{8,32}$/', $toCheck) )
             {return false;}
         return true;
     }
