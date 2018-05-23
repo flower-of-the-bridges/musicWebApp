@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.7
+-- version 4.8.0.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Creato il: Mag 23, 2018 alle 09:32
--- Versione del server: 10.1.30-MariaDB
--- Versione PHP: 7.2.2
+-- Host: localhost
+-- Generation Time: May 23, 2018 at 09:49 AM
+-- Server version: 10.1.30-MariaDB
+-- PHP Version: 7.2.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -21,11 +21,25 @@ SET time_zone = "+00:00";
 --
 -- Database: `musicwebapp`
 --
+DROP DATABASE IF EXISTS musicwebapp;
+CREATE DATABASE IF NOT EXISTS musicwebapp;
+USE musicwebapp;
 
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `image`
+-- Table structure for table `followers`
+--
+
+CREATE TABLE `followers` (
+  `id_user` smallint(5) NOT NULL,
+  `id_follower` smallint(5) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `image`
 --
 
 CREATE TABLE `image` (
@@ -38,7 +52,7 @@ CREATE TABLE `image` (
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `listener`
+-- Table structure for table `listener`
 --
 
 CREATE TABLE `listener` (
@@ -49,7 +63,7 @@ CREATE TABLE `listener` (
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `moderator`
+-- Table structure for table `moderator`
 --
 
 CREATE TABLE `moderator` (
@@ -60,7 +74,7 @@ CREATE TABLE `moderator` (
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `mp3`
+-- Table structure for table `mp3`
 --
 
 CREATE TABLE `mp3` (
@@ -74,7 +88,7 @@ CREATE TABLE `mp3` (
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `musician`
+-- Table structure for table `musician`
 --
 
 CREATE TABLE `musician` (
@@ -83,7 +97,7 @@ CREATE TABLE `musician` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dump dei dati per la tabella `musician`
+-- Dumping data for table `musician`
 --
 
 INSERT INTO `musician` (`id`, `nickname`) VALUES
@@ -92,7 +106,7 @@ INSERT INTO `musician` (`id`, `nickname`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `report`
+-- Table structure for table `report`
 --
 
 CREATE TABLE `report` (
@@ -108,7 +122,7 @@ CREATE TABLE `report` (
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `song`
+-- Table structure for table `song`
 --
 
 CREATE TABLE `song` (
@@ -124,7 +138,7 @@ CREATE TABLE `song` (
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `supporter`
+-- Table structure for table `supporter`
 --
 
 CREATE TABLE `supporter` (
@@ -137,7 +151,7 @@ CREATE TABLE `supporter` (
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `support_info`
+-- Table structure for table `support_info`
 --
 
 CREATE TABLE `support_info` (
@@ -147,7 +161,7 @@ CREATE TABLE `support_info` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dump dei dati per la tabella `support_info`
+-- Dumping data for table `support_info`
 --
 
 INSERT INTO `support_info` (`id_artist`, `contribute`, `period`) VALUES
@@ -156,7 +170,7 @@ INSERT INTO `support_info` (`id_artist`, `contribute`, `period`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `users`
+-- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
@@ -170,7 +184,7 @@ CREATE TABLE `users` (
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `user_info`
+-- Table structure for table `user_info`
 --
 
 CREATE TABLE `user_info` (
@@ -184,66 +198,66 @@ CREATE TABLE `user_info` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Indici per le tabelle scaricate
+-- Indexes for dumped tables
 --
 
 --
--- Indici per le tabelle `image`
+-- Indexes for table `image`
 --
 ALTER TABLE `image`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indici per le tabelle `listener`
+-- Indexes for table `listener`
 --
 ALTER TABLE `listener`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indici per le tabelle `moderator`
+-- Indexes for table `moderator`
 --
 ALTER TABLE `moderator`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indici per le tabelle `mp3`
+-- Indexes for table `mp3`
 --
 ALTER TABLE `mp3`
   ADD PRIMARY KEY (`id_song`);
 
 --
--- Indici per le tabelle `musician`
+-- Indexes for table `musician`
 --
 ALTER TABLE `musician`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indici per le tabelle `report`
+-- Indexes for table `report`
 --
 ALTER TABLE `report`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indici per le tabelle `song`
+-- Indexes for table `song`
 --
 ALTER TABLE `song`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`,`id_artist`);
 
 --
--- Indici per le tabelle `supporter`
+-- Indexes for table `supporter`
 --
 ALTER TABLE `supporter`
   ADD PRIMARY KEY (`id_artist`,`id_supporter`);
 
 --
--- Indici per le tabelle `support_info`
+-- Indexes for table `support_info`
 --
 ALTER TABLE `support_info`
   ADD PRIMARY KEY (`id_artist`);
 
 --
--- Indici per le tabelle `users`
+-- Indexes for table `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
@@ -251,29 +265,29 @@ ALTER TABLE `users`
   ADD UNIQUE KEY `nickname` (`nickname`);
 
 --
--- Indici per le tabelle `user_info`
+-- Indexes for table `user_info`
 --
 ALTER TABLE `user_info`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT per le tabelle scaricate
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT per la tabella `report`
+-- AUTO_INCREMENT for table `report`
 --
 ALTER TABLE `report`
   MODIFY `id` smallint(5) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT per la tabella `song`
+-- AUTO_INCREMENT for table `song`
 --
 ALTER TABLE `song`
   MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT per la tabella `users`
+-- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
   MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT;
