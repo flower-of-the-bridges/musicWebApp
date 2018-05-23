@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Mag 23, 2018 alle 09:30
+-- Creato il: Mag 23, 2018 alle 09:32
 -- Versione del server: 10.1.30-MariaDB
 -- Versione PHP: 7.2.2
 
@@ -21,9 +21,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `musicwebapp`
 --
-DROP DATABASE IF EXISTS musicwebapp;
-CREATE DATABASE IF NOT EXISTS musicwebapp;
-USE musicwebapp;
 
 -- --------------------------------------------------------
 
