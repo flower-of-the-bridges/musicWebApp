@@ -82,16 +82,22 @@ class FPersistantManager {
             case($target=='Img'): // load di un immagine
                 $sql = FImg::loadImg();
                 break;
-            case($target=='musicianSongs'): //load di ESong di un musician
+            case($target=='musicianSongs'): // load di ESong di un musician
                 $sql = FSong::loadMusicianSongs();
+                break;
+            case($target=='Followers'): // load di EUser che seguono un utente
+                $sql = FFollower::loadFollowers();
+                break;
+            case($target=='Following'): // load di EUser seguiti da un utente
+                $sql = FFollower::loadFollowing();
                 break;
             case($target=='SupInfo'): //load delle info del supporto
                 $sql = FSupInfo::loadSupportInfo();
                 break;
-            case($target=='Report'): //load delle info del supporto
+            case($target=='Report'): //load di un report
                 $sql = FReport::loadReport();
                 break;
-            case($target=='modReports'): //load delle info del supporto
+            case($target=='modReports'): //load dei report assegnati ad un moderatore
                 $sql = FReport::loadReportByIdMod();
                 break;
             default:
@@ -214,7 +220,7 @@ class FPersistantManager {
     {
         $result = false;
         switch($obj){
-            case(is_a($obj, EMusician::class)):
+            case(is_a($obj, EMusician::class)): 
                 $sql = FMusician::storeMusician();
                 $result = $this->execStore($obj, $sql);
                 break;
@@ -222,30 +228,33 @@ class FPersistantManager {
                 $sql = FListener::storeListener();
                 $result = $this->execStore($obj, $sql);
                 break;
-            case(is_a($obj, ESong::class)):
+            case(is_a($obj, ESong::class)): // salvataggio di un Esong nel db
                 $sql = FSong::storeSong();
                 $result = $this->execStore($obj, $sql);
                 break;
-            case(is_a($obj, EMp3::class)):
-                $sql = FMp3::storeMp3(); //salva l'mp3
+            case(is_a($obj, EMp3::class)): //salvataggio di un EMp3 nel db
+                $sql = FMp3::storeMp3(); 
                 $result = $this->execStore($obj, $sql);
                 break;
-            case(is_a($obj, EImg::class)):
+            case(is_a($obj, EImg::class)): //salvataggio di una EImg nel db
                 $sql = FImg::storeImg(); //salva l'mp3
                 $result = $this->execStore($obj, $sql);
                 break;
-            case(is_a($obj, EComment::class)):
+            case(is_a($obj, EComment::class)): //salvataggio di un EComment nel db
                 $sql = FComment::storeComment();
                 $result = $this->execStore($obj, $sql);
                 break;
-            case(is_a($obj, ESupInfo::class)):
+            case(is_a($obj, ESupInfo::class)): // salvataggio di un ESupInfo nel db
                 $sql = FSupInfo::storeSupportInfo();
                 $result = $this->execStore($obj, $sql);
                 break;
-            case(is_a($obj, EReport::class)):
+            case(is_a($obj, EReport::class)): // salvataggio di un EReport nel db
                 $sql = FReport::storeReport();
                 $result = $this->execStore($obj, $sql);
                 break;
+            case(is_a($obj, EFollower::class)): // salvataggio di un EFollower nel db
+                $sql = FFollower::storeFollower();
+                $result = $this->execStore($obj, $sql);
             default:
                 $sql = null;
                 break;
@@ -303,7 +312,8 @@ class FPersistantManager {
     /**
      * Metodo che permette di aggiornare informazioni sul database, relative
      * ad una singola ennupla.
-     * @param $obj
+     * @param $obj l'oggetto da aggiornare
+     * @bool true se l'update ha avuto successo, false altrimenti
      */
     function update($obj) : bool
     {
@@ -343,7 +353,7 @@ class FPersistantManager {
      * Esegue una UPDATE sul database
      * @param mixed $obj l'oggetto da salvare
      * @param string $sql la stringa contenente il comando SQL
-     * @return boolean l'esito della transazione
+     * @return bool l'esito della transazione
      */
     private function execUpdate(&$obj, string $sql) : bool
     {
@@ -383,54 +393,65 @@ class FPersistantManager {
      * Metodo che cancella dal database una entry di un particolare
      * oggetto Entity.
      * @param string $className il nome dell'oggetto (Song, User, Musician, ...)
-     * @param int $id l'identifier dell'oggetto da eliminare.
+     * @param int $id l'identifier della entry da eliminare.
+     * @param int $id2 opzionale se l'entry nel database ha due primary key
      * @return bool se l'operazione ha avuto successo o meno.
      */
-    function remove(string $target, int $id) : bool
+    function remove(string $target, int $id, int $id2=null) : bool
     {
         switch($target)
         {
             case($target=='User'): // rimozione di un users dal db
                 $sql = FUser::removeUser();
+                return FPersistantManager::execRemove($sql, $id);
                 break;
             case($target=='Song'): // rimozione di una song dal db
                 $sql = FSong::removeSong();
+                return FPersistantManager::execRemove($sql, $id);
                 break;
-            case($target=='Img'): // rimozione di una song dal db
+            case($target=='Img'): // rimozione di una immagine dal db
                 $sql = FImg::removeImg();
+                return FPersistantManager::execRemove($sql, $id);
                 break;
             case($target=='Comment'): // rimozione di un comment dal db
                 $sql = FComment::removeComment();
+                return FPersistantManager::execRemove($sql, $id);
                 break;
-            case($target=='Report'): // rimozione di un comment dal db
+            case($target=='Report'): // rimozione di un report dal db
                 $sql = FReport::removeReport();
+                return FPersistantManager::execRemove($sql, $id);
                 break;
+            case($target=='Follower'):
+                $sql = FFollower::removeFollower();
+                return FPersistantManager::execRemove($sql, $id, $id2);
             default:
-                $sql = NULL;
+                return false;
                 break;
         }
-        if($sql)
-            return FPersistantManager::execRemove($id, $sql);
-        else return false;
+  
     }
     
     /**
      * Rimuove una entry dal database.
      * @param int $id della entry da eliminare
+     * @param int $id2 opzionale se l'entry ha due primary key
      * @return bool l'esito dell'operazione
      */
-    private function execRemove(int $id, string $sql) : bool {
+    private function execRemove(string $sql, int $id, int $id2 = NULL) : bool {
         
-        try 
-        {    
+        try
+        {
             $stmt = $this->db->prepare($sql); //a partire dalla stringa sql viene creato uno statement
             
             $stmt->bindValue(":id", $id, PDO::PARAM_INT); //si associa l'id al campo della query
-           
-            return $stmt->execute(); //esegue lo statement e ritorna il risultato
             
+            if($id2) // se id2 e' stato inserito...
+                $stmt->bindValue(":id2", $id2, PDO::PARAM_INT); //...si associa id2 al campo della query
+                
+                return $stmt->execute(); //esegue lo statement e ritorna il risultato
+                
         }
-        catch (PDOException $e) 
+        catch (PDOException $e)
         {
             die($e->errorInfo);
             return FALSE; //ritorna false se ci sono errori
@@ -441,38 +462,45 @@ class FPersistantManager {
 /***************************************  EXISTS  ****************************************************/
     
     /**
-     * Metodo che verifica l'esistenza di un valore in una entry di una table 
+     * Metodo che verifica l'esistenza di un valore in una entry di una table
      * @param string $target il tipo di dato di cui si vuole controllare l'esistenza
      * @param string | int $value il valore di cui controllare l'unicita'
+     * @param string | int $value2 opzionale se presente una doppia chiave nella table da interrogare
      * @return bool true se il dato esiste, false altrimenti
      */
-    function exists(string $target, $value) : bool
+    function exists(string $target, $value, $value2 = null) : bool
     {
         switch($target)
         {
-            case($target=='Mail'):
+            case($target=='Mail'): // controlla se una mail sia gia stata inserita
                 $sql = FUser::existUserMail();
+                return FPersistantManager::execExists($sql, $value);
                 break;
-            case($target=='NickName'):
+            case($target=='NickName'): // controlla se un nickname sia gia stato inserito
                 $sql = FUser::existUserName();
+                return FPersistantManager::execExists($sql, $value);
                 break;
-            case($target=='Song'):
+            case($target=='Song'): // controlla se un utente abbia gia inserito una canzone con lo stesso nome
+                return FPersistantManager::execExists($sql, $value);
+                break;
+            case($target=='Follower'): // controlla se un utente sta seguendo un altr utente
+                $sql = FFollower::existsFollower();
+                return FPersistantManager::execExists($sql, $value, $value2);
                 break;
             default:
-                $sql = NULL;
+                return false;
                 break;
         }
-        if($sql)
-            return FPersistantManager::execExists($sql, $value);
     }
     
     /**
      * Esegue l'operazione di controllo di esistenza
-     * @param string $sql
-     * @param int | string $value
-     * @return bool
+     * @param string $sql la query da inviare al dbms
+     * @param string | int $value il valore di cui controllare l'unicita'
+     * @param string | int $value2 opzionale se presente una doppia chiave nella table da interrogare
+     * @return bool true se la entry esiste, false altrimenti
      */
-    private function execExists(string $sql, $value) : bool {
+    private function execExists(string $sql, $value, $value2 = NULL) : bool {
         
         try
         {
@@ -480,10 +508,19 @@ class FPersistantManager {
             
             if(is_int($value))
                 $stmt->bindValue(":value", $id, PDO::PARAM_INT); //si associa l'intero al campo della query
-            if(is_string($value))
-                $stmt->bindValue(":value", $id, PDO::PARAM_STR); //si associa la stringa al campo della query
-            return $stmt->execute(); //esegue lo statement e ritorna il risultato
-            
+                if(is_string($value))
+                    $stmt->bindValue(":value", $id, PDO::PARAM_STR); // si associa la stringa al campo della query
+                    
+                    if ($value2) // se il secondo valore e' stato inserito
+                    {
+                        if (is_int($value2))
+                            $stmt->bindValue(":value2", $id, PDO::PARAM_INT); // si associa l'intero al campo della query
+                            if (is_string($value2))
+                                $stmt->bindValue(":value2", $id, PDO::PARAM_STR); // si associa la stringa al campo della query
+                    }
+                    
+                    
+                    return $stmt->execute(); //esegue lo statement e ritorna il risultato
         }
         catch (PDOException $e)
         {
@@ -491,6 +528,7 @@ class FPersistantManager {
             return FALSE; //ritorna false se ci sono errori
         }
     }
+    
     
 /*************************************** TRUNCATE ***************************************************/    
 
@@ -536,16 +574,19 @@ class FPersistantManager {
             case(is_a($obj, EMp3::class)): // associazione statement - EMp3
                 FMp3::bindValues($stmt, $obj);
                 break;
-            case(is_a($obj, EImg::class)): // associazione statement - Img
+            case(is_a($obj, EImg::class)): // associazione statement - EImg
                 FImg::bindValues($stmt, $obj);
                 break;
-            case(is_a($obj, ESupInfo::class)):
+            case(is_a($obj, ESupInfo::class)): // associazione statement - ESupInfo
                 FSupInfo::bindValues($stmt, $obj);
                 break;
-            case(is_a($obj, EReport::class)):
+            case(is_a($obj, EReport::class)): // associazione statement - EReport
                 FReport::bindValues($stmt, $obj);
                 break;
-            case(is_a($obj, EComment::class)):
+            case(is_a($obj, EFollower::class)): // associazione statement - EFollower
+                FFollower::bindValues($stmt, $obj);
+                break;
+            case(is_a($obj, EComment::class)): // associazione statement - EComment
                 break;
             default:
                 break;
@@ -564,7 +605,7 @@ class FPersistantManager {
         
         switch($target)
         {
-            case($target=='User'): // creazione di un oggetto EUser
+            case($target=='User' || $target=='Followers' || $target=='Following'): // creazione di un oggetto EUser
                 $obj = FUser::createObjectFromRow($row);
             case($target=='Song' || $target=='musicianSongs'): // creazione di un oggetto ESong
                 $obj = FSong::createObjectFromRow($row);
@@ -575,10 +616,10 @@ class FPersistantManager {
             case($target=='Img'): // creazione di un oggetto EImg
                 $obj= FImg::createObjectFromRow($row);
                 break;
-            case($target=='SupInfo'):
+            case($target=='SupInfo'): // creazione di un oggetto ESupInfo
                 $obj= FSupInfo::createObjectFromRow($row);
                 break;
-            case($target=='Report'):
+            case($target=='Report'): // creazione di un oggetto EReport
                 $obj= FReport::createObjectFromRow($row);
                 break;
             default:
