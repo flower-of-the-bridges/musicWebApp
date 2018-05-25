@@ -12,6 +12,7 @@ require_once 'Entity/EFollower.php';
 require_once 'Entity/ESong.php';
 require_once 'Entity/EMp3.php';
 require_once 'Entity/EObject.php';
+require_once 'Entity/ESupporter.php';
 require_once 'SmartyConfig.php';
 //require_once 'Foundation/FComment.php';
 //require_once 'Foundation/FListener.php';
@@ -25,5 +26,6 @@ require_once 'Foundation/FSupInfo.php';
 require_once 'Foundation/FReport.php';
 require_once 'Foundation/FFollower.php';
 require_once 'Foundation/FPersistantManager.php';
+require_once 'Foundation/FSupporter.php';
 
 ?>

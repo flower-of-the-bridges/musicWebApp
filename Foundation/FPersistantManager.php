@@ -100,6 +100,12 @@ class FPersistantManager {
             case($target=='modReports'): //load dei report assegnati ad un moderatore
                 $sql = FReport::loadReportByIdMod();
                 break;
+            case($target=='Supporters'): //load dei supporter di un utente
+                $sql = FSupporter::loadSupporters();
+                break;
+            case($target=='Supporting'): //load dei supporti di un utente
+                $sql = FSupporter::loadSupporting();
+                break;
             default:
                 $sql = NULL;
                 break;
@@ -255,6 +261,11 @@ class FPersistantManager {
             case(is_a($obj, EFollower::class)): // salvataggio di un EFollower nel db
                 $sql = FFollower::storeFollower();
                 $result = $this->execStore($obj, $sql);
+                break;
+            case(is_a($obj, ESupporter::class)): // salvataggio di un ESupporter nel db
+                $sql = FSupporter::storeSupporter();
+                $result = $this->execStore($obj, $sql);
+                break;
             default:
                 $sql = null;
                 break;
@@ -340,6 +351,9 @@ class FPersistantManager {
             case(is_a($obj, EReport::class)):
                 $sql = FReport::updateReport();
                 break;
+            case(is_a($obj, ESupporter::class)):
+                $sql = FSupporter::updateSupporter();
+                break;
             default:
                 $sql = null;
                 break;
@@ -424,6 +438,11 @@ class FPersistantManager {
             case($target=='Follower'):
                 $sql = FFollower::removeFollower();
                 return FPersistantManager::execRemove($sql, $id, $id2);
+                break;
+            case($target=='Supporters'):
+                $sql = FSupporter::removeSupporter();
+                return FPersistantManager::execRemove($sql, $id, $id2);
+                break;
             default:
                 return false;
                 break;
@@ -485,6 +504,10 @@ class FPersistantManager {
                 break;
             case($target=='Follower'): // controlla se un utente sta seguendo un altr utente
                 $sql = FFollower::existsFollower();
+                return FPersistantManager::execExists($sql, $value, $value2);
+                break;
+            case($target=='Supporters'): // controlla se un artista supporta un altro utente
+                $sql = FSupporter::existsSupporter();
                 return FPersistantManager::execExists($sql, $value, $value2);
                 break;
             default:
@@ -585,6 +608,9 @@ class FPersistantManager {
                 break;
             case(is_a($obj, EFollower::class)): // associazione statement - EFollower
                 FFollower::bindValues($stmt, $obj);
+                break;
+            case(is_a($obj, ESupporter::class)): // associazione statement - EFollower
+                FSupporter::bindValues($stmt, $obj);
                 break;
             case(is_a($obj, EComment::class)): // associazione statement - EComment
                 break;
