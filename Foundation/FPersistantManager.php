@@ -542,14 +542,12 @@ class FPersistantManager {
             
             $result = $stmt->execute(); // esegue lo statement e ritorna il risultato
             $stmt->setFetchMode(PDO::FETCH_ASSOC); // i risultati del db verranno salvati in un array con indici le colonne della table
-            var_dump($result);
-            if ($result) {
+            if ($stmt->rowCount()) {
                 $row = $stmt->fetch();
-                var_dump($row['id']);
                 if ($row['id'])
                     return $row['id'];
                 else
-                    return false;
+                    return true;
             } else
                 return false;
         } catch (PDOException $e) {
