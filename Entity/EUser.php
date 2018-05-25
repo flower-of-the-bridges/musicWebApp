@@ -8,10 +8,14 @@ include_once 'Entity/EObject.php';
 
 class EUser extends EObject
 {
-    protected $nickname;
-    protected $mail;
-    protected $password;
-    protected $type;
+    private $nickname;
+    private $mail;
+    private $password;
+    private $type;
+    
+    private $userInfo; // le informazioni dell'utente
+    private $img; // le immagini dell'utente 
+    private $supInfo; // le informazioni per il supporto dell'utente (se musicista)
         
     function __construct()
     {
@@ -29,15 +33,108 @@ class EUser extends EObject
     {
         return $this->nickname;
     }
+    
     function setName (string $nickname)
     {
         $this->nickname = $nickname;
     }
     
+    /**
+     * Restituisce le info dell'utente
+     * @return EUserInfo|NULL
+     */
+    function getUserInfo()
+    {
+        $this->userInfo =FPersistantManager::getInstance()->load('UserInfo', $this->id); 
+        return $this->userInfo;
+    }
+    
+    /**
+     * Imposta le informazioni dell'utente
+     * @param EUserInfo $info
+     */
+    function setUserInfo(EUserInfo $info)
+    {
+        $info->setId($this->id);
+        
+        if(!FPersistantManager::getInstance()->load('UserInfo', $this->id)) // se le informazioni non sono presenti...
+        { //vengono caricate nel db
+            FPersistantManager::getInstance()->store($info);
+        }
+        else 
+        { //altrimenti vengono aggiornate
+            FPersistantManager::getInstance()->update($info);
+        }
+        
+        $this->userInfo = $info;
+    }
+    
+    /**
+     * Restituisce l'immagine dell'utente
+     * @return EImg | NULL
+     */
+    function getImage()
+    {
+        $this->img = FPersistantManager::getInstance()->load('Img', $this->id);
+        return $this->img;
+    }
+    
+    /**
+     * Imposta l'immagine dell'utente
+     * @param EImg $img
+     */
+    function setImage(EImg $img)
+    {
+        $img->setId($this->id);
+        
+        if(!FPersistantManager::getInstance()->load('Img', $this->id)) // se le informazioni non sono presenti...
+        { // vengono salvate nel db
+            FPersistantManager::getInstance()->store($img); 
+        }
+        else
+        { // altrimenti vengono aggiornate
+            FPersistantManager::getInstance()->update($img);
+        }
+        
+        $this->img = $img;
+    }
+    
+    /**
+     * Restituisce le informazioni sul supporto dell'utente (di tipo musicista)
+     * @return ESupInfo | NULL
+     */
+    function getSupportInfo()
+    {
+        $this->supInfo = FPersistantManager::getInstance()->load('SupInfo', $this->id);
+        return $this->supInfo;
+    }
+    
+    /**
+     * Imposta le informazioni sul supporto dell'utente (di tipo musicista)
+     * @param ESupInfo $supInfo
+     */
+    function setSupportInfo(ESupInfo $supInfo)
+    {
+        $supInfo->setId($this->id);
+        
+        if(!FPersistantManager::getInstance()->load('SupInfo', $this->id))
+        {
+            FPersistantManager::getInstance()->store($supInfo);
+        }
+        else
+        {
+            FPersistantManager::getInstance()->update($supInfo);
+        }
+        
+        $this->supInfo = $supInfo;
+    }
+    
+    
     function getType () : string
     {
         return $this->type;
     }
+    
     function setType (string $type)
     {
         $this->type = $type;

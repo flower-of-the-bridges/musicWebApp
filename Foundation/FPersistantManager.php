@@ -115,7 +115,7 @@ class FPersistantManager {
         else return NULL;
     }
     
-       /**
+    /**
      * Esegue una SELECT sul database
      * @param string $target il tipo di richiesta che si sta effettuando
      * @param string $sql la stringa contenente il comando SQL
@@ -226,25 +226,20 @@ class FPersistantManager {
     {
         $result = false;
         switch($obj){
-            case(is_a($obj, EMusician::class)): 
-                $sql = FMusician::storeMusician();
-                $result = $this->execStore($obj, $sql);
+            case(is_a($obj, EUser::class)):
+                $sql = FUser::storeListener(); // salvataggio di un EUser nel db
                 break;
-            case(is_a($obj, EListener::class)):
-                $sql = FListener::storeListener();
-                $result = $this->execStore($obj, $sql);
+            case(is_a($obj, EUserInfo::class)):
+                $sql = FUserInfo::storeUserInfo(); // salvataggio di un EUserInfo nel db
                 break;
             case(is_a($obj, ESong::class)): // salvataggio di un Esong nel db
                 $sql = FSong::storeSong();
-                $result = $this->execStore($obj, $sql);
                 break;
             case(is_a($obj, EMp3::class)): //salvataggio di un EMp3 nel db
                 $sql = FMp3::storeMp3(); 
-                $result = $this->execStore($obj, $sql);
                 break;
             case(is_a($obj, EImg::class)): //salvataggio di una EImg nel db
                 $sql = FImg::storeImg(); //salva l'mp3
-                $result = $this->execStore($obj, $sql);
                 break;
             case(is_a($obj, EComment::class)): //salvataggio di un EComment nel db
                 $sql = FComment::storeComment();
@@ -252,24 +247,22 @@ class FPersistantManager {
                 break;
             case(is_a($obj, ESupInfo::class)): // salvataggio di un ESupInfo nel db
                 $sql = FSupInfo::storeSupportInfo();
-                $result = $this->execStore($obj, $sql);
                 break;
             case(is_a($obj, EReport::class)): // salvataggio di un EReport nel db
                 $sql = FReport::storeReport();
-                $result = $this->execStore($obj, $sql);
                 break;
             case(is_a($obj, EFollower::class)): // salvataggio di un EFollower nel db
                 $sql = FFollower::storeFollower();
-                $result = $this->execStore($obj, $sql);
                 break;
             case(is_a($obj, ESupporter::class)): // salvataggio di un ESupporter nel db
                 $sql = FSupporter::storeSupporter();
-                $result = $this->execStore($obj, $sql);
                 break;
             default:
                 $sql = null;
                 break;
         }
+        if($sql) // se la stringa sql e' definita...
+            $result = $this->execStore($obj, $sql); // ... esegui la query
         return $result;
     }
 
@@ -591,6 +584,9 @@ class FPersistantManager {
             case(is_a($obj, EUser::class)): // associazione statement - EUser
                 FUser::bindValues($stmt, $obj);
                 break;
+            case(is_a($obj, EUserInfo::class)): // associazione statement - EUserInfo
+                FUserInfo::bindValues($stmt, $obj);
+                break;
             case(is_a($obj, ESong::class)): // associazione statement - ESong
                 FSong::bindValues($stmt, $obj);
                 break;
@@ -633,6 +629,10 @@ class FPersistantManager {
         {
             case($target=='User' || $target=='Followers' || $target=='Following'): // creazione di un oggetto EUser
                 $obj = FUser::createObjectFromRow($row);
+                break;
+            case($target=='UserInfo'):
+                $obj = FUserInfo::createObjectFromRow($row); //creazione di un oggetto EUserInfo
+                break;
             case($target=='Song' || $target=='musicianSongs'): // creazione di un oggetto ESong
                 $obj = FSong::createObjectFromRow($row);
                 break;
