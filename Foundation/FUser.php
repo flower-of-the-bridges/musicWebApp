@@ -22,7 +22,7 @@ class FUser
     {
         return "SELECT id
                 FROM users
-                WHERE mail = :value AND password = :value2;";
+                WHERE nickname = :value AND password = :value2;";
     }
     
     static function storeUser() : string

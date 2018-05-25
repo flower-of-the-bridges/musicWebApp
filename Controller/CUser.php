@@ -15,6 +15,7 @@ class CUser
         if($vUser->validateLogin())
         {
             $userId = FPersistantManager::getInstance()->exists('User', $_POST['name'], $_POST['pwd']); // si verifica che la coppia mail -pswd matchi una entry nel db
+            
             if($userId) // se e' stato prelevato un id...
             {
                 session_start(); // si da inizio alla sessione
@@ -28,10 +29,10 @@ class CUser
                 $vUser->showProfile($loggedUser, $loggedUser, 'None');
             }
             else 
-                header('Location: /DeepMusic/login'); 
+                $vUser->showLogin();
         }
         else
-            header('Location: /DeepMusic/login');
+            $vUser->showLogin();
        
     }
     
@@ -72,6 +73,7 @@ class CUser
     static function getUserFromSession() : EUser
     {
         session_start();
+        
         $user = new EUser();
         if(isset($_SESSION['id']))
         {

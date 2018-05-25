@@ -511,48 +511,50 @@ class FPersistantManager {
                 break;
         }
     }
-    
+
     /**
      * Esegue l'operazione di controllo di esistenza
-     * @param string $sql la query da inviare al dbms
-     * @param string | int $value il valore di cui controllare l'unicita'
-     * @param string | int $value2 opzionale se presente una doppia chiave nella table da interrogare
+     *
+     * @param string $sql
+     *            la query da inviare al dbms
+     * @param
+     *            string | int $value il valore di cui controllare l'unicita'
+     * @param
+     *            string | int $value2 opzionale se presente una doppia chiave nella table da interrogare
      * @return bool | id true se la entry esiste, false altrimenti
      */
-    private function execExists(string $sql, $value, $value2 = NULL) : bool {
-        
-        try
+    private function execExists(string $sql, $value, $value2 = NULL): bool
+    {
+        try 
         {
-            $stmt = $this->db->prepare($sql); //a partire dalla stringa sql viene creato uno statement
+            $stmt = $this->db->prepare($sql); // a partire dalla stringa sql viene creato uno statement
+            if (is_int($value))
+                $stmt->bindValue(":value", $value, PDO::PARAM_INT); // si associa l'intero al campo della query
+            if (is_string($value))
+                $stmt->bindValue(":value", $value, PDO::PARAM_STR); // si associa la stringa al campo della query
+            if ($value2) // se il secondo valore e' stato inserito
+            {
+                if (is_int($value2))
+                    $stmt->bindValue(":value2", $value2, PDO::PARAM_INT); // si associa l'intero al campo della query
+                if (is_string($value2))
+                    $stmt->bindValue(":value2", $value2, PDO::PARAM_STR); // si associa la stringa al campo della query
+            }
             
-            if(is_int($value))
-                $stmt->bindValue(":value", $value, PDO::PARAM_INT); //si associa l'intero al campo della query
-                if(is_string($value))
-                    $stmt->bindValue(":value", $value2, PDO::PARAM_STR); // si associa la stringa al campo della query
-                    
-                    if ($value2) // se il secondo valore e' stato inserito
-                    {
-                        if (is_int($value2))
-                            $stmt->bindValue(":value2", $value, PDO::PARAM_INT); // si associa l'intero al campo della query
-                        if (is_string($value2))
-                            $stmt->bindValue(":value2", $value2, PDO::PARAM_STR); // si associa la stringa al campo della query
-                    }
-                    
-                    $result = $stmt->execute(); //esegue lo statement e ritorna il risultato
-                    $stmt->setFetchMode(PDO::FETCH_ASSOC); // i risultati del db verranno salvati in un array con indici le colonne della table
-                    if($result)
-                    {
-                        $row = $stmt->fetch();
-                        if($row['id'])
-                            return $row['id'];
-                        else return false;
-                    }
-                    else return  false;
-        }
-        catch (PDOException $e)
-        {
+            $result = $stmt->execute(); // esegue lo statement e ritorna il risultato
+            $stmt->setFetchMode(PDO::FETCH_ASSOC); // i risultati del db verranno salvati in un array con indici le colonne della table
+            var_dump($result);
+            if ($result) {
+                $row = $stmt->fetch();
+                var_dump($row['id']);
+                if ($row['id'])
+                    return $row['id'];
+                else
+                    return false;
+            } else
+                return false;
+        } catch (PDOException $e) {
             die($e->errorInfo);
-            return FALSE; //ritorna false se ci sono errori
+            return FALSE; // ritorna false se ci sono errori
         }
     }
     
