@@ -545,9 +545,9 @@ class FPersistantManager {
                         $row = $stmt->fetch();
                         if($row['id'])
                             return $row['id'];
-                        else return true;
+                        else return false;
                     }
-                    else return  $false;
+                    else return  false;
         }
         catch (PDOException $e)
         {
