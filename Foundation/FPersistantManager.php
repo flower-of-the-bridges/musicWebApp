@@ -25,8 +25,8 @@ class FPersistantManager {
     private function __construct()
     {
         try{
-            global $address,$user,$pass,$database;
-            $this->db = new PDO ("mysql:host=$address;dbname=$database", $user, $pass);
+            global $address,$admin,$pass,$database;
+            $this->db = new PDO ("mysql:host=$address;dbname=$database", $admin, $pass);
 
         }catch (PDOException $e){
             echo "Errore : " . $e->getMessage();
@@ -478,9 +478,9 @@ class FPersistantManager {
      * @param string $target il tipo di dato di cui si vuole controllare l'esistenza
      * @param string | int $value il valore di cui controllare l'unicita'
      * @param string | int $value2 opzionale se presente una doppia chiave nella table da interrogare
-     * @return bool true se il dato esiste, false altrimenti
+     * @return bool | int true se il dato esiste, false altrimenti. un int se si richiede l'esistenza di un User.
      */
-    function exists(string $target, $value, $value2 = null) : bool
+    function exists(string $target, $value, $value2 = null) 
     {
         switch($target)
         {
@@ -492,14 +492,17 @@ class FPersistantManager {
                 $sql = FUser::existUserName();
                 return FPersistantManager::execExists($sql, $value);
                 break;
+            case($target=='User' && $value2):
+                $sql = FUser::existUser();
+                return FPersistantManager::execExists($sql, $value, $value2);
             case($target=='Song'): // controlla se un utente abbia gia inserito una canzone con lo stesso nome
                 return FPersistantManager::execExists($sql, $value);
-                break;
-            case($target=='Follower'): // controlla se un utente sta seguendo un altr utente
+                break; 
+            case($target=='Follower' && $value2): // controlla se un utente sta seguendo un altr utente
                 $sql = FFollower::existsFollower();
                 return FPersistantManager::execExists($sql, $value, $value2);
                 break;
-            case($target=='Supporters'): // controlla se un artista supporta un altro utente
+            case($target=='Supporters' && $value2): // controlla se un artista supporta un altro utente
                 $sql = FSupporter::existsSupporter();
                 return FPersistantManager::execExists($sql, $value, $value2);
                 break;
@@ -514,7 +517,7 @@ class FPersistantManager {
      * @param string $sql la query da inviare al dbms
      * @param string | int $value il valore di cui controllare l'unicita'
      * @param string | int $value2 opzionale se presente una doppia chiave nella table da interrogare
-     * @return bool true se la entry esiste, false altrimenti
+     * @return bool | id true se la entry esiste, false altrimenti
      */
     private function execExists(string $sql, $value, $value2 = NULL) : bool {
         
@@ -523,20 +526,28 @@ class FPersistantManager {
             $stmt = $this->db->prepare($sql); //a partire dalla stringa sql viene creato uno statement
             
             if(is_int($value))
-                $stmt->bindValue(":value", $id, PDO::PARAM_INT); //si associa l'intero al campo della query
+                $stmt->bindValue(":value", $value, PDO::PARAM_INT); //si associa l'intero al campo della query
                 if(is_string($value))
-                    $stmt->bindValue(":value", $id, PDO::PARAM_STR); // si associa la stringa al campo della query
+                    $stmt->bindValue(":value", $value2, PDO::PARAM_STR); // si associa la stringa al campo della query
                     
                     if ($value2) // se il secondo valore e' stato inserito
                     {
                         if (is_int($value2))
-                            $stmt->bindValue(":value2", $id, PDO::PARAM_INT); // si associa l'intero al campo della query
-                            if (is_string($value2))
-                                $stmt->bindValue(":value2", $id, PDO::PARAM_STR); // si associa la stringa al campo della query
+                            $stmt->bindValue(":value2", $value, PDO::PARAM_INT); // si associa l'intero al campo della query
+                        if (is_string($value2))
+                            $stmt->bindValue(":value2", $value2, PDO::PARAM_STR); // si associa la stringa al campo della query
                     }
                     
-                    
-                    return $stmt->execute(); //esegue lo statement e ritorna il risultato
+                    $result = $stmt->execute(); //esegue lo statement e ritorna il risultato
+                    $stmt->setFetchMode(PDO::FETCH_ASSOC); // i risultati del db verranno salvati in un array con indici le colonne della table
+                    if($result)
+                    {
+                        $row = $stmt->fetch();
+                        if($row['id'])
+                            return $row['id'];
+                        else return true;
+                    }
+                    else return  $false;
         }
         catch (PDOException $e)
         {

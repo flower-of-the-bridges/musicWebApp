@@ -1,14 +1,29 @@
 <?php
 
+require_once 'inc.php';
 
-require_once('inc.php');
-$smarty = SmartyConfig::configure();
+$method = $_SERVER['REQUEST_METHOD'];
+$resource = $_SERVER['REQUEST_URI'];
+//$params = $_SERVER['REQUEST_URI'];
+//MainController::MainPage();
 
-$user = new EUser();
-$user->setName('Giov');
-$user->setType('listener');
-
-$smarty->registerObject('user', $user);
-$smarty->display('index.tpl');
+switch($resource)
+{
+    case($resource=='/DeepMusic/login'):
+        if($method=='GET') // se get
+            CUser::Login(); // fornisce la pagina di login
+        if($method=='POST') //se post
+            CUser::Authentication(); // fornisce l'autenticazione
+        break;
+    case($resource=='/DeepMusic/logout'):
+        if($method=='GET')
+            CUser::Logout();
+    default:
+        $user = CUser::getUserFromSession();
+        $smarty = SmartyConfig::configure();
+        $smarty->registerObject('user', $user);
+        $smarty->display('index.tpl');
+        break;
+}
 
 ?>

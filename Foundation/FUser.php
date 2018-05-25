@@ -18,6 +18,13 @@ class FUser
                       WHERE mail = :value;)";
     }
     
+    static function existUser() : string
+    {
+        return "SELECT id
+                FROM users
+                WHERE mail = :value AND password = :value2;";
+    }
+    
     static function storeUser() : string
     {
         return "INSERT INTO users(nickname, password, type, mail)

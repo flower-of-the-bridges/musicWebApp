@@ -1,5 +1,7 @@
 <?php
 
+require_once 'Controller/CUser.php';
+require_once 'View/VUser.php';
 //require_once 'Entity/EComment.php';
 //require_once 'Entity/EListener.php';
 //require_once 'Entity/EMusician.php';
@@ -13,6 +15,7 @@ require_once 'Entity/ESong.php';
 require_once 'Entity/EMp3.php';
 require_once 'Entity/EObject.php';
 require_once 'Entity/ESupporter.php';
+require_once 'Profile.php';
 require_once 'SmartyConfig.php';
 //require_once 'Foundation/FComment.php';
 //require_once 'Foundation/FListener.php';

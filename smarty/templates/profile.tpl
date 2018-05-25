@@ -19,11 +19,13 @@
 
 	{user->getType assign='uType'} 
 	{user->getName assign='uName'}
+	{user->getId assign='uId'}
 
 	{include file="navbar.tpl"}
 	
 	{profile->getType assign='pType'} 
 	{profile->getName assign='pName'}
+	{profile->getId assign='pId'}
 	<div class="container text-center">
 		<div class="col-sm-3">
 			{include file="userInfo.tpl"}
@@ -33,6 +35,8 @@
 					{include file="SongList.tpl"}
 				{elseif $content eq 'Song'}
 					{include file="Song.tpl"}
+				{elseif $content eq 'None'}
+				<h3>No content available</h3>
 				{/if}
 			</div>
 		<div class="col-sm-2">

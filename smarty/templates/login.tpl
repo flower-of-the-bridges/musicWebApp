@@ -28,11 +28,11 @@
         </div>
 		<div class="col-sm-7 well">
 			<h2>Login</h2>
-					<form class="form-horizontal" method="post" action="auth.php">
+					<form class="form-horizontal" method="post" action="/DeepMusic/login">
 						<div class="form-group">
 							<label class="control-label " for="user">User Name:</label> <input
 								type="text" class="form-control" id="user"
-								placeholder="Enter UserName" name="user">
+								placeholder="Enter username" name="name">
 
 						</div>
 						<div class="form-group">

@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.32, created on 2018-05-17 23:01:36
+/* Smarty version 3.1.32, created on 2018-05-25 19:30:00
   from '/opt/lampp/htdocs/DeepMusic/smarty/templates/index.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.32',
-  'unifunc' => 'content_5afdedb07a14c7_18422041',
+  'unifunc' => 'content_5b0848182903e0_44465373',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'e754dca9e678eb081aa6af2bd7cd223027f5b44d' => 
     array (
       0 => '/opt/lampp/htdocs/DeepMusic/smarty/templates/index.tpl',
-      1 => 1526569321,
+      1 => 1527269275,
       2 => 'file',
     ),
   ),
@@ -21,7 +21,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
     'file:navbar.tpl' => 1,
   ),
 ),false)) {
-function content_5afdedb07a14c7_18422041 (Smarty_Internal_Template $_smarty_tpl) {
+function content_5b0848182903e0_44465373 (Smarty_Internal_Template $_smarty_tpl) {
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
@@ -47,6 +47,8 @@ function content_5afdedb07a14c7_18422041 (Smarty_Internal_Template $_smarty_tpl)
 	<?php $_smarty_tpl->assign('uType',$_smarty_tpl->smarty->registered_objects['user'][0]->getType(array(),$_smarty_tpl));?>
  
 	<?php $_smarty_tpl->assign('uName',$_smarty_tpl->smarty->registered_objects['user'][0]->getName(array(),$_smarty_tpl));?>
+
+	<?php $_smarty_tpl->assign('uId',$_smarty_tpl->smarty->registered_objects['user'][0]->getid(array(),$_smarty_tpl));?>
 
 
 	<?php $_smarty_tpl->_subTemplateRender("file:navbar.tpl", $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 0, $_smarty_tpl->cache_lifetime, array(), 0, false);

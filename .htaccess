@@ -1,5 +1,6 @@
 <IfModule mod_rewrite.c>
 RewriteEngine on
 RewriteRule . index.php [L]
+RewriteCond $1 !^(css|js|img)/
 
 </IfModule>

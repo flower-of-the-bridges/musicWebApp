@@ -9,7 +9,7 @@ $pass= 'lautz97';
 
 $address= 'localhost';
 $database= 'musicwebapp';
-$user= 'root';
+$admin= 'root';
 $pass= 'web';
 
 ?>
