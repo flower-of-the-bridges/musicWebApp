@@ -39,7 +39,7 @@ class FUserInfo
     static function bindValues(PDOStatement &$stmt, EUserInfo &$userInfo)
     {
         if($userInfo->getId()!=NULL){
-            $stmt->bindValue(':id', $userInfo->getId(), PDO::PARAM_STR);
+            $stmt->bindValue(':id', $userInfo->getId(), PDO::PARAM_INT);
         }
         if($userInfo->getFirstName()!=NULL){
             $stmt->bindValue(':first_name', $userInfo->getFirstName(), PDO::PARAM_STR);
