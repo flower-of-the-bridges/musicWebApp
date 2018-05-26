@@ -30,6 +30,22 @@ class VUser
     }
     
     /**
+     * Verifica che un utente sia autenticato
+     * @return array contenente gli errori
+     */
+    function validateSignUp() : bool
+    {
+        if(isset($_POST['name']) && isset($_POST['pwd']) && isset($_POST['mail']) && isset($_POST['type']))
+        {
+            VUser::validateInputs();
+            if(!$this->errors['name'] && !$this->errors['pwd'] && !$this->errors['mail'])
+                return true;
+            else return false;
+        }
+        else return false;  
+    }
+    
+    /**
      * Restituisce un array contenente gli errori delle form
      * @return array 
      */
@@ -57,31 +73,55 @@ class VUser
 
     /**
      * Mostra la pagina di login
-     * @param EUser $user 
+     * @param bool $error facoltativo se è stato rilevato un errore 
      */
-    function showLogin()
+    function showLogin(bool $error=NULL)
     {
+        if(!$error)
+            $error = false;
+        
         $user = new EUser();
         $user->setName('Visitor');
         $user->setType('guest');
-        
         $this->smarty->registerObject('user', $user);
+        $this->smarty->assign('error', $error);
         $this->smarty->display('login.tpl');
     }
     
     /**
+     * Mostra la pagina di signup
+     * @param bool $error facoltativo se è stato rilevato un errore
+     */
+    function showSignUp(bool $error=NULL)
+    {
+        if(!$error)
+            $error = false;
+            
+            $user = new EUser();
+            $user->setName('Visitor');
+            $user->setType('guest');
+            
+            $this->smarty->registerObject('user', $user);
+            $this->smarty->assign('error', $error);
+            $this->smarty->display('register.tpl');
+    }
+
+    /**
      * Controlla che gli input delle form, se arrivati dal client tramite POST, siano corretti.
      */
-    private function validateInputs() 
+    private function validateInputs()
     {
-       
         if (isset($_POST['mail'])) // se la mail e' inserita...
             if (! filter_var($_POST['mail'], FILTER_VALIDATE_EMAIL)) // controllo che sia valida
                 $this->errors['mail'] = true;
         /*
-        if(!preg_match('/^[a-zA-Z0-9_-]{8,32}$/', $_POST['pwd']))
-            $this->errors['pwd'] = true;
-            */
+        if (isset($_POST['pwd']))
+            if (! preg_match('/^\w{8}$/', $_POST['pwd']))
+                $this->errors['pwd'] = true;
+        */
+        if (isset($_POST['name']))
+            if (! preg_match('/^[[:alpha:]]{3,20}$/', $_POST['name']))
+                $this->errors['name'] = true;
     }
 }
 

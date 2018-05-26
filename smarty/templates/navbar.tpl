@@ -13,6 +13,8 @@
 					{if $uType == "guest"}
 					<li><a href="login"><span
 							class="glyphicon glyphicon-log-in"></span> Log In</a></li>
+					<li><a href="register"><span
+							class="glyphicon glyphicon-sign-up"></span> Sign Up</a></li>
 				    {else}
 					<li><a href="profile?id={$uId}"><span
 							class="glyphicon glyphicon-user"></span> {$uName}'s Account </a></li>

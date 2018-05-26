@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.32, created on 2018-05-25 19:30:00
+/* Smarty version 3.1.32, created on 2018-05-26 16:18:45
   from '/opt/lampp/htdocs/DeepMusic/smarty/templates/navbar.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.32',
-  'unifunc' => 'content_5b08481829b6a9_31405275',
+  'unifunc' => 'content_5b096cc5c036a8_83976187',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'c235dbee611e2f57a4a4c8fcdd64c08306fc4e7e' => 
     array (
       0 => '/opt/lampp/htdocs/DeepMusic/smarty/templates/navbar.tpl',
-      1 => 1527269327,
+      1 => 1527286219,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_5b08481829b6a9_31405275 (Smarty_Internal_Template $_smarty_tpl) {
+function content_5b096cc5c036a8_83976187 (Smarty_Internal_Template $_smarty_tpl) {
 ?><nav class="navbar navbar-inverse-dark">
 		<div class="container-fluid">
 			<div class="navbar-header">
@@ -36,6 +36,8 @@ function content_5b08481829b6a9_31405275 (Smarty_Internal_Template $_smarty_tpl)
 					<?php if ($_smarty_tpl->tpl_vars['uType']->value == "guest") {?>
 					<li><a href="login"><span
 							class="glyphicon glyphicon-log-in"></span> Log In</a></li>
+					<li><a href="register"><span
+							class="glyphicon glyphicon-sign-up"></span> Sign Up</a></li>
 				    <?php } else { ?>
 					<li><a href="profile?id=<?php echo $_smarty_tpl->tpl_vars['uId']->value;?>
 "><span

@@ -15,7 +15,6 @@ class CUser
         if($vUser->validateLogin())
         {
             $userId = FPersistantManager::getInstance()->exists('User', $_POST['name'], $_POST['pwd']); // si verifica che la coppia mail -pswd matchi una entry nel db
-            
             if($userId) // se e' stato prelevato un id...
             {
                 session_start(); // si da inizio alla sessione
@@ -26,14 +25,60 @@ class CUser
                 $_SESSION['name'] = $loggedUser->getName();
                 $_SESSION['type'] = $loggedUser->getType();
                 
+                //if(isset($_POST['remember']))
+      
                 $vUser->showProfile($loggedUser, $loggedUser, 'None');
             }
             else 
-                $vUser->showLogin();
+                $vUser->showLogin(true);
         }
         else
             $vUser->showLogin();
        
+    }
+    
+    /**
+     * La funzione Authentication verifica che le credenziali di accesso inserite da un utente
+     * siano corrette: in tal caso, l'applicazione lo riporterà verso la sua pagina, altrimenti
+     * restituirà la schermata di login, con un messaggio di errore
+     */
+    static function Register()
+    {
+        $vUser = new VUser();
+        if($vUser->validateSignUp())
+        {
+            $loggedUser = NULL;
+            
+            if(!FPersistantManager::getInstance()->exists('NickName', $_POST['name']) && !FPersistantManager::getInstance()->exists('Mail', $_POST['mail']))
+            { // se il nickname e la mail non sono stati ancora usati, si puo creare l'utente
+                 $loggedUser = new EUser();
+                 $loggedUser->setName($_POST['name']);
+                 $loggedUser->setPassword($_POST['pwd']);
+                 $loggedUser->setMail($_POST['mail']);
+                 $loggedUser->setType($_POST['type']);
+            }
+            
+            if($loggedUser) // se e' stato prelevato un id...
+            {
+                FPersistantManager::getInstance()->store($loggedUser); // si salva l'utente
+                
+                session_start(); // si da inizio alla sessione
+               
+                // i suoi dati sono memorizzati all'interno della sessione
+                $_SESSION['id'] =  $loggedUser->getId();
+                $_SESSION['name'] = $loggedUser->getName();
+                $_SESSION['type'] = $loggedUser->getType();
+                
+                //if(isset($_POST['remember']))
+                
+                $vUser->showProfile($loggedUser, $loggedUser, 'None');
+            }
+            else
+                $vUser->showSignUp(true);
+        }
+        else
+            $vUser->showSignUp();
+            
     }
     
     /**
@@ -48,6 +93,16 @@ class CUser
         else
             $vUser->showLogin();
     }
+
+    static function Signup()
+    {
+        $vUser = new VUser();
+        $user = CUser::getUserFromSession();
+        if ($user->getType() != 'guest') // se l'utente non è guest, non puo accedere al login
+            header('Location: /DeepMusic/index');
+        else
+            $vUser->showSignUp();
+    }
     
     /**
      * Effettua il logout.
@@ -60,7 +115,7 @@ class CUser
 
         session_destroy(); // distrugge la sessione
         
-        header('Location: /DeepMusic/home');
+        header('Location: /Beta/home');
         
     }
     

@@ -227,7 +227,7 @@ class FPersistantManager {
         $result = false;
         switch($obj){
             case(is_a($obj, EUser::class)):
-                $sql = FUser::storeListener(); // salvataggio di un EUser nel db
+                $sql = FUser::storeUser(); // salvataggio di un EUser nel db
                 break;
             case(is_a($obj, EUserInfo::class)):
                 $sql = FUserInfo::storeUserInfo(); // salvataggio di un EUserInfo nel db
@@ -523,7 +523,7 @@ class FPersistantManager {
      *            string | int $value2 opzionale se presente una doppia chiave nella table da interrogare
      * @return bool | id true se la entry esiste, false altrimenti
      */
-    private function execExists(string $sql, $value, $value2 = NULL): bool
+    private function execExists(string $sql, $value, $value2 = NULL)
     {
         try 
         {
@@ -544,12 +544,12 @@ class FPersistantManager {
             $stmt->setFetchMode(PDO::FETCH_ASSOC); // i risultati del db verranno salvati in un array con indici le colonne della table
             if ($stmt->rowCount()) {
                 $row = $stmt->fetch();
-                if ($row['id'])
-                    return $row['id'];
-                else
-                    return true;
-            } else
+                return $row['id'];
+            } 
+            else
                 return false;
+           
+                
         } catch (PDOException $e) {
             die($e->errorInfo);
             return FALSE; // ritorna false se ci sono errori

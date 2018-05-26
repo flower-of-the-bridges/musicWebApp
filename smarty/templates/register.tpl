@@ -32,32 +32,40 @@
 				<strong>Warning!</strong><br>Wrong combination of user and password. <br>Please retry.
 			</div>
 			{/if}
-			<h2>Login</h2>
-					<form class="form-horizontal" method="post" action="login">
+			<h2>Register</h2>
+					<form method="post" enctype="multipart/form-data" action="register">
 						<div class="form-group">
-							<label class="control-label " for="user">User Name:</label> <input
-								type="text" class="form-control" id="user"
-								placeholder="Enter username" name="name">
-
+							<label for="SongName">User Name: *</label> <input type="text"
+								class="form-control" name="name"
+								placeholder="Enter username...">
 						</div>
 						<div class="form-group">
-							<label class="control-label" for="pwd">Password:</label> <input
-								type="password" class="form-control" id="pwd"
-								placeholder="Enter password" name="pwd">
-
+							<label for="SongName">Password: *</label> <input type="password"
+								class="form-control" name="pwd"
+								placeholder="Enter password...">
 						</div>
 						<div class="form-group">
+							<label for="SongName">Mail: *</label> <input type="text"
+								class="form-control" name="mail"
+								placeholder="Enter mail...">
+						</div>
 
-							<div class="checkbox">
-								<label><input type="checkbox" name="remember">
-									Remember me</label>
+						<fieldset class="form-group">
+							<legend>User Type:</legend>
+							<div class="form-check">
+								<label class="form-check-label"> <input type="radio"
+									class="form-check-input" name="type" value="listener" checked>
+									Listener
+								</label>
 							</div>
-
-						</div>
-						<div class="form-group">
-
-							<button type="submit" class="btn btn-default">Submit</button>
-						</div>
+							<div class="form-check">
+								<label class="form-check-label"> <input type="radio"
+									class="form-check-input" name="type" value="musician">
+									Musician
+								</label>
+							</div>
+						</fieldset>
+						<button type="submit" class="btn btn-primary">Submit</button>
 					</form>
 
 		</div>

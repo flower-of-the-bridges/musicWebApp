@@ -6,21 +6,21 @@ class FUser
     
     static function existUserName() : string
     {
-        return "EXISTS(SELECT *
-                      FROM users
-                      WHERE nickname = :value;)";
+        return " SELECT *
+                 FROM users
+                 WHERE nickname = :value ;";
     }
     
     static function existUserMail() : string
     {
-        return "EXISTS(SELECT *
-                      FROM users
-                      WHERE mail = :value;)";
+        return "SELECT *
+                FROM users
+                WHERE mail = :value ;)";
     }
     
     static function existUser() : string
     {
-        return "SELECT id
+        return "SELECT *
                 FROM users
                 WHERE nickname = :value AND password = :value2;";
     }

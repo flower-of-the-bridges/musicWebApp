@@ -15,6 +15,12 @@ switch($resource)
         if($method=='POST') //se post
             CUser::Authentication(); // fornisce l'autenticazione
         break;
+    case($resource=='/DeepMusic/register'):
+        if($method=='GET') // se get
+            CUser::Signup(); // fornisce la pagina di registrazione
+        if($method=='POST') //se post
+            CUser::Register(); // registra un utente
+        break;
     case($resource=='/DeepMusic/logout'):
         if($method=='GET')
             CUser::Logout();
