@@ -115,7 +115,7 @@ class CUser
 
         session_destroy(); // distrugge la sessione
         
-        header('Location: /Beta/home');
+        header('Location: /DeepMusic/home');
         
     }
     
