@@ -14,7 +14,7 @@ class CUser
         $vUser = new VUser();
         if($vUser->validateLogin())
         {
-            $userId = FPersistantManager::getInstance()->exists('User', $_POST['name'], $_POST['pwd']); // si verifica che la coppia mail -pswd matchi una entry nel db
+            $userId = FPersistantManager::getInstance()->exists('User', $_POST['name']); // si verifica che la coppia mail -pswd matchi una entry nel db
             if($userId) // se e' stato prelevato un id...
             {
                 session_start(); // si da inizio alla sessione
@@ -49,11 +49,13 @@ class CUser
         {
             $loggedUser = NULL;
             
-            if(!FPersistantManager::getInstance()->exists('NickName', $_POST['name']) && !FPersistantManager::getInstance()->exists('Mail', $_POST['mail']))
-            { // se il nickname e la mail non sono stati ancora usati, si puo creare l'utente
+            if(!FPersistantManager::getInstance()->exists('NickName', $_POST['name']) 
+                && !FPersistantManager::getInstance()->exists('Mail', $_POST['mail']))    
+            { 
+                // se il nickname e la mail non sono stati ancora usati, si puo creare l'utente
                  $loggedUser = new EUser();
                  $loggedUser->setName($_POST['name']);
-                 $loggedUser->setPassword($_POST['pwd']);
+                 $loggedUser->setPassword($loggedUser->hashPwd($_POST['pwd']));
                  $loggedUser->setMail($_POST['mail']);
                  $loggedUser->setType($_POST['type']);
             }

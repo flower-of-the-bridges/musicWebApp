@@ -29,6 +29,23 @@ class EUser extends EObject
         return true;
     }
     
+    function validateMail(string $tc) : string
+    {
+        return filter_var($tc, FILTER_VALIDATE_EMAIL);        
+    }
+    
+    
+    function hashPwd (string $pwd) : string
+    {
+        return password_hash($pwd, PASSWORD_DEFAULT);
+    }
+    
+    function validatePwd (string $pwd) : bool
+    {
+        return password_verify($pwd, FPersistantManager::getInstance()->load('User', $this->id)->getPassword());
+    }
+    
+    
     function getName () : string
     {
         return $this->nickname;
@@ -45,7 +62,7 @@ class EUser extends EObject
      */
     function getUserInfo()
     {
-        $this->userInfo =FPersistantManager::getInstance()->load('UserInfo', $this->id); 
+        $this->userInfo = FPersistantManager::getInstance()->load('UserInfo', $this->id); 
         return $this->userInfo;
     }
     
