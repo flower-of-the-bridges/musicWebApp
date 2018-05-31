@@ -176,10 +176,18 @@ INSERT INTO `support_info` (`id_artist`, `contribute`, `period`) VALUES
 CREATE TABLE `users` (
   `id` smallint(5) UNSIGNED NOT NULL,
   `nickname` varchar(50) DEFAULT NULL,
-  `type` set('guest','user','music','mod') NOT NULL DEFAULT 'guest',
+  `type` set('listener','musician','moderator') NOT NULL,
   `mail` varchar(50) NOT NULL,
-  `password` varchar(32) NOT NULL
+  `password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `nickname`, `type`, `mail`, `password`) VALUES
+(17, 'Metallica', 'musician', 'metallica@mail.com', '$2y$10$SXQscNtJ5lRy.6VLBh83qegn1LhOvNr0L0aZXWInvZ66d086CAjq2'),
+(18, 'Giov', 'musician', 'mail@mail.com', '$2y$10$TptC8vTBp94M7rpPIeu.QuHR6MKuLjhzaeYc1RaIGpdGXgn3Al7AW');
 
 -- --------------------------------------------------------
 
@@ -290,7 +298,7 @@ ALTER TABLE `song`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

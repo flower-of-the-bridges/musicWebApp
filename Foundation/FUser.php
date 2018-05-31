@@ -4,21 +4,21 @@
 class FUser
 {
     
-    static function existUserName() : string
+    static function existsNickName() : string
     {
         return " SELECT *
                  FROM users
                  WHERE nickname = :value ;";
     }
     
-    static function existUserMail() : string
+    static function existsMail() : string
     {
         return "SELECT *
                 FROM users
                 WHERE mail = :value ;)";
     }
     
-    static function existUser() : string
+    static function existsUser() : string
     {
         return "SELECT *
                 FROM users

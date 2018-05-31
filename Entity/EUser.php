@@ -42,7 +42,7 @@ class EUser extends EObject
     
     function validatePwd (string $pwd) : bool
     {
-        return password_verify($pwd, FPersistantManager::getInstance()->load('User', $this->id)->getPassword());
+        return password_verify($pwd, FPersistantManager::getInstance()->load(EUser::class, $this->id)->getPassword());
     }
     
     
@@ -62,7 +62,7 @@ class EUser extends EObject
      */
     function getUserInfo()
     {
-        $this->userInfo = FPersistantManager::getInstance()->load('UserInfo', $this->id); 
+        $this->userInfo = FPersistantManager::getInstance()->load(EUserInfo::class, $this->id); 
         return $this->userInfo;
     }
     
@@ -74,7 +74,7 @@ class EUser extends EObject
     {
         $info->setId($this->id);
         
-        if(!FPersistantManager::getInstance()->load('UserInfo', $this->id)) // se le informazioni non sono presenti...
+        if(!FPersistantManager::getInstance()->load(EUserInfo::class, $this->id)) // se le informazioni non sono presenti...
         { //vengono caricate nel db
             FPersistantManager::getInstance()->store($info);
         }
@@ -92,7 +92,7 @@ class EUser extends EObject
      */
     function getImage()
     {
-        $this->img = FPersistantManager::getInstance()->load('Img', $this->id);
+        $this->img = FPersistantManager::getInstance()->load(EImg::class, $this->id);
         return $this->img;
     }
     
@@ -104,7 +104,7 @@ class EUser extends EObject
     {
         $img->setId($this->id);
         
-        if(!FPersistantManager::getInstance()->load('Img', $this->id)) // se le informazioni non sono presenti...
+        if(!FPersistantManager::getInstance()->load(EImg::class, $this->id)) // se le informazioni non sono presenti...
         { // vengono salvate nel db
             FPersistantManager::getInstance()->store($img); 
         }
@@ -122,7 +122,7 @@ class EUser extends EObject
      */
     function getSupportInfo()
     {
-        $this->supInfo = FPersistantManager::getInstance()->load('SupInfo', $this->id);
+        $this->supInfo = FPersistantManager::getInstance()->load(ESupInfo::class, $this->id);
         return $this->supInfo;
     }
     
@@ -134,7 +134,7 @@ class EUser extends EObject
     {
         $supInfo->setId($this->id);
         
-        if(!FPersistantManager::getInstance()->load('SupInfo', $this->id))
+        if(!FPersistantManager::getInstance()->load(ESupInfo::class, $this->id))
         {
             FPersistantManager::getInstance()->store($supInfo);
         }

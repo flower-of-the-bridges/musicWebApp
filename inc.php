@@ -19,6 +19,7 @@ require_once 'SmartyConfig.php';
 //require_once 'Foundation/FComment.php';
 //require_once 'Foundation/FListener.php';
 //require_once 'Foundation/FMusician.php';
+require_once 'Foundation/FTarget.php';
 require_once 'Foundation/FSong.php';
 require_once 'Foundation/FMp3.php';
 require_once 'Foundation/FUser.php';

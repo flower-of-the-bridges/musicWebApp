@@ -62,66 +62,47 @@ class FPersistantManager {
 /****************************************** LOAD *****************************************************/ 
     
     /**
-     * Metodo che carica dal dbms informazioni nel corrispettivo
-     * oggetto Entity.
-     * @param string $target il nome dell'oggetto (Song, User, Musician, ...)
+     * Metodo che carica dal dbms informazioni in un corrispettivo oggetto Entity.
+     * @param string $class il nome della classe (ottenibile tramite EClass::name )
+     * @param string $target opzionale, sono accettabili solo valori di FTarget
+     * $target puo essere specificato per le seguenti classi:
+     *  - ESong ( FTarget::LOAD_MUSICIAN_SONG )
+     *  - EFollower ( FTarget::LOAD_FOLLOWING FTarget::LOAD_FOLLOWERS )
+     *  - ESupporter ( FTarget::LOAD_SUPPORTERS FTarget::LOAD_SUPPORTING )
+     *  - EReport (FTarget::LOAD_MOD_REPORT)
      * @return object un oggetto Entity.
      */
-    function load(string $target, int $id)
+    function load(string $class, int $id, string $target=NULL)
     {
-        switch($target){
-            case($target=='User'): // load di un EUser
-                $sql = FUser::loadUser();
-                break;
-            case($target=='Song'): // load di un ESong
-                $sql = FSong::loadSong();
-                break;
-            case($target=='Mp3'): // load di un EMp3
-                $sql = FMp3::loadMp3();
-                break;
-            case($target=='Img'): // load di un immagine
-                $sql = FImg::loadImg();
-                break;
-            case($target=='musicianSongs'): // load di ESong di un musician
-                $sql = FSong::loadMusicianSongs();
-                break;
-            case($target=='Followers'): // load di EUser che seguono un utente
-                $sql = FFollower::loadFollowers();
-                break;
-            case($target=='Following'): // load di EUser seguiti da un utente
-                $sql = FFollower::loadFollowing();
-                break;
-            case($target=='SupInfo'): //load delle info del supporto
-                $sql = FSupInfo::loadSupportInfo();
-                break;
-            case($target=='Report'): //load di un report
-                $sql = FReport::loadReport();
-                break;
-            case($target=='modReports'): //load dei report assegnati ad un moderatore
-                $sql = FReport::loadReportByIdMod();
-                break;
-            case($target=='Supporters'): //load dei supporter di un utente
-                $sql = FSupporter::loadSupporters();
-                break;
-            case($target=='Supporting'): //load dei supporti di un utente
-                $sql = FSupporter::loadSupporting();
-                break;
-            default:
-                $sql = NULL;
-                break;
+        $sql='';
+        
+        if ( class_exists( $class ) ) // si verifica che l'oggetto Entity esista
+        {
+            $resource = substr($class,1); // si ricava il nome della risorsa corrispondente all'oggetto Entity
+            $foundClass = 'F'.$resource; // si ricava il nome della corrispettiva classe Foundation
+            
+            if($target) // se il target e' specificato
+                $method = 'load'.$target; // i
+            else 
+                $method = 'load'.$resource;
+            
+            if(method_exists($foundClass, $method))
+                $sql = $foundClass::$method();  
         }
+        
         if($sql)
-            return $this->execLoad($target, $id, $sql);
+            return $this->execLoad($class, $id, $sql, $target);
         else return NULL;
     }
     
     /**
      * Esegue una SELECT sul database
-     * @param string $target il tipo di richiesta che si sta effettuando
+     * @param string $class il nome della classe (ottenibile tramite EClass::name )
+     * @param string $target opzionale, sono accettabili solo valori di FTarget
      * @param string $sql la stringa contenente il comando SQL
      * @return boolean l'esito della transazione
      */
-    private function execLoad(string $target, int $id, string $sql) {
+    private function execLoad(string $class, int $id, string $sql, string $target=null) {
         
         try 
         {    
@@ -134,13 +115,16 @@ class FPersistantManager {
             
             while($row = $stmt->fetch())
             { // per ogni tupla restituita dal db viene istanziato un oggetto
-                if($target == 'musicianSongs' || $target == 'modReports') //inserire qui target che richiedono un array come ritorno
-                   $obj[] = FPersistantManager::createObjectFromRow($target, $row);
-               else $obj = FPersistantManager::createObjectFromRow($target, $row);            
+                if($target == FTarget::LOAD_FOLLOWERS || $target == FTarget::LOAD_FOLLOWING || 
+                   $target == FTarget::LOAD_MUSICIAN_SONG || $target==FTarget::LOAD_MOD_REPORTS ||
+                   $target == FTarget::LOAD_SUPPORTERS || $target == FTarget::LOAD_SUPPORTING) 
+                //inserire qui target che richiedono un array come ritorno
+                   $obj[] = FPersistantManager::createObjectFromRow($class, $row);
+               else $obj = FPersistantManager::createObjectFromRow($class, $row);            
             }
-            
             return $obj;
         }
+        
         catch (PDOException $e) 
         {
             die($e->errorInfo);
@@ -214,55 +198,30 @@ class FPersistantManager {
             return null; // ritorna null se ci sono errori
         }
     }
+    
 /****************************************** STORE ********************************************/    
    
     /**
      * Metodo che permette di salvare informazioni contenute in un oggetto
      * Entity sul database.
-     * @param object $obj il nome dell'oggetto.
+     * @param object $obj l'oggetto da salvare
      * @return bool $result il risultato dell'elaborazione
      */
     function store(&$obj) : bool
     {
         $result = false;
-        switch($obj){
-            case(is_a($obj, EUser::class)):
-                $sql = FUser::storeUser(); // salvataggio di un EUser nel db
-                break;
-            case(is_a($obj, EUserInfo::class)):
-                $sql = FUserInfo::storeUserInfo(); // salvataggio di un EUserInfo nel db
-                break;
-            case(is_a($obj, ESong::class)): // salvataggio di un Esong nel db
-                $sql = FSong::storeSong();
-                break;
-            case(is_a($obj, EMp3::class)): //salvataggio di un EMp3 nel db
-                $sql = FMp3::storeMp3(); 
-                break;
-            case(is_a($obj, EImg::class)): //salvataggio di una EImg nel db
-                $sql = FImg::storeImg(); //salva l'mp3
-                break;
-            case(is_a($obj, EComment::class)): //salvataggio di un EComment nel db
-                $sql = FComment::storeComment();
-                $result = $this->execStore($obj, $sql);
-                break;
-            case(is_a($obj, ESupInfo::class)): // salvataggio di un ESupInfo nel db
-                $sql = FSupInfo::storeSupportInfo();
-                break;
-            case(is_a($obj, EReport::class)): // salvataggio di un EReport nel db
-                $sql = FReport::storeReport();
-                break;
-            case(is_a($obj, EFollower::class)): // salvataggio di un EFollower nel db
-                $sql = FFollower::storeFollower();
-                break;
-            case(is_a($obj, ESupporter::class)): // salvataggio di un ESupporter nel db
-                $sql = FSupporter::storeSupporter();
-                break;
-            default:
-                $sql = null;
-                break;
-        }
-        if($sql) // se la stringa sql e' definita...
+        $sql='';
+        $class = get_class($obj); // restituisce il nome della classe dall'oggetto
+        $resource = substr($class,1); // nome della risorsa (User, Song, UserInfo, ...)
+        $foundClass = 'F'.$resource; // nome della rispettiva classe Foundation
+        $method = 'store'.$resource; // nome del metodo store+nome_risorsa
+        
+        if(class_exists($foundClass) && method_exists($foundClass, $method))  // se la classe esiste e il metodo pure...           
+            $sql = $foundClass::$method(); //ottieni la stringa sql
+        
+        if($sql) //se la stringa sql esiste...
             $result = $this->execStore($obj, $sql); // ... esegui la query
+        
         return $result;
     }
 
@@ -321,39 +280,18 @@ class FPersistantManager {
      */
     function update($obj) : bool
     {
-        switch($obj)
-        {
-            case(is_a($obj, EMusician::class)):
-                $sql = FMusician::updateMusician();
-                break;
-            case(is_a($obj, EListener::class)):
-                $sql = FListener::updateListener();
-                break;
-            case(is_a($obj, ESong::class)):
-                $sql = FSong::updateSong();
-                break;
-            case(is_a($obj, EImg::class)):
-                $sql = FImg::updateImg();
-                break;
-            case(is_a($obj, EComment::class)):
-                $sql = FComment::updateComment();
-                break;
-            case(is_a($obj, ESupInfo::class)):
-                $sql = FSupInfo::updateSupInfo();
-                break;
-            case(is_a($obj, EReport::class)):
-                $sql = FReport::updateReport();
-                break;
-            case(is_a($obj, ESupporter::class)):
-                $sql = FSupporter::updateSupporter();
-                break;
-            default:
-                $sql = null;
-                break;
-        }
-        if($sql)
-            return $this->execUpdate($obj, $sql);
-        else return false;
+        $sql='';
+        
+        $class = get_class($obj); // restituisce il nome della classe dall'oggetto
+        $resource = substr($class,1); // nome della risorsa (User, Song, UserInfo, ...)
+        $foundClass = 'F'.$resource; // nome della rispettiva classe Foundation
+        $method = 'update'.$resource; // nome del metodo update+nome_risorsa
+        
+        $sql = $foundClass::$method();
+        
+        $result = $this->execUpdate($obj, $sql); // ... esegui la query
+        
+        return $result;
     }
     
     /**
@@ -399,47 +337,31 @@ class FPersistantManager {
     /**
      * Metodo che cancella dal database una entry di un particolare
      * oggetto Entity.
-     * @param string $className il nome dell'oggetto (Song, User, Musician, ...)
+     * @param string $class il nome della classe (ottenibile tramite EClass::name )
      * @param int $id l'identifier della entry da eliminare.
      * @param int $id2 opzionale se l'entry nel database ha due primary key
      * @return bool se l'operazione ha avuto successo o meno.
      */
-    function remove(string $target, int $id, int $id2=null) : bool
+    function remove(string $class, int $id, int $id2=null) : bool
     {
-        switch($target)
+        $sql = '';
+        if (class_exists($class))
         {
-            case($target=='User'): // rimozione di un users dal db
-                $sql = FUser::removeUser();
-                return FPersistantManager::execRemove($sql, $id);
-                break;
-            case($target=='Song'): // rimozione di una song dal db
-                $sql = FSong::removeSong();
-                return FPersistantManager::execRemove($sql, $id);
-                break;
-            case($target=='Img'): // rimozione di una immagine dal db
-                $sql = FImg::removeImg();
-                return FPersistantManager::execRemove($sql, $id);
-                break;
-            case($target=='Comment'): // rimozione di un comment dal db
-                $sql = FComment::removeComment();
-                return FPersistantManager::execRemove($sql, $id);
-                break;
-            case($target=='Report'): // rimozione di un report dal db
-                $sql = FReport::removeReport();
-                return FPersistantManager::execRemove($sql, $id);
-                break;
-            case($target=='Follower'):
-                $sql = FFollower::removeFollower();
-                return FPersistantManager::execRemove($sql, $id, $id2);
-                break;
-            case($target=='Supporters'):
-                $sql = FSupporter::removeSupporter();
-                return FPersistantManager::execRemove($sql, $id, $id2);
-                break;
-            default:
-                return false;
-                break;
+            $resource = substr($class, 1);
+            $foundClass = 'F' . $resource;
+            $method = 'remove' . $resource;
+            
+            $sql = $foundClass::$method();
         }
+        if ($sql)
+        {
+            if($value2 && ($class==ESupporter::class || $class==EFollower::class))
+                return $this->execExists($sql, $id, $id2);
+            else
+                return $this->execExists($sql, $id2);
+        }
+        else
+            return NULL;
   
     }
     
@@ -475,41 +397,36 @@ class FPersistantManager {
     
     /**
      * Metodo che verifica l'esistenza di un valore in una entry di una table
-     * @param string $target il tipo di dato di cui si vuole controllare l'esistenza
+     * @param string $class il nome della classe (ottenibile tramite EClass::name )
+     * @param string $target opzionale, sono accettabili solo valori di FTarget. 
+     * Associazioni class - target è la seguente:
+     *  - EUser ( FTarget::EXISTS_USER FTarget::EXISTS_MAIL FTarget::EXISTS_NICKNAME )
+     *  - EFollower (FTarget::EXISTS_FOLLOWER )
+     *  - ESupporter (FTarget::EXISTS_SUPPORTER)
      * @param string | int $value il valore di cui controllare l'unicita'
-     * @param string | int $value2 opzionale se presente una doppia chiave nella table da interrogare
+     * @param string | int $value2 opzionale, se presente una doppia chiave nella table da interrogare
      * @return bool | int true se il dato esiste, false altrimenti. un int se si richiede l'esistenza di un User.
      */
-    function exists(string $target, $value, $value2 = null) 
+    function exists(string $class, string $target, $value, $value2 = null) 
     {
-        switch($target)
+        $sql = '';
+        if (class_exists($class)) 
         {
-            case($target=='Mail'): // controlla se una mail sia gia stata inserita
-                $sql = FUser::existUserMail();
-                return FPersistantManager::execExists($sql, $value);
-                break;
-            case($target=='NickName'): // controlla se un nickname sia gia stato inserito
-                $sql = FUser::existUserName();
-                return FPersistantManager::execExists($sql, $value);
-                break;
-            case($target=='User' && $value2):
-                $sql = FUser::existUser();
-                return FPersistantManager::execExists($sql, $value, $value2);
-            case($target=='Song'): // controlla se un utente abbia gia inserito una canzone con lo stesso nome
-                return FPersistantManager::execExists($sql, $value);
-                break; 
-            case($target=='Follower' && $value2): // controlla se un utente sta seguendo un altr utente
-                $sql = FFollower::existsFollower();
-                return FPersistantManager::execExists($sql, $value, $value2);
-                break;
-            case($target=='Supporters' && $value2): // controlla se un artista supporta un altro utente
-                $sql = FSupporter::existsSupporter();
-                return FPersistantManager::execExists($sql, $value, $value2);
-                break;
-            default:
-                return false;
-                break;
+            $resource = substr($class, 1);
+            $foundClass = 'F' . $resource;
+            $method = 'exists' . $target;
+            
+            $sql = $foundClass::$method();
         }
+        if ($sql)
+        {
+            if($value2 && ($target==FTarget::EXISTS_SUPPORTER || $target==FTarget::EXISTS_FOLLOWER || $target==FTarget::EXISTS_USER))
+                return $this->execExists($sql, $value, $value2);
+            else
+                return $this->execExists($sql, $value);
+        }
+        else
+            return NULL;
     }
 
     /**
@@ -542,6 +459,7 @@ class FPersistantManager {
             
             $result = $stmt->execute(); // esegue lo statement e ritorna il risultato
             $stmt->setFetchMode(PDO::FETCH_ASSOC); // i risultati del db verranno salvati in un array con indici le colonne della table
+  
             if ($stmt->rowCount()) {
                 $row = $stmt->fetch();
                 return $row['id'];
@@ -590,78 +508,28 @@ class FPersistantManager {
      */
     private function bindValues(PDOStatement &$stmt, &$obj) 
     {
-        switch($obj)
-        {
-            case(is_a($obj, EUser::class)): // associazione statement - EUser
-                FUser::bindValues($stmt, $obj);
-                break;
-            case(is_a($obj, EUserInfo::class)): // associazione statement - EUserInfo
-                FUserInfo::bindValues($stmt, $obj);
-                break;
-            case(is_a($obj, ESong::class)): // associazione statement - ESong
-                FSong::bindValues($stmt, $obj);
-                break;
-            case(is_a($obj, EMp3::class)): // associazione statement - EMp3
-                FMp3::bindValues($stmt, $obj);
-                break;
-            case(is_a($obj, EImg::class)): // associazione statement - EImg
-                FImg::bindValues($stmt, $obj);
-                break;
-            case(is_a($obj, ESupInfo::class)): // associazione statement - ESupInfo
-                FSupInfo::bindValues($stmt, $obj);
-                break;
-            case(is_a($obj, EReport::class)): // associazione statement - EReport
-                FReport::bindValues($stmt, $obj);
-                break;
-            case(is_a($obj, EFollower::class)): // associazione statement - EFollower
-                FFollower::bindValues($stmt, $obj);
-                break;
-            case(is_a($obj, ESupporter::class)): // associazione statement - EFollower
-                FSupporter::bindValues($stmt, $obj);
-                break;
-            case(is_a($obj, EComment::class)): // associazione statement - EComment
-                break;
-            default:
-                break;
-        }
+        $class = get_class($obj); // restituisce il nome della classe dall'oggetto
+        $resource = substr($class,1); // nome della risorsa (User, Song, UserInfo, ...)
+        $foundClass = 'F'.$resource; // nome della rispettiva classe Foundation
+        
+        $foundClass::bindValues($stmt, $obj); // associazione statement - EObject
     }
     
     /**
      * Da una tupla ricevuta da una query istanzia l'oggetto corrispondente
-     * @param string $target individua il tipo di oggetto da creare
+     * @param string $class il nome della classe (ottenibile tramite EClass::name )
      * @param $row array la tupla restituita dal dbms
      * @return mixed l'oggetto risultato dell'elaborazione
      */
-    private function createObjectFromRow(string $target, $row)
+    private function createObjectFromRow(string $class, $row)
     {
-        $obj; //oggetto che conterra' l'istanza dell'elaborazione
+        $obj = NULL; //oggetto che conterra' l'istanza dell'elaborazione
         
-        switch($target)
+        if ( class_exists( $class ) ) 
         {
-            case($target=='User' || $target=='Followers' || $target=='Following'): // creazione di un oggetto EUser
-                $obj = FUser::createObjectFromRow($row);
-                break;
-            case($target=='UserInfo'):
-                $obj = FUserInfo::createObjectFromRow($row); //creazione di un oggetto EUserInfo
-                break;
-            case($target=='Song' || $target=='musicianSongs'): // creazione di un oggetto ESong
-                $obj = FSong::createObjectFromRow($row);
-                break;
-            case($target=='Mp3'): // creazione di un oggetto EMp3
-                $obj= FMp3::createObjectFromRow($row);
-                break;
-            case($target=='Img'): // creazione di un oggetto EImg
-                $obj= FImg::createObjectFromRow($row);
-                break;
-            case($target=='SupInfo'): // creazione di un oggetto ESupInfo
-                $obj= FSupInfo::createObjectFromRow($row);
-                break;
-            case($target=='Report'): // creazione di un oggetto EReport
-                $obj= FReport::createObjectFromRow($row);
-                break;
-            default:
-                $obj=NULL;
-                break;
+            $foundClass = 'F'.substr($class,1);
+            
+            $obj = $foundClass::createObjectFromRow($row);         
         }
         
         return $obj;
