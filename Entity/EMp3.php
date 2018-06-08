@@ -57,8 +57,8 @@ class EMp3 extends EObject
 /********************************************** SETTER *************************************************/  
 
     /**
-     * 
-     * @param int $size
+     * Imposta la dimensione dell'Mp3
+     * @param int $size la dimensione dell'mp3
      */
     function setSize (int $size)
     {
@@ -66,8 +66,8 @@ class EMp3 extends EObject
     }
     
     /**
-     * 
-     * @param string $type
+     * Imposta il Mime Type dell'Mp3
+     * @param string $type il mime typ dell'mp3 (audio/mpeg)
      */
     function setType (string $type)
     {
@@ -75,11 +75,37 @@ class EMp3 extends EObject
     }
     
     /**
-     * 
-     * @param mixed $mp3
+     * Imposta il contenuto del file
+     * @param mixed $mp3 il contenuto del file
      */
-    function setMp3 (&$mp3)
+    function setMp3 ($mp3)
     {
         $this->mp3 = $mp3;
+    }
+    
+/*************************************** VALIDATION *******************************************/
+    
+    /**
+     * verifica che la dimensione del file sia superiore ad 1Mb
+     * @return bool true se la dimensione e' corretta, false altrimenti
+     */
+    function validateSize() : bool
+    {
+        if($this->size>=1437521)
+            return true;
+        else
+            return false;
+    }
+    
+    /**
+     * Verifica che il mime type sia effettivamente audio/mpeg
+     * @return bool true se il mime type e' corretto, false altrimenti
+     */
+    function validateType() : bool
+    {
+        if($this->type!='audio/mpeg')
+            return false;
+        else 
+            return true;
     }
 }

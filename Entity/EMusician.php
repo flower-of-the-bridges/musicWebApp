@@ -12,85 +12,47 @@ include_once 'Entity/EObject.php';
  */
 class EMusician extends EUser
 {
-
-    private $genre;
- // genere musicale adottato dal musicista. Calcolato rispetto ai generi di ogni singola canzone.
+    private $supInfo; // le informazioni per il supporto dell'utente
     
     /**
      *
      */
     function __construct()
     {
-        $this->setType('musician');
+        parent::__construct();
     }
 
     /**
-     *
-     * @return string il genere musicale dell'artista
+     * Restituisce le informazioni sul supporto
+     * @return ESupInfo | NULL
      */
-    function getGenre(): string
+    function getSupportInfo()
     {
-        return $this->genre;
+        $this->supInfo = FPersistantManager::getInstance()->load(ESupInfo::class, $this->id);
+        return $this->supInfo;
     }
-
+    
     /**
-     * Calcola il genere musicale dell'artista come combinazione dei generi musicali
-     * di ogni singola canzone, oppure viene fornito in ingresso.
-     *
-     * @param string $genre
-     *            il genere musicale dell'artista (facoltativo)
+     * Imposta le informazioni sul supporto 
+     * @param ESupInfo $supInfo
      */
-    function setGenre(string $genre = null): void
+    function setSupportInfo(ESupInfo $supInfo)
     {
-        if($genre!=NULL)
+        $supInfo->setId($this->id);
+        
+        if(!FPersistantManager::getInstance()->load(ESupInfo::class, $this->id))
         {
-            $this->genre = $genre;
+            FPersistantManager::getInstance()->store($supInfo);
         }
-        else 
+        else
         {
-            $this->genre = ''; //inizializza il genere
-            $songs = FPersistantManager::getInstance()->load('musicianSongs', $this->id);
-            if($songs)
-            {
-                foreach ($songs as $song)
-                {
-                    $songGenre = $song->getGenre();
-                    if(!preg_match('/\b'.$songGenre.'\b/',$this->genre)) //verifica che il genere non sia gia stato inserito
-                      $this->genre.=$songGenre." "; // aggiunge il valore al genere
-                }
-            }
-            FPersistantManager::getInstance()->update($this);
+            FPersistantManager::getInstance()->update($supInfo);
         }
+        
+        $this->supInfo = $supInfo;
     }
-
   
-    /**
-     * Assegna una canzone all'artista.
-     *
-     * @param Esong $song
-     *            la canzone da aggiungere
-     */
-     
-     function addSong(Esong &$song) : bool
-     {
-         if(FPersistantManager::getInstance()->store($song)){
-             $song->setMp3();
-             return FPersistantManager::getInstance()->store($song->getMp3());
-         }
-         else return false;
-     }
-     
-     /**
-     * Rimuove una canzone del musicista
-     *
-     * @param int $id l'id della canzone da ottenere
-     * @return bool true se l'operazione e' riuscita, false altrimenti
-     */
-     function removeSong(ESong &$song) : bool
-     {
-     // TODO
-     }
-
+  
     /**
      * Restituisce le canzoni dell'artista
      *
@@ -98,7 +60,7 @@ class EMusician extends EUser
      */
     function getSongs()
     {
-        $songs = FPersistantManager::getInstance()->load('musicianSongs', $this->id);
+        $songs = FPersistantManager::getInstance()->load(ESong::class, $this->id, FTarget::LOAD_MUSICIAN_SONG);
         if ($songs == NULL)
             return null;
         else

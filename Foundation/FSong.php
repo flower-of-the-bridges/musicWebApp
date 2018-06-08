@@ -122,10 +122,9 @@ class FSong {
     static function createObjectFromRow($row)
     {
         // istanzia il musicista autore dell'artista
-        $musician = new EUser();
-        $musician->setType('Musician');
+        $musician = new EMusician();
         $musician->setId($row['id_artist']); 
-        $musician->setName($row['nickname']); 
+        $musician->setNickName($row['nickname']); 
         // creazione dell'oggetto Esong
         $song = new ESong(); 
         $song->setId($row['id']);
@@ -133,10 +132,14 @@ class FSong {
         $song->setArtist($musician);
         $song->setGenre($row['genre']);
         //impostazione visibilita'.
-        if ($row['forall']) $song->setForAll();
-        elseif ($row['registered']) $song->setForRegisteredOnly();
-        elseif ($row['supporters']) $song->setForSupportersOnly();
-        else $song->setHidden();
+        if ($row['forall']) 
+            $song->setForAll();
+        elseif ($row['registered']) 
+            $song->setForRegisteredOnly();
+        elseif ($row['supporters']) 
+            $song->setForSupportersOnly();
+        else 
+            $song->setHidden();
         // restituisce la canzone
         return $song; 
     }      

@@ -8,14 +8,13 @@ include_once 'Entity/EObject.php';
 
 class EUser extends EObject
 {
-    private $nickname;
-    private $mail;
-    private $password;
-    private $type;
+    protected $nickname; // il nome dell'utente
+    protected $mail; // la mail dell'utente
+    protected $password; // la password dell'utente
     
-    private $userInfo; // le informazioni dell'utente
-    private $img; // le immagini dell'utente 
-    private $supInfo; // le informazioni per il supporto dell'utente (se musicista)
+    protected $userInfo; // le informazioni dell'utente
+    protected $img; // l'immagine dell'utente 
+     
         
     function __construct()
     {
@@ -29,29 +28,84 @@ class EUser extends EObject
         return true;
     }
     
-    function validateMail(string $tc) : string
+    /**
+     * Metodo che verifica se l'email dell'istanza sia corretta. Una email corretta
+     * e' nella forma domain@example.com
+     * @return bool true se l'email e' corretta, false altrimenti
+     */
+    function validateMail() : bool
     {
-        return filter_var($tc, FILTER_VALIDATE_EMAIL);        
+        if($this->mail && filter_var($this->mail, FILTER_VALIDATE_EMAIL))
+        {
+            return true;
+        }
+        else
+            return false;
     }
     
-    
-    function hashPwd (string $pwd) : string
+    /**
+     * Metodo che verifica se l'email dell'istanza sia corretta. Una password corretta
+     * deve contenere almeno un numero, almeno una lettera minuscola e almeno una lettera maiuscola
+     * @return bool true se la password e' corretta, false altrimenti
+     */
+    function validatePassword() : bool
     {
-        return password_hash($pwd, PASSWORD_DEFAULT);
+        if($this->password && preg_match('/^[[:alpha:]]{3,20}$/', $this->password))
+        {
+            return true;
+        }
+        else
+            return false;
     }
     
-    function validatePwd (string $pwd) : bool
+    /**
+     * Metodo che effettua l'hash della password
+     */
+    function hashPassword () 
     {
-        return password_verify($pwd, FPersistantManager::getInstance()->load(EUser::class, $this->id)->getPassword());
+        $this->password = password_hash($this->password, PASSWORD_DEFAULT);
     }
     
+    /**
+     * Metodo che controllo se la password dell'oggetto sia corrispondente alla entry nel database
+     * che contiene lo stesso id dell'oggetto che ha richiamato il metodo
+     * @param string $pwd la password 
+     * @return bool
+     */
+    function checkPassword () : bool
+    {
+        return password_verify($this->password, FPersistantManager::getInstance()->load(EUser::class, $this->id)->getPassword());
+    }
     
-    function getName () : string
+    /**
+     * Metodo che verifica se il nickname dell'istanza sia corretto. Un nickname si intende corretto
+     * quando contiene solo caratteri alfanumerici, per una lunghezza tra 3 e 20 caratteri.
+     * @return bool true se il nickname e' corretto, false altrimenti
+     */
+    function validateNickName() : bool
+    {
+        if ($this->nickname && preg_match('/^[[:alpha:]]{3,20}$/', $this->nickname))
+        {
+            return true;
+        }
+        else 
+            return false;
+    }
+    
+    /**
+     * 
+     * @return string il nickname dell'utente
+     */
+    function getNickName () : string
     {
         return $this->nickname;
     }
     
-    function setName (string $nickname)
+    /**
+     * 
+     * @param string $nickname il nickname dell'utente
+     */
+    function setNickName (string $nickname)
     {
         $this->nickname = $nickname;
     }
@@ -73,17 +127,18 @@ class EUser extends EObject
     function setUserInfo(EUserInfo $info)
     {
         $info->setId($this->id);
+        $this->userInfo = $info;
         
         if(!FPersistantManager::getInstance()->load(EUserInfo::class, $this->id)) // se le informazioni non sono presenti...
         { //vengono caricate nel db
-            FPersistantManager::getInstance()->store($info);
+            FPersistantManager::getInstance()->store($this->info);
         }
         else 
         { //altrimenti vengono aggiornate
-            FPersistantManager::getInstance()->update($info);
+            FPersistantManager::getInstance()->update($this->info);
         }
         
-        $this->userInfo = $info;
+        
     }
     
     /**
@@ -117,59 +172,36 @@ class EUser extends EObject
     }
     
     /**
-     * Restituisce le informazioni sul supporto dell'utente (di tipo musicista)
-     * @return ESupInfo | NULL
+     * 
+     * @return string la paswword dell'utente
      */
-    function getSupportInfo()
-    {
-        $this->supInfo = FPersistantManager::getInstance()->load(ESupInfo::class, $this->id);
-        return $this->supInfo;
-    }
-    
-    /**
-     * Imposta le informazioni sul supporto dell'utente (di tipo musicista)
-     * @param ESupInfo $supInfo
-     */
-    function setSupportInfo(ESupInfo $supInfo)
-    {
-        $supInfo->setId($this->id);
-        
-        if(!FPersistantManager::getInstance()->load(ESupInfo::class, $this->id))
-        {
-            FPersistantManager::getInstance()->store($supInfo);
-        }
-        else
-        {
-            FPersistantManager::getInstance()->update($supInfo);
-        }
-        
-        $this->supInfo = $supInfo;
-    }
-    
-    
-    function getType () : string
-    {
-        return $this->type;
-    }
-    
-    function setType (string $type)
-    {
-        $this->type = $type;
-    }
-    
     function getPassword () : string
     {
         return $this->password;
     }
+    
+    /**
+     * 
+     * @param string $pwd la password dell'utente
+     */
     function setPassword (string $pwd)
     {
         $this->password = $pwd;
     }
     
+    /**
+     * 
+     * @return string la mail dell'utente
+     */
     function getMail () : string
     {
         return $this->mail;
     }
+    
+    /**
+     * 
+     * @param string $mail la mail dell'utente
+     */
     function setMail (string $mail)
     {
         $this->mail = $mail;
@@ -177,7 +209,8 @@ class EUser extends EObject
     
     function __toString()
     {
-        return "Nome: ".$this->nickname."\nTipo: ".$this->type."\nId: ".$this->id;
+        return "Nome: ".$this->nickname."\nId: ".$this->id;
     }
+    
     
 }

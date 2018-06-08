@@ -124,7 +124,6 @@ class FPersistantManager {
             }
             return $obj;
         }
-        
         catch (PDOException $e) 
         {
             die($e->errorInfo);
@@ -210,8 +209,12 @@ class FPersistantManager {
     function store(&$obj) : bool
     {
         $result = false;
-        $sql='';
-        $class = get_class($obj); // restituisce il nome della classe dall'oggetto
+        $sql = '';
+        $class = '';
+        if(is_a($obj, EListener::class) || is_a($obj, EMusician::class))
+            $class = get_parent_class($obj);
+        else 
+            $class = get_class($obj); // restituisce il nome della classe dall'oggetto
         $resource = substr($class,1); // nome della risorsa (User, Song, UserInfo, ...)
         $foundClass = 'F'.$resource; // nome della rispettiva classe Foundation
         $method = 'store'.$resource; // nome del metodo store+nome_risorsa
@@ -282,7 +285,12 @@ class FPersistantManager {
     {
         $sql='';
         
-        $class = get_class($obj); // restituisce il nome della classe dall'oggetto
+        $class = '';
+        if(is_a($obj, EListener::class) || is_a($obj, EMusician::class))
+            $class = get_parent_class($obj);
+        else
+            $class = get_class($obj); // restituisce il nome della classe dall'oggetto
+            
         $resource = substr($class,1); // nome della risorsa (User, Song, UserInfo, ...)
         $foundClass = 'F'.$resource; // nome della rispettiva classe Foundation
         $method = 'update'.$resource; // nome del metodo update+nome_risorsa
@@ -508,7 +516,12 @@ class FPersistantManager {
      */
     private function bindValues(PDOStatement &$stmt, &$obj) 
     {
-        $class = get_class($obj); // restituisce il nome della classe dall'oggetto
+        $class = '';
+        if(is_a($obj, EListener::class) || is_a($obj, EMusician::class))
+            $class = get_parent_class($obj);
+        else
+            $class = get_class($obj); // restituisce il nome della classe dall'oggetto
+        
         $resource = substr($class,1); // nome della risorsa (User, Song, UserInfo, ...)
         $foundClass = 'F'.$resource; // nome della rispettiva classe Foundation
         

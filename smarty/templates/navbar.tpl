@@ -6,23 +6,23 @@
 					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="index">Deep Music</a>
+				<a class="navbar-brand" href="/deepmusic/">Deep Music</a>
 			</div>
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav">
-					{if $uType == "guest"}
-					<li><a href="login"><span
+					{if $uType eq 'guest'}
+					<li><a href="/deepmusic/user/login"><span
 							class="glyphicon glyphicon-log-in"></span> Log In</a></li>
-					<li><a href="register"><span
-							class="glyphicon glyphicon-sign-up"></span> Sign Up</a></li>
+					<li><a href="/deepmusic/user/signup"><span
+							class="glyphicon glyphicon-plus"></span> Sign Up</a></li>
 				    {else}
-					<li><a href="profile?id={$uId}"><span
+					<li><a href="/deepmusic/user/profile/{$uId}&song"><span
 							class="glyphicon glyphicon-user"></span> {$uName}'s Account </a></li>
-					{if $uType == "musician"}
-					<li><a href="load"><span
+					{if $uType eq 'musician'}
+					<li><a href="/deepmusic/song/load"><span
 							class="glyphicon glyphicon-cd"></span> Add Song </a></li> 
 					{/if}
-					<li><a href="logout"><span
+					<li><a href="/deepmusic/user/logout"><span
 							class="glyphicon glyphicon-log-out"></span> Log Out </a></li>
 					{/if} 
 					

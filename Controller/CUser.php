@@ -5,47 +5,139 @@ require_once 'inc.php';
 class CUser
 {
     /**
+     * Metodo che implementa la funzionalita' di login. Se richiamato tramite GET, fornisce
+     * la pagina di login, se richiamato tramite POST cerca di autenticare l'utente attraverso
+     * i valori che quest'ultimo ha fornito
+     */
+    static function login()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') // se il metodo e' get...
+        { //...carica la pagina del login, se l'utente e' effettivamente un guest
+            $vUser = new VUser();
+            $user = CSession::getUserFromSession();
+            if(get_class($user)!=EGuest::class) // se l'utente non è guest, non puo accedere al login
+            {
+                $vUser->showErrorPage($user, 'Why are you doing this? Yuo\'re already logged!');
+            }
+            else
+                $vUser->showLogin();
+        }
+        else if ($_SERVER['REQUEST_METHOD'] == 'POST')
+            CUser::authentication();
+        else
+            header('Location: HTTP/1.1 Invalid HTTP method detected');
+    }
+
+    static function signup()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') //se il metodo http utilizzato e' GET...
+        { //...visualizza la pagina di signup, controllando che l'utente sia effettivamente un guest
+            $vUser = new VUser();
+            $user = CSession::getUserFromSession();
+            if (get_class($user)!=EGuest::class) // se l'utente non è guest, non puo accedere al login
+                $vUser->showErrorPage($user, 'Why are you doing this? Yuo\'re already logged!');
+            else
+                $vUser->showSignUp();
+        }
+        else if ($_SERVER['REQUEST_METHOD'] == 'POST')
+            CUser::register();
+        else
+            header('Location: Invalid HTTP method detected');
+    }
+    
+    /**
+     * La funzione mostra il profilo di un utente. A seconda del tipo di URL, saranno visualizzati contenuti differenti.
+     * In particolare:
+     *  - /deepmusic/user/profile/id&song mostra la lista delle canzoni
+     *  - /deepmusic/user/profile/id&follower mostra la lista dei follower
+     *  - /deepmusic/user/profile/id&following mostra la lista dei following dell'utente
+     * @param $string l'argomento della url. se non specificato, si viene reindirizzati ad una pagina di errore.
+     */
+    static function profile($string = null)
+    {
+        $vUser = new VUser();
+        $loggedUser = CSession::getUserFromSession();
+        
+        if ($string && $_SERVER['REQUEST_METHOD'] == 'GET') // se la stringa e' specificata, l'url e' completa e si puo procedere
+        {
+            if (is_numeric($string)) // se presenta solo l'id
+            {
+                $profileUser = FPersistantManager::getInstance()->load(EUser::class, $string); // si cerca di caricare l'utente dal database
+                if ($profileUser) // se esiste...
+                    $vUser->showProfile($profileUser, $loggedUser, 'None'); // si mostra il profilo base
+                else
+                    $vUser->showErrorPage($loggedUser, 'The user id doesn\'t match any DeepMusic\'s user!'); // altrimenti si reindirizza ad una pagina di errore
+            } 
+            elseif ($params = explode('&', $string)) // se l'url e' nella forma "id&content", si separano i valori
+            {
+                if (is_numeric($params[0])) // se il primo valore e' l'id...
+                {
+                    // si effettua il caricamento dell'utente
+                    $profileUser = FPersistantManager::getInstance()->load(EUser::class, $params[0]);
+                    
+                    if ($profileUser) 
+                    {
+                        if ($params[1] == 'song')  // se il parametro e' song
+                        {
+                            // si carica la lista delle canzoni dell'utente (caricate se musician, preferite se listener)
+                            $songs = FPersistantManager::getInstance()->load(ESong::class, $params[0], FTarget::LOAD_MUSICIAN_SONG);
+                            $vUser->showProfile($profileUser, $loggedUser, 'Song List', $songs);
+                        }
+                    } 
+                    else
+                        $vUser->showErrorPage($loggedUser, 'The user id doesn\'t match any DeepMusic\'s user!');
+                } 
+                else
+                    header('Location: HTTP/1.1 Invalid URL scheme');
+            } 
+            else
+                header('Location: HTTP/1.1 Invalid HTTP method detected');
+        } 
+        else
+            $vUser->showErrorPage($loggedUser, 'The URL has too few arguments');
+    }
+
+    /**
      * La funzione Authentication verifica che le credenziali di accesso inserite da un utente
      * siano corrette: in tal caso, l'applicazione lo riporterà verso la sua pagina, altrimenti
      * restituirà la schermata di login, con un messaggio di errore
      */
-    static function Authentication()
+    private function authentication()
     {
         $vUser = new VUser();
-        if($vUser->validateLogin())
+        $loggedUser = $vUser->createUser();
+        
+        if($vUser->validateLogin($loggedUser))
         {
             $authenticated = false; // bool per l'autenticazione
             
-            $userId = FPersistantManager::getInstance()->exists(EUser::class, FTarget::EXISTS_NICKNAME, $_POST['name']); // si verifica che l'utente inserito matchi una entry nel db
+            $userId = FPersistantManager::getInstance()->exists(EUser::class, FTarget::EXISTS_NICKNAME, $loggedUser->getNickName()); // si verifica che l'utente inserito matchi una entry nel db
             
             if($userId) // se e' stato prelevato un id...
             {
-                $loggedUser = FPersistantManager::getInstance()->load(EUser::class, $userId); // viene caricato l'utente
-                
-                if($loggedUser->validatePwd($_POST['pwd'])) // se la password e' corretta
+               
+                $loggedUser->setId($userId); // viene assegnato all'utente l'user id
+
+                if($loggedUser->checkPassword()) // se la password e' corretta
                 {
+                    unset($loggedUser); // l'istanza utilizzata per il login viene rimossa
+                    $user = FPersistantManager::getInstance()->load(EUser::class, $userId); // viene caricato l'utente
+                    
                     $authenticated = true; // l'utente e' autenticato
                     
-                    session_start(); // si da inizio alla sessione
-                    
-                    // i suoi dati sono memorizzati all'interno della sessione
-                    $_SESSION['id'] =  $loggedUser->getId();
-                    $_SESSION['name'] = $loggedUser->getName();
-                    $_SESSION['type'] = $loggedUser->getType();
-                    
-                    //if(isset($_POST['remember']))
-                    
-                    $vUser->showProfile($loggedUser, $loggedUser, 'None');
+                    CSession::startSession($user);
+                                    
+                    header('Location: /deepmusic/index');
                 }
             }
             
             if(!$authenticated)
                 $vUser->showLogin(true);
-          
+                
         }
         else
             $vUser->showLogin();
-       
+            
     }
     
     /**
@@ -53,37 +145,24 @@ class CUser
      * siano corrette: in tal caso, l'applicazione lo riporterà verso la sua pagina, altrimenti
      * restituirà la schermata di login, con un messaggio di errore
      */
-    static function Register()
+    private function register()
     {
         $vUser = new VUser();
-        if($vUser->validateSignUp())
+        $loggedUser = $vUser->createUser(); // viene creato un utente con i parametri della form
+        
+        if($vUser->validateSignUp($loggedUser))
         {
-            $loggedUser = NULL;
-            
-            if(!FPersistantManager::getInstance()->exists(EUser::class, FTarget::EXISTS_NICKNAME, $_POST['name']) 
-                && !FPersistantManager::getInstance()->exists(EUser::class, FTarget::EXISTS_MAIL, $_POST['mail']))    
-            { 
-                // se il nickname e la mail non sono stati ancora usati, si puo creare l'utente
-                 $loggedUser = new EUser();
-                 $loggedUser->setName($_POST['name']);
-                 $loggedUser->setPassword($loggedUser->hashPwd($_POST['pwd']));
-                 $loggedUser->setMail($_POST['mail']);
-                 $loggedUser->setType($_POST['type']);
-            }
-            
-            if($loggedUser) // se e' stato prelevato un id...
+            if(!FPersistantManager::getInstance()->exists(EUser::class, FTarget::EXISTS_NICKNAME, $loggedUser->getName())
+                && !FPersistantManager::getInstance()->exists(EUser::class, FTarget::EXISTS_MAIL, $loggedUser->getMail()))
             {
+                // se il nickname e la mail non sono stati ancora usati, si puo salvare l'utente
+ 
+                $loggedUser->hashPassword(); // si cripta la password
+            
                 FPersistantManager::getInstance()->store($loggedUser); // si salva l'utente
                 
-                session_start(); // si da inizio alla sessione
+                CSession::startSession($loggedUser);
                
-                // i suoi dati sono memorizzati all'interno della sessione
-                $_SESSION['id'] =  $loggedUser->getId();
-                $_SESSION['name'] = $loggedUser->getName();
-                $_SESSION['type'] = $loggedUser->getType();
-                
-                //if(isset($_POST['remember']))
-                
                 $vUser->showProfile($loggedUser, $loggedUser, 'None');
             }
             else
@@ -95,66 +174,14 @@ class CUser
     }
     
     /**
-     * Controlla l'accesso alla pagina di login. 
-     */
-    static function Login()
-    {
-        $vUser = new VUser();
-        $user = CUser::getUserFromSession();
-        if($user->getType()!='guest') // se l'utente non è guest, non puo accedere al login
-            header('Location: /DeepMusic/index');
-        else
-            $vUser->showLogin();
-    }
-
-    static function Signup()
-    {
-        $vUser = new VUser();
-        $user = CUser::getUserFromSession();
-        if ($user->getType() != 'guest') // se l'utente non è guest, non puo accedere al login
-            header('Location: /DeepMusic/index');
-        else
-            $vUser->showSignUp();
-    }
-    
-    /**
      * Effettua il logout.
      */
-    static function Logout()
+    static function logout()
     {
-        session_start();
-        
-        session_unset(); // rimuove le variabili di sessione
-
-        session_destroy(); // distrugge la sessione
-        
-        header('Location: /DeepMusic/home');
-        
+        CSession::destroySession();
+        header('Location: /deepmusic/home');
     }
     
-    /**
-     * Restituisce l'utente della sessione corrispondente alla connessione che ha richiamato 
-     * il metodo. Se la sessione è effettivamente attiva, restituirà l'utente corrispondente,
-     * altrimenti restituirà un semplice utente guest.
-     * @return EUser
-     */
-    static function getUserFromSession() : EUser
-    {
-        session_start();
-        
-        $user = new EUser();
-        if(isset($_SESSION['id']))
-        {
-            $user->setId($_SESSION['id']);
-            $user->setName($_SESSION['name']);
-            $user->setType($_SESSION['type']);
-        }
-        else
-        {
-            $user->setName('Visitor');
-            $user->setType('guest');
-        }
-        return $user;
-    }
+    
 }
 

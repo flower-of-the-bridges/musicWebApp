@@ -1,11 +1,11 @@
 <div class="well">				
-	<p id="important">{profile->getName}</p>
+	<p id="important">{$pName}</p>
 	<img	src="https://vignette.wikia.nocookie.net/strangerthings8338/images/7/78/Image.jpg/revision/latest/scale-to-width-down/310?cb=20171113113237"
 					class="img-circle" alt="Avatar" width="165" height="150">
 </div>
 
 <div class="well">
-	<p id="important">{if pType eq 'Listener'}Favourite{/if} Genre</p>
+	<p id="important">{if pType eq 'listener'}Favourite{/if} Genre</p>
 	<p>	<span class="label label-primary">Genere</span> </p>
 </div>
 

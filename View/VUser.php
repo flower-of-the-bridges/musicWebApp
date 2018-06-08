@@ -1,68 +1,80 @@
 <?php
 require_once 'inc.php';
+include_once 'View/VObject.php';
 
-class VUser
+class VUser extends VObject
 {
 
-    private $smarty;
-
-    private $errors;
- // array che contiene gli errori rispetto alle caratteristiche di un euser
     function __construct()
     {
-        $this->smarty = SmartyConfig::configure();
-        // l'array è istanziato con indici i campi delle varie form, i cui valori sono di default a false (no errori)
-        $this->errors = array(
-            'name' => false,
-            'mail' => false,
-            'pwd' => false,
-            'type' => false
+        parent::__construct();
+        
+        $this->check = array(
+            'name' => true,
+            'mail' => true,
+            'pwd' => true,
+            'type' => true
         );
+    }
+    
+    /**
+     * Funzione che permette la creazione di utente con i valori prelevati da una form
+     * @return EUser l'utente ottenuto dai campi della form
+     */
+    function createUser() : EUser
+    {
+        $user;
+        if(isset($_POST['type']))
+        {
+            $type = 'E'.ucfirst($_POST['type']);
+            $user = new $type(); 
+        }
+        else
+            $user = new EUser();
+        
+        if(isset($_POST['name']))
+            $user->setNickName($_POST['name']);
+        if(isset($_POST['mail']))
+            $user->setMail($_POST['mail']);
+        if(isset($_POST['pwd']))
+            $user->setPassword($_POST['pwd']);
+        
+        return $user;
+    }
+    /**
+     * Verifica che un utente abbia rispettato i vincoli per l'inserimento dei parametri di login
+     *
+     * @return true se non si sono commessi errori, false altrimenti
+     */
+    function validateLogin(EUser $user): bool
+    {
+        if($this->check['name']=$user->validateNickName() && $this->check['pwd']=$user->validatePassword())
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+        
     }
 
     /**
-     * Verifica che un utente sia autenticato
+     * Verifica che un utente abbia inserito i 
      *
-     * @return array contenente gli errori
+     * @return true se non si sono commessi errori, false altrimenti
      */
-    function validateLogin(): bool
+    function validateSignUp(EUser $user): bool
     {
-        VUser::validateInputs();
-        if (! $this->errors['name'] && ! $this->errors['pwd'])
+        if($this->check['name']=$user->validateNickName() && $this->check['pwd']=$user->validatePassword() && $this->check['mail']=$user->validateMail())
+        {
             return true;
+        }
         else
             return false;
     }
 
-    /**
-     * Verifica che un utente sia autenticato
-     *
-     * @return array contenente gli errori
-     */
-    function validateSignUp(): bool
-    {
-        if (isset($_POST['name']) && isset($_POST['pwd']) && isset($_POST['mail']) && isset($_POST['type'])) {
-            // se i campi della form sono arrivati correttamente, vengono convalidati
-            VUser::validateInputs();
-            
-            if (! $this->errors['name'] && ! $this->errors['pwd'] && ! $this->errors['mail'])
-                return true;
-            else
-                return false;
-        } else
-            return false;
-    }
-
-    /**
-     * Restituisce un array contenente gli errori delle form
-     *
-     * @return array
-     */
-    function getErrors(): array
-    {
-        return $this->errors;
-    }
-
+  
     /**
      * Mostra il profilo di un utente
      *
@@ -75,14 +87,17 @@ class VUser
      * @param array $array
      *            l'array del contenuto da visualizzare
      */
-    function showProfile(EUser &$profileUser, &$loggedUser, string $content, array $array = NULL)
+    function showProfile(EUser &$profileUser, EUser &$loggedUser, string $content, array $array = NULL)
     {
         $this->smarty->assign('content', $content);
+ 
         $this->smarty->registerObject('user', $loggedUser);
-        $this->smarty->registerObject('profile', $profileUser);
+        $this->smarty->assign('uType', lcfirst(substr(get_class($loggedUser), 1)));
         
-        if ($array)
-            $this->smarty->assign('songs', $array);
+        $this->smarty->registerObject('profile', $profileUser);
+        $this->smarty->assign('pType', lcfirst(substr(get_class($profileUser), 1)));
+        
+        $this->smarty->assign('array', $array);
         
         $this->smarty->display('profile.tpl');
     }
@@ -95,13 +110,14 @@ class VUser
      */
     function showLogin(bool $error = NULL)
     {
-        if (! $error)
+        if(!$error)
             $error = false;
         
-        $user = new EUser();
-        $user->setName('Visitor');
-        $user->setType('guest');
+        $user = new EGuest();
+        
         $this->smarty->registerObject('user', $user);
+        $this->smarty->assign('uType', lcfirst(substr(get_class($user), 1)));
+        
         $this->smarty->assign('error', $error);
         $this->smarty->display('login.tpl');
     }
@@ -117,35 +133,13 @@ class VUser
         if (! $error)
             $error = false;
         
-        $user = new EUser();
-        $user->setName('Visitor');
-        $user->setType('guest');
+        $user = new EGuest();
         
         $this->smarty->registerObject('user', $user);
+        $this->smarty->assign('uType', lcfirst(substr(get_class($user), 1)));
+        
         $this->smarty->assign('error', $error);
         $this->smarty->display('register.tpl');
-    }
-
-    /**
-     * Controlla che gli input delle form, se arrivati dal client tramite POST, siano corretti.
-     */
-    private function validateInputs()
-    {
-        if (isset($_POST['mail'])) // se la mail e' inserita...
-            if (! filter_var($_POST['mail'], FILTER_VALIDATE_EMAIL)) // controllo che sia valida
-                $this->errors['mail'] = true;
-        /*
-         * if (isset($_POST['pwd']))
-         * if (! preg_match('/^\w{8}$/', $_POST['pwd']))
-         * $this->errors['pwd'] = true;
-         */
-        if (isset($_POST['name']))
-            if (! preg_match('/^[[:alpha:]]{3,20}$/', $_POST['name']))
-                $this->errors['name'] = true;
-        
-        if (isset($_POST['type']))
-            if ($_POST['type'] != 'listener' && $_POST['type'] != 'musician')
-                $this->errors['type'] = true;
     }
 }
 

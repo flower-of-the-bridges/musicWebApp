@@ -42,7 +42,7 @@ class ESong extends EObject
      * prodotto la canzone
      * @return EMusician il musicista autore della canzone
      */
-    function getArtist() : EUser
+    function getArtist() : EMusician
     {
         return $this->artist;
     }
@@ -83,7 +83,7 @@ class ESong extends EObject
      * Metodo che imposta l'artista che ha prodotto la canzone.
      * @param EMusician $artist il musicista che ha realizzato la canzone.
      */
-    function setArtist(EUser &$artist)
+    function setArtist(EMusician &$artist)
     {
         $this->artist = $artist;
     }
@@ -110,17 +110,9 @@ class ESong extends EObject
      * create a new instance of mp3, fill it with parameters and try to store in the DB
      * @param Emp3 $mp3 (optional) l'oggetto mp3 da assegnare al brano
      */
-    function setMp3 (EMp3 &$mp3=null)
-    {
-        if($mp3 && $mp3->getId()==$this->getId())
-            $this->mp3 = $mp3;
-        else
-        {
-            $this->mp3->setId($this->id);
-            $this->mp3->setMp3( file_get_contents ($_FILES['file']['tmp_name']) );
-            $this->mp3->setSize ($_FILES['file']['size']);
-            $this->mp3->setType ($_FILES['file']['type']);   
-        }
+    function setMp3 (EMp3 &$mp3)
+    { 
+       $this->mp3 = $mp3;
     }
     
 /*************************************** PRIVACY SETTINGS *******************************************/    
@@ -203,6 +195,45 @@ class ESong extends EObject
         $this->registered = false;
     }
     
+/*************************************** VALIDATION *******************************************/
+    /**
+     * Funzione che verifica che il nome della canzone sia valido. Un nome si intende valido se 
+     * contiene solamente numeri, lettere e spazi
+     * @return bool true se il nome e' corretto, false altrimenti
+     */
+    function validateName() : bool
+    {
+        if (preg_match("/^[a-zA-Z][a-zA-Z -]+$/", $this->name)) // solo lettere, numeri e spazi
+            return true;
+        else 
+            return false;
+    }
+    
+    /**
+     * Funzione che verifica che il nome della canzone sia valido. Un nome si intende valido se
+     * contiene solamente numeri, lettere e spazi
+     * @return bool true se il nome e' corretto, false altrimenti
+     */
+    function validateGenre(): bool
+    {
+        if (preg_match("/^[a-zA-Z][a-zA-Z -]+$/", $this->genre)) // solo lettere, numeri e spazi
+            return true;
+        else
+            return false;
+    }
+    
+    /**
+     * Funzione che verifica che il file audio associato al brano sia corretto. Un file audio si intende
+     * corretto se il suo mime type e' coerente e se la sua dimensione supera 1MB
+     * @return bool true se il file e' valido, false altrimenti
+     */
+    function validateMp3() : bool
+    {
+        if($this->mp3->validateSize() && $this->mp3->validateType())
+            return true;
+        else 
+            return false;
+    }
 /**************************************** DEBUG *****************************************************/
     
     /**

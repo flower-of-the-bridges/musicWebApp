@@ -1,15 +1,8 @@
 <!DOCTYPE html>
- 
-{user->getNickName assign='uName'}
-{user->getId assign='uId'}
- 
-{profile->getNickName assign='pName'}
-{profile->getId assign='pId'}
-
 <html lang="en">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<title>{$pName}'s Profile</title>
+<title>Welcome to Deep Music!</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet"
@@ -24,28 +17,17 @@
 </head>
 <body>
 
+	{user->getNickName assign='uName'}
+	{user->getId assign='uId'}
 
 	{include file="navbar.tpl"}
-	
-	
-	<div class="container text-center">
-		<div class="col-sm-3">
-			{include file="userInfo.tpl"}
-        </div>
-			<div class="col-sm-7 well">
-				{if $content eq 'Song List'}
-					{include file="SongList.tpl"}
-				{elseif $content eq 'Song'}
-					{include file="Song.tpl"}
-				{elseif $content eq 'None'}
-				<h3>No content available</h3>
-				{/if}
-			</div>
-		<div class="col-sm-2">
-			{include file="followOptions.tpl"}				
-		</div>
+
+	<div class="container text-center well">
+		<h3>Ooooops! Something went wrong!</h3>
+		<p>{$error}. Please go back to <a href="/deepmusic/">home</a>
+		</p>
 		
 	</div>
-	
+
 </body>
 </html>

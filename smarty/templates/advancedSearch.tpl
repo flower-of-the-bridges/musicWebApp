@@ -18,7 +18,7 @@
 <body>
 
 	{user->getType assign='uType'} 
-	{user->getName assign='uName'}
+	{user->getNickName assign='uName'}
 
 	{include file="navbar.tpl"}
 	

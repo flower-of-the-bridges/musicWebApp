@@ -18,10 +18,10 @@ class SmartyConfig
         
         $smarty = new Smarty();
         
-        $smarty->setTemplateDir('/opt/lampp/htdocs/DeepMusic/smarty/templates');
-        $smarty->setCompileDir('/opt/lampp/htdocs/DeepMusic/smarty/templates_c');
-        $smarty->setCacheDir('/opt/lampp/htdocs/DeepMusic/smarty/cache');
-        $smarty->setConfigDir('/opt/lampp/htdocs/DeepMusic/smarty/configs');
+        $smarty->setTemplateDir('/opt/lampp/htdocs/deepmusic/smarty/templates');
+        $smarty->setCompileDir('/opt/lampp/htdocs/deepmusic/smarty/templates_c');
+        $smarty->setCacheDir('/opt/lampp/htdocs/deepmusic/smarty/cache');
+        $smarty->setConfigDir('/opt/lampp/htdocs/deepmusic/smarty/configs');
         
         return $smarty; 
     }

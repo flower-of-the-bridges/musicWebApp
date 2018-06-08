@@ -15,7 +15,7 @@ class FUser
     {
         return "SELECT *
                 FROM users
-                WHERE mail = :value ;)";
+                WHERE mail = :value ;";
     }
     
     static function existsUser() : string
@@ -63,20 +63,27 @@ class FUser
     
     static function bindValues(PDOStatement &$stmt, EUser &$user)
     {
-        $stmt->bindValue(':nickname', $user->getName(), PDO::PARAM_STR);
+        $stmt->bindValue(':nickname', $user->getNickName(), PDO::PARAM_STR);
         $stmt->bindValue(':password', $user->getPassword(), PDO::PARAM_STR);
         $stmt->bindValue(':mail', $user->getMail(), PDO::PARAM_STR);
-        $stmt->bindValue(':type', $user->getType(), PDO::PARAM_STR);
+        $stmt->bindValue(':type', lcfirst(substr(get_class($user),1)), PDO::PARAM_STR);
     }
     
-    static function createObjectFromRow($row) : EUser
+    /**
+     * Crea una Entity da una row del database
+     * @param array $row avente come indici i campi della table da cui e' stata prelevata l'entry
+     * @return EListener | EMusician | EModerator
+     */
+    static function createObjectFromRow($row) 
     {
-        $user = new EUser();
+        $uType = 'E'.ucfirst($row['type']); // costruisce la classe da cui istanziare l'oggetto 
+  
+        $user = new $uType();
+        
         $user->setId($row['id']);
-        $user->setName($row['nickname']);
+        $user->setNickName($row['nickname']);
         $user->setPassword($row['password']);
         $user->setMail($row['mail']);
-        $user->setType($row['type']);
         
         return $user;
     }

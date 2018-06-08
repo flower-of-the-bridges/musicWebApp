@@ -8,7 +8,7 @@
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <link rel="stylesheet"
-	href="smarty/templates/style.css">
+	href="/deepmusic/smarty/templates/style.css">
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script
@@ -16,12 +16,11 @@
 
 </head>
 <body>
-	{user->getType assign='uType'} 
-	{user->getName assign='uName'}
+
+	{user->getNickName assign='uName'}
 
 	{include file="navbar.tpl"}
 	
-	{profile->getType assign='pType'} 
 	{profile->getName assign='pName'}
 
 	<div class="container text-center">
