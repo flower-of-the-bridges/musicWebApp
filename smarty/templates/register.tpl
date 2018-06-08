@@ -17,7 +17,7 @@
 </head>
 <body>
 
-	{user->getName assign='uName'}
+	{user->getNickName assign='uName'}
 
 	{include file="navbar.tpl"}
 	
