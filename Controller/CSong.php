@@ -25,8 +25,46 @@ class CSong
     }
     
     /**
+     * La funzione load permette la visualizzazione della canzone da parte di un utente. Se l'utente 
+     * può effettivamente visualizzarla, sarà possibile riprodurla, altrimenti verrà mostrato un 
+     * messaggio d'errore. In caso la canzone sia visualizzata dall'artista stesso o da un moderatore,
+     * sarà possibile visualizzare funzionalità come la modifica o la rimozione
+     * @param int $id l'identificativo della canzone da visualizzare.
+     */
+    static function show($id)
+    {
+        if(is_numeric($id)) // se nell'url è effettivamente presente un id.
+        {
+            $vSong = new VSong(); // crea la view
+            $user = CSession::getUserFromSession(); // ottiene l'utente dalla sessione
+            $song = FPersistantManager::getInstance()->load(ESong::class, $id); // carica la canzone dell'id
+            if($song) // se la canzone esiste, esegue il controllo di visibilità
+            {
+                $canSee = false; // variabile booleana che denota se l'utente può vedere la canzone o no
+                
+                if($user->getId() == $song->getArtist()->getId() || is_a($user, EModerator::class)) // se l'utente è l'autore della canzone
+                    $canSee = true;
+                else if($song->isForAll()) // se è per tutti...
+                    $canSee = true;
+                else if ($song->isForRegisteredOnly() && get_class($user)!=EGuest::class) // se è per i registrati e l'utente non è guest...
+                    $canSee = true;
+                else if ($song->isForSupportersOnly() &&
+                         FPersistantManager::getInstance()->exists(ESupporter::class, FTarget::EXISTS_SUPPORTER, $user->getId(), $song->getArtist()->getId()))
+                    // se è per i supporter e l'utente supporta l'artista della canzone...
+                    $canSee = true;
+                            
+               $vSong->showSong($user, $song, $canSee); // mostra la pagina della canzone
+            }
+            else
+                $vSong->showErrorPage($user, 'The song\'s id doesn\'t match any song stored in the system.');
+        }
+        else
+            header('Location: HTTP/1.1 405 Invalid URL detected');
+    }
+    
+    /**
      * Mostra la form per il caricamento di una canzone. Reindirizza ad un messaggio di errore
-     * se l'utente che accede alla risorsa non e' un musicista
+     * se l'utente che accede alla risorsa non e' un musicista.
      */
     private function showLoadForm()
     {

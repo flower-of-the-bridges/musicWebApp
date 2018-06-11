@@ -286,7 +286,7 @@ class FPersistantManager {
         $sql='';
         
         $class = '';
-        if(is_a($obj, EListener::class) || is_a($obj, EMusician::class))
+        if(is_a($obj, EListener::class) || is_a($obj, EMusician::class) || is_a($obj, EModerator::class))
             $class = get_parent_class($obj);
         else
             $class = get_class($obj); // restituisce il nome della classe dall'oggetto

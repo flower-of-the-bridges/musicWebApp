@@ -4,7 +4,7 @@
 	<tbody>					
 	{foreach $array as $song}
 		<tr>
-			<td><a href="song.php?id={$song->getId()}">{$song->getName()}</a></td>
+			<td><a href="/deepmusic/song/show/{$song->getId()}">{$song->getName()}</a></td>
 			<td>{$song->getGenre()}</td> 
 			{if $pName==$uName}
 			<td><a href="#"><span

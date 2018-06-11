@@ -74,6 +74,45 @@ class VSong extends VObject
     }
     
     /**
+     * Mostra la pagina che consente la modifica di un brano da parte di un utente
+     * @param EUser $user l'utente della sessione
+     * @param ESong $song la canzone da modificare
+     * @param bool $error facoltativo, da impostare a true se l'utente ha inserito un nome di una canzone gia' inserita da lui
+     */
+    function showEditForm(EUser &$user, ESong &$song, bool $error = NULL)
+    {
+        if (! $error)
+            $error = false;
+            
+            $this->smarty->registerObject('user', $user);
+            $this->smarty->assign('song', $song);
+            
+            $this->smarty->assign('uType', lcfirst(substr(get_class($user), 1)));
+            $this->smarty->assign('error', $error);
+            
+            $this->smarty->display('loadSong.tpl');
+    }
+    
+    /**
+     * Mostra il contenuto di una canzone.
+     * @param EUser $user l'utente che sta visualizzando la pagina
+     * @param ESong $song la canzone da visualizzare
+     * @param bool $canSee true se l'utente puo' visualizzare la canzone, false altrimenti
+     */
+    function showSong(EUser &$user, ESong &$song, bool $canSee)
+    {
+        $this->smarty->registerObject('user', $user);
+        $this->smarty->assign('song', $song);
+        
+        $this->smarty->assign('uType', lcfirst(substr(get_class($user), 1)));
+        
+        $this->smarty->assign('canSee', $canSee);
+        
+        $this->smarty->display('song.tpl');
+        
+    }
+    
+    /**
      * Funzione che controlla i campi della form per l'inserimento di una canzone
      * @return bool true se gli input sono corretti, false altrimenti
      */

@@ -35,8 +35,6 @@
 			<div class="col-sm-7 well">
 				{if $content eq 'Song List'}
 					{include file="SongList.tpl"}
-				{elseif $content eq 'Song'}
-					{include file="Song.tpl"}
 				{elseif $content eq 'None'}
 				<h3>No content available</h3>
 				{/if}

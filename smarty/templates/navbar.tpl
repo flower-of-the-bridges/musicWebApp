@@ -11,7 +11,7 @@
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav">
 					{if $uType eq 'guest'}
-					<li><a href="/deepmusic/user/login"><span
+					<li><a href="./user/login"><span
 							class="glyphicon glyphicon-log-in"></span> Log In</a></li>
 					<li><a href="/deepmusic/user/signup"><span
 							class="glyphicon glyphicon-plus"></span> Sign Up</a></li>
