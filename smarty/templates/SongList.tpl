@@ -4,11 +4,12 @@
 	<tbody>					
 	{foreach $array as $song}
 		<tr>
+			{if !$song->isHidden()} 
 			<td><a href="/deepmusic/song/show/{$song->getId()}">{$song->getName()}</a></td>
 			<td>{$song->getGenre()}</td> 
-			{if $pName==$uName}
-			<td><a href="#"><span
-				class="glyphicon glyphicon-pencil"></span> Edit Song </a></td> 
+			{elseif $song->getArtist()->getId()==$uId}
+			<td><a href="/deepmusic/song/show/{$song->getId()}">{$song->getName()}</a></td>
+			<td>{$song->getGenre()}</td> 
 			{/if}
 		</tr>
 	{/foreach}

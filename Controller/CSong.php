@@ -25,7 +25,27 @@ class CSong
     }
     
     /**
-     * La funzione load permette la visualizzazione della canzone da parte di un utente. Se l'utente 
+     * La funzione load permette la visualizzazione della form per la modifica di una canzone,
+     * a seguito di un metodo GET, o l'inserimento delle modifiche di una canzone
+     * da parte di un utente a seguito del metodo POST.
+     */
+    static function edit($id)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'GET')
+            CSong::showEditForm($id);
+        else if ($_SERVER['REQUEST_METHOD'] == 'POST')
+        {
+            if(is_numeric($id))
+                CSong::editSong($id);
+            else
+                header('Location: /deepmusic/home');
+        }
+        else
+            header('Location: HTTP/1.1 405 Invalid HTTP method detected');
+    }
+    
+    /**
+     * La funzione show permette la visualizzazione della canzone da parte di un utente. Se l'utente 
      * può effettivamente visualizzarla, sarà possibile riprodurla, altrimenti verrà mostrato un 
      * messaggio d'errore. In caso la canzone sia visualizzata dall'artista stesso o da un moderatore,
      * sarà possibile visualizzare funzionalità come la modifica o la rimozione
@@ -80,36 +100,106 @@ class CSong
     }
     
     /**
+     * Mostra la form per il caricamento di una canzone. Reindirizza ad un messaggio di errore
+     * se l'utente che accede alla risorsa non e' un musicista.
+     * @param int $id l'identificativo della cazone.
+     */
+    private function showEditForm($id)
+    {
+        $vSong = new VSong();       
+        $user = CSession::getUserFromSession();
+        
+        if(is_numeric($id)) // verifica che nell'url sia stato inserito un id
+        {
+            $song = FPersistantManager::getInstance()->load(ESong::class, $id); // carica la canzone dal db
+            if($song) // se la canzone esiste...
+            { // verifica che l'utente puo' effettivamente modificarla
+                if($song->getArtist()->getId()==$user->getId() || is_a($user, EModerator::class))
+                    $vSong->showEditForm($user, $song);
+                else 
+                    $vSong->showErrorPage($user, 'You don\'t have the permission to edit this song!');
+            }
+            else // altrimenti mostra una pagina d'errore.
+                $vSong->showErrorPage($user, 'The id doesn\'t match any song.');
+        }
+        else 
+            $vSong->showErrorPage($user, 'The URL is invalid.');                
+    }
+    
+    /**
      * Metodo che consente l'associazione di una canzone all'utente che l'ha caricata. Se l'associazione va a buon
      * fine, la canzone viene salvata nel database.
      */
     private function addSong()
     {
         $vSong = new VSong(); // crea la view 
-        $song = $vSong->createSong(); // la view restituisce una ESong costruita a partire dalla form
-        $user = CSession::getUserFromSession(); // ottiene l'utente della sessione
         
-        if($vSong->validateLoad($song) && get_class($user)==EMusician::class)
+        $user = CSession::getUserFromSession(); // ottiene l'utente della sessione
+        if (get_class($user) == EMusician::class) // verifica che l'utente sia un musicista
         {
-            ini_set( "upload_max_filesize","120M"); // aumenta il limite di upload
-       
-            $song->setArtist($user);
-            if(FPersistantManager::getInstance()->store($song))
+            $song = $vSong->createSong(); // la view restituisce una ESong costruita a partire dalla form
+            if ($vSong->validateLoad($song)) // se l'oggetto e' valido
             {
-                $song->getMp3()->setId($song->getId()); // assegna all'mp3 l'id appena ottenuto
-                if(FPersistantManager::getInstance()->store($song->getMp3())) // se il caricamento dell'mp3 ha successo
-                    header('Location: /deepmusic/user/profile/'.$user->getId().'&song');
+                ini_set("upload_max_filesize", "120M"); // aumenta il limite di upload
+                
+                $song->setArtist($user); // si imposta l'utente della canzone
+                if (FPersistantManager::getInstance()->store($song)) 
+                {
+                    $song->getMp3()->setId($song->getId()); // assegna all'mp3 l'id appena ottenuto
+                    if (FPersistantManager::getInstance()->store($song->getMp3())) // se il caricamento dell'mp3 ha successo
+                        header('Location: /deepmusic/user/profile/' . $user->getId() . '&song');
+                    else 
+                    { // altrimenti cancella la canzone nella table song e ritorna false
+                        FPersistantManager::getInstance()->remove(ESong::class, $song->getId());
+                        $vSong->showErrorPage($user, 'An error occurs!');
+                    }
+                } 
                 else
-                { // altrimenti cancella la canzone nella table song e ritorna false
-                    FPersistantManager::getInstance()->remove(ESong::class, $song->getId(), $song->getArtist()->getId());
                     $vSong->showErrorPage($user, 'An error occurs!');
+            } 
+            else
+                $vSong->showLoadForm($user, true);
+        } 
+        else
+            $vSong->showErrorPage($user, 'You can\'t upload a song! You are not a musician!');
+    }
+    
+    /**
+     * Mostra la form per il caricamento di una canzone. Reindirizza ad un messaggio di errore
+     * se l'utente che accede alla risorsa non e' un musicista.
+     * @param int $id l'identificativo della cazone.
+     */
+    private function editSong($id)
+    {
+        $vSong = new VSong();
+        $user = CSession::getUserFromSession();
+        
+        $songNew = $vSong->createSong(); // la view restituisce una ESong costruita a partire dalla form
+        $songOld = FPersistantManager::getInstance()->load(ESong::class, $id); // carica la vecchia canzone dal db
+        if($songOld) // se la canzone esiste
+        {
+            // verifica che l'utente puo' effettivamente modificarla
+            if($songOld->getArtist()->getId()==$user->getId() || is_a($user, EModerator::class))
+            {
+                if($vSong->validateEdit($songNew)) // verifica che le modifiche siano corrette
+                {
+                    $songNew->setId($songOld->getId());
+                    $songNew->setArtist($songOld->getArtist());
+                    FPersistantManager::getInstance()->update($songNew);
+                    header('Location: /deepmusic/song/show/'.$songNew->getId());
                 }
+                else
+                    $vSong->showEditForm($user, $songOld, true);
+                    
             }
-            else 
-                $vSong->showErrorPage($user, 'An error occurs!');
+            else
+                $vSong->showErrorPage($user, 'You don\'t have the permission to edit this song!');
+            
         }
-        else 
-            $vSong->showLoadForm($user, true);
+        else   
+        {
+            $vSong->showErrorPage($user, 'The id doesn\'t match any song.');
+        }
     }
 }
 

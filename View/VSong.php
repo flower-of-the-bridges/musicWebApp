@@ -26,13 +26,11 @@ class VSong extends VObject
      * Funzione che crea una canzone a partire dagli input della form.
      * @return ESong
      */
-    function createSong(): ESong
+    function createSong() : ESong
     {
         $song = new ESong();
-        
-        if (isset($_POST['name']) && isset($_POST['genre']) && isset($_POST['view']) && isset($_FILES['file']))
+        if (isset($_POST['name']) && isset($_POST['genre']) && isset($_POST['view']))
         {
-            $song->setName($_POST['name']);
             // impostazione di nome e genere
             $song->setName(ucfirst($_POST['name']));
             $song->setGenre(ucfirst($_POST['genre']));
@@ -45,15 +43,18 @@ class VSong extends VObject
                 $song->setForSupportersOnly();
             if ($_POST['view'] == 'hidden')
                 $song->setHidden();
-            
+        }
+        if (isset($_FILES['file'])) // se il file e' stato caricato
+        { // si procede alla creazione dell'EMp3
             $mp3 = new EMp3();
             
-            $mp3->setMp3( file_get_contents ($_FILES['file']['tmp_name']));
-            $mp3->setSize ($_FILES['file']['size']);
-            $mp3->setType ($_FILES['file']['type']); 
+            $mp3->setMp3(file_get_contents($_FILES['file']['tmp_name']));
+            $mp3->setSize($_FILES['file']['size']);
+            $mp3->setType($_FILES['file']['type']);
             
-            $song->setMp3($mp3);
+            $song->setMp3($mp3); // l'mp3 viene associato alla canzone
         }
+           
         return $song;
     }
     
@@ -86,11 +87,20 @@ class VSong extends VObject
             
             $this->smarty->registerObject('user', $user);
             $this->smarty->assign('song', $song);
+            $checked=''; // stringa che verifica quale radio button mostrare come checked
+            if($song->isForAll())
+                $checked='all';
+            elseif($song->isForRegisteredOnly())
+                $checked='registered';
+            elseif($song->isForSupportersOnly())
+                $checked='supporters';
+            else
+                $checked='hidden';
             
             $this->smarty->assign('uType', lcfirst(substr(get_class($user), 1)));
             $this->smarty->assign('error', $error);
-            
-            $this->smarty->display('loadSong.tpl');
+            $this->smarty->assign('checked', $checked);
+            $this->smarty->display('editSong.tpl');
     }
     
     /**
@@ -121,6 +131,20 @@ class VSong extends VObject
         if($this->check['name']=$song->validateName() && $this->check['genre']=$song->validateGenre() && $this->check['mp3']=$song->validateMp3())
             return true;
         else 
+            return false;
+    }
+    
+    /**
+     * Funzione che controlla i campi della form per la modifica di una canzone
+     * @return bool true se gli input sono corretti, false altrimenti
+     */
+    function validateEdit(ESong &$song) : bool
+    {
+        if($this->check['name']=$song->validateName() && $this->check['genre']=$song->validateGenre())
+        {
+            return true;
+        }
+        else
             return false;
     }
     

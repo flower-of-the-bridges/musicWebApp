@@ -22,6 +22,7 @@ class VObject
     function showErrorPage(EUser &$user, string $error)
     {
         $this->smarty->registerObject('user', $user);
+        $this->smarty->assign('uType', lcfirst(substr(get_class($user), 1)));
         $this->smarty->assign('error', $error);
         $this->smarty->display('errorPage.tpl');
     }
