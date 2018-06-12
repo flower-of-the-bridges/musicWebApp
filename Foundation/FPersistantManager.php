@@ -363,10 +363,10 @@ class FPersistantManager {
         }
         if ($sql)
         {
-            if($value2 && ($class==ESupporter::class || $class==EFollower::class))
-                return $this->execExists($sql, $id, $id2);
+            if($id2 && ($class==ESupporter::class || $class==EFollower::class))
+                return $this->execRemove($sql, $id, $id2);
             else
-                return $this->execExists($sql, $id2);
+                return $this->execRemove($sql, $id);
         }
         else
             return NULL;
@@ -390,7 +390,7 @@ class FPersistantManager {
             if($id2) // se id2 e' stato inserito...
                 $stmt->bindValue(":id2", $id2, PDO::PARAM_INT); //...si associa id2 al campo della query
                 
-                return $stmt->execute(); //esegue lo statement e ritorna il risultato
+            return $stmt->execute(); //esegue lo statement e ritorna il risultato
                 
         }
         catch (PDOException $e)

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<title>Error Page</title>
+<title>Remove {$song->getArtist()->getNickName()} - {$song->getName()}</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet"
@@ -23,10 +23,11 @@
 	{include file="navbar.tpl"}
 
 	<div class="container text-center well">
-		<h3>Ooooops! Something went wrong!</h3>
-		<p>{$error} Please go back to <a href="/deepmusic/">home</a>
-		</p>
-		
+		<h3>Do you want to remove {$song->getName()}?</h3>
+		<form method="post" action="/deepmusic/song/remove/{$song->getId()}">
+    		<button type="submit" class="btn btn-primary btn-lg active" name="action" value="yes">Yes</button>
+    		<button type="submit" class="btn btn-primary btn-lg btn-danger active" name="action" value="no">No</button>
+		</form>
 	</div>
 
 </body>

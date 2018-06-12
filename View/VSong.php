@@ -102,6 +102,24 @@ class VSong extends VObject
             $this->smarty->assign('checked', $checked);
             $this->smarty->display('editSong.tpl');
     }
+
+    /**
+     * Mostra la pagina che consente la rimozione di un brano da parte di un utente
+     *
+     * @param EUser $user
+     *            l'utente della sessione
+     * @param ESong $song
+     *            la canzone da rimuovere
+     */
+    function showRemoveForm(EUser &$user, ESong &$song)
+    {
+        $this->smarty->registerObject('user', $user);
+        $this->smarty->assign('song', $song);
+        
+        $this->smarty->assign('uType', lcfirst(substr(get_class($user), 1)));
+        $this->smarty->display('removeSong.tpl');
+    }
+    
     
     /**
      * Mostra il contenuto di una canzone.
@@ -148,5 +166,21 @@ class VSong extends VObject
             return false;
     }
     
+    /**
+     * Funzione che verifica se l'utente ha effettivamente richiesto la rimozione di una canzone 
+     * @return bool true se l'utente vuole rimuovere il brano, false altrimenti
+     */
+    function validateRemove() : bool
+    {
+        if(isset($_POST['action']))
+        {
+            if($_POST['action']=='yes')
+                return true;
+            else 
+                return false;
+        }
+        else 
+            return false;
+    }
 }
 

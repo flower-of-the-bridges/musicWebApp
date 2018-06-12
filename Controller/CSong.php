@@ -45,6 +45,26 @@ class CSong
     }
     
     /**
+     * La funzione remove permette la visualizzazione della form per la rimozione di una canzone,
+     * a seguito di un metodo GET, o l'inserimento delle modifiche di una canzone
+     * da parte di un utente a seguito del metodo POST.
+     */
+    static function remove($id)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'GET')
+            CSong::showRemoveForm($id);
+        else if ($_SERVER['REQUEST_METHOD'] == 'POST')
+        {
+            if(is_numeric($id))
+                CSong::removeSong($id);
+            else
+                header('Location: /deepmusic/home');
+        }
+        else
+            header('Location: HTTP/1.1 405 Invalid HTTP method detected');
+    }
+    
+    /**
      * La funzione show permette la visualizzazione della canzone da parte di un utente. Se l'utente 
      * può effettivamente visualizzarla, sarà possibile riprodurla, altrimenti verrà mostrato un 
      * messaggio d'errore. In caso la canzone sia visualizzata dall'artista stesso o da un moderatore,
@@ -127,6 +147,34 @@ class CSong
     }
     
     /**
+     * Mostra la form per la rimozione di una canzone. Reindirizza ad un messaggio di errore
+     * se l'utente che accede alla risorsa non e' un musicista.
+     * @param int $id l'identificativo della cazone.
+     */
+    private function showRemoveForm($id)
+    {
+        $vSong = new VSong();
+        $user = CSession::getUserFromSession();
+        
+        if(is_numeric($id)) // verifica che nell'url sia stato inserito un id
+        {
+            $song = FPersistantManager::getInstance()->load(ESong::class, $id); // carica la canzone dal db
+            if($song) // se la canzone esiste...
+            { // verifica che l'utente puo' effettivamente modificarla
+                if($song->getArtist()->getId()==$user->getId() || is_a($user, EModerator::class))
+                    $vSong->showRemoveForm($user, $song);
+                else
+                    $vSong->showErrorPage($user, 'You don\'t have the permission to edit this song!');
+            }
+            else 
+                // altrimenti mostra una pagina d'errore.
+                $vSong->showErrorPage($user, 'The id doesn\'t match any song.');
+        }
+        else
+            $vSong->showErrorPage($user, 'The URL is invalid.');
+    }
+    
+    /**
      * Metodo che consente l'associazione di una canzone all'utente che l'ha caricata. Se l'associazione va a buon
      * fine, la canzone viene salvata nel database.
      */
@@ -197,6 +245,41 @@ class CSong
             
         }
         else   
+        {
+            $vSong->showErrorPage($user, 'The id doesn\'t match any song.');
+        }
+    }
+    
+    /**
+     * Effettua l'operazione per la rimozione di una canzone. Reindirizza ad un messaggio di errore
+     * se l'utente che vuole rimuovere il brano non è l'autore del brano stesso.
+     * @param int $id l'identificativo della cazone.
+     */
+    private function removeSong($id)
+    {
+        $vSong = new VSong();
+        $user = CSession::getUserFromSession();
+        $song = FPersistantManager::getInstance()->load(ESong::class, $id); // carica la canzone dell'url
+
+        if($song) // se la canzone esiste 
+        {
+            
+            if($song->getArtist()->getId()==$user->getId() || is_a($user, EModerator::class)) // verifica che l'utente puo' effettivamente rimuoverla
+            {
+               
+                if($vSong->validateRemove()) // se l'utente ha deciso di rimuoverla...
+                { // ...la canzone viene rimossa
+                    FPersistantManager::getInstance()->remove(ESong::class, $song->getId()); // rimuove la canzone
+                    header('Location: /deepmusic/user/profile/'.$user->getId().'&song'); // l'utente viene reindirizzato al profilo
+                }
+                else // altrimenti si viene reindirizzati ad una pagina di errore 
+                    header('Location: /deepmusic/song/show/'.$song->getId()); 
+            }
+            else 
+                $vSong->showErrorPage($user, 'You don\'t have the permission to remove this song!');
+                
+        }
+        else
         {
             $vSong->showErrorPage($user, 'The id doesn\'t match any song.');
         }
