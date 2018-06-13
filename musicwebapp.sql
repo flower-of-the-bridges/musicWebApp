@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jun 12, 2018 at 04:14 PM
+-- Generation Time: Jun 13, 2018 at 11:03 AM
 -- Server version: 10.1.30-MariaDB
 -- PHP Version: 7.2.1
 
@@ -31,8 +31,9 @@ USE `musicwebapp`;
 --
 
 CREATE TABLE IF NOT EXISTS `followers` (
-  `id_user` smallint(5) NOT NULL,
-  `id_follower` smallint(5) NOT NULL
+  `id` smallint(5) NOT NULL,
+  `id_follower` smallint(5) NOT NULL,
+  PRIMARY KEY (`id`,`id_follower`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -97,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `song` (
   `supporters` tinyint(1) DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`,`id_artist`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
