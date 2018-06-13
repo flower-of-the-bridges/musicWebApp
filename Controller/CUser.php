@@ -100,10 +100,10 @@ class CUser
                         $vUser->showErrorPage($loggedUser, 'The user id doesn\'t match any DeepMusic\'s user!');
                 } 
                 else
-                    $vUser->showErrorPage($user, 'The URL is invalid!');
+                    $vUser->showErrorPage($loggedUser, 'The URL is invalid!');
             } 
             else
-                $vUser->showErrorPage($user, 'The URL is invalid!');
+                $vUser->showErrorPage($loggedUser, 'The URL is invalid!');
         } 
         else
             $vUser->showErrorPage($loggedUser, 'The URL has too few arguments');
@@ -162,9 +162,8 @@ class CUser
     }
     
     /**
-     * La funzione Authentication verifica che le credenziali di accesso inserite da un utente
-     * siano corrette: in tal caso, l'applicazione lo riporterà verso la sua pagina, altrimenti
-     * restituirà la schermata di login, con un messaggio di errore
+     * La funzione Register permette di creare un nuovo utente
+     * ammesso che non vi siano presenti utenti con stessa mail o nome utente inseriti nella form
      */
     private function register()
     {
@@ -184,6 +183,7 @@ class CUser
                 
                 CSession::startSession($loggedUser);
                 
+                #nuovo header che reindirizza verso VUserInfo->showSignUpInfo()?
                 header('Location: /deepmusic/user/profile/'.$loggedUser->getId().'&song');
             }
             else

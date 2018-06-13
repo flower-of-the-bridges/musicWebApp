@@ -1,5 +1,5 @@
 <?php
-define('WHO', 'giovanni');
+define('WHO', 'davide');
 class SmartyConfig
 {
     
