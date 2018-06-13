@@ -69,6 +69,14 @@ class CUserInfo
         
     }
     
+    static function signupinfo()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST')
+            CUserInfo::register();
+        else
+            header('Location: Invalid HTTP method detected');
+    }
+    
 }
 
 

@@ -72,7 +72,10 @@ class VUserInfo extends VObject
         
         $userInfo = new EUserInfo();
         
-        //TODO
+        $this->smarty->registerObject('userInfo', $userInfo);
+
+        $this->smarty->assign('error', $error);
+        $this->smarty->display('registerUserInfo.tpl');
     }
     
     
