@@ -160,11 +160,11 @@ class CSong
         {
             $song = FPersistantManager::getInstance()->load(ESong::class, $id); // carica la canzone dal db
             if($song) // se la canzone esiste...
-            { // verifica che l'utente puo' effettivamente modificarla
+            { // verifica che l'utente puo' effettivamente rimuoverla
                 if($song->getArtist()->getId()==$user->getId() || is_a($user, EModerator::class))
-                    $vSong->showRemoveForm($user, $song);
+                    $vSong->showRemoveForm($user, $song); // mostra la pagina di rimozione
                 else
-                    $vSong->showErrorPage($user, 'You don\'t have the permission to edit this song!');
+                    $vSong->showErrorPage($user, 'You don\'t have the permission to remove this song!');
             }
             else 
                 // altrimenti mostra una pagina d'errore.

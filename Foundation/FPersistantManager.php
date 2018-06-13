@@ -67,7 +67,8 @@ class FPersistantManager {
      * @param string $target opzionale, sono accettabili solo valori di FTarget
      * $target puo essere specificato per le seguenti classi:
      *  - ESong ( FTarget::LOAD_MUSICIAN_SONG )
-     *  - EFollower ( FTarget::LOAD_FOLLOWING FTarget::LOAD_FOLLOWERS )
+     *  - EFollower 
+     *  - EUser ( FTarget::LOAD_FOLLOWING FTarget::LOAD_FOLLOWERS )
      *  - ESupporter ( FTarget::LOAD_SUPPORTERS FTarget::LOAD_SUPPORTING )
      *  - EReport (FTarget::LOAD_MOD_REPORT)
      * @return object un oggetto Entity.
@@ -211,10 +212,11 @@ class FPersistantManager {
         $result = false;
         $sql = '';
         $class = '';
-        if(is_a($obj, EListener::class) || is_a($obj, EMusician::class))
-            $class = get_parent_class($obj);
+        if(is_a($obj, EListener::class) || is_a($obj, EMusician::class)) // se l'oggetto e' una tipologia di musicista
+            $class = get_parent_class($obj); // si considera la classe padre, EUser
         else 
             $class = get_class($obj); // restituisce il nome della classe dall'oggetto
+        
         $resource = substr($class,1); // nome della risorsa (User, Song, UserInfo, ...)
         $foundClass = 'F'.$resource; // nome della rispettiva classe Foundation
         $method = 'store'.$resource; // nome del metodo store+nome_risorsa
@@ -249,10 +251,9 @@ class FPersistantManager {
             FPersistantManager::bindValues($stmt, $obj); // si associano i valori dell'oggetto alle entry della query
             
             $stmt->execute();
-
             if ($stmt->rowCount()) // si esegue la query
             {
-                if ($obj->getId() == 0) // ...se il valore e' non nullo, si assegna l'id
+                if (method_exists($obj, 'getId') && $obj->getId() == 0) // ...se il valore e' non nullo, si assegna l'id
                     $obj->setId($this->db->lastInsertId()); // assegna all'oggetto l'ultimo id dato dal dbms
                 
                 return $this->db->commit(); // si ritorna il risultato del commit

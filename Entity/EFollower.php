@@ -50,6 +50,32 @@ class EFollower
         $this->follower = $follower;
     }
 
+    /**
+     * Verifica che l'associazione tra i due utenti sia valida, ovvero che un utente non stia 
+     * seguendo se stesso.
+     * @return bool true se l'associazione è valida, false altrimenti
+     */
+    function isValid() : bool
+    {
+        if($this->user->getId()!=$this->follower->getId())
+            return true;
+        else
+            return false;
+    }
+    
+    /**
+     * Verifica che l'associazione tra gli utenti sia presente nel database
+     * @return bool true se l'associazione esiste, false altrimenti
+     */
+    function exists() : bool
+    {
+        $uId = $this->user->getId();
+        $pId = $this->follower->getId();
+        
+        if(FPersistantManager::getInstance()->exists(EFollower::class, FTarget::EXISTS_FOLLOWER, $uId, $pId))
+            return true;
+        else return false;
+    }
     
     
 }

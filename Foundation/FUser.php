@@ -3,7 +3,10 @@
 
 class FUser
 {
-    
+    /**
+     * Query che verifica l'esistenza di un nickname nella table users
+     * @return string contenente la query sql
+     */
     static function existsNickName() : string
     {
         return " SELECT *
@@ -11,6 +14,10 @@ class FUser
                  WHERE nickname = :value ;";
     }
     
+    /**
+     * Query che verifica l'esistenza di una mail nella table users
+     * @return string contenente la query sql
+     */
     static function existsMail() : string
     {
         return "SELECT *
@@ -18,19 +25,20 @@ class FUser
                 WHERE mail = :value ;";
     }
     
-    static function existsUser() : string
-    {
-        return "SELECT *
-                FROM users
-                WHERE nickname = :value AND password = :value2;";
-    }
-    
+    /**
+     * Query che effettua il salvataggio di un utente nella table users
+     * @return string contenente la query sql
+     */
     static function storeUser() : string
     {
         return "INSERT INTO users(nickname, password, type, mail)
                 VALUES (:nickname, :password, :type, :mail);";
     }
     
+    /**
+     * Query che effettua l'aggiornamento di un utente nella table users
+     * @return string contenente la query sql
+     */
     static function updateUser() : string
     {
         return "UPDATE users
@@ -38,6 +46,10 @@ class FUser
                 WHERE id = :id;";
     }
     
+    /**
+     * Query per il caricamento di un utente
+     * @return string sql rappresentante la SELECT.
+     */
     static function loadUser() : string
     {
         return "SELECT *
@@ -45,6 +57,32 @@ class FUser
                 WHERE id = :id;";
     }
     
+    /**
+     * Carica i follower di un utente in un array di EUser
+     * @return string la stringa sql per la SELECT
+     */
+    static function loadFollowers() : string
+    {
+        return "SELECT users.*
+                FROM followers, users
+                WHERE followers.id_user = :id AND followers.id_user = users.id ; ";
+    }
+    
+    /**
+     * Carica i following di un utente in un array di EUser
+     * @return string la stringa sql per la SELECT
+     */
+    static function loadFollowing() : string
+    {
+        return "SELECT users.*
+                FROM followers, users
+                WHERE followers.id_follower = :id AND followers.id_follower = users.id;";
+    }
+    
+    /**
+     * Query che rimuove un utente dalla table users.
+     * @return string contenente la query sql
+     */
     static function removeUser() : string
     {
         return "DELETE
@@ -52,6 +90,10 @@ class FUser
                 WHERE id = :id;";
     }
     
+    /**
+     * Query che seleziona dalla table users degli utenti in base al nome
+     * @return string
+     */
     static function searchUserByName() : string
     {
         return "SELECT *
@@ -59,8 +101,11 @@ class FUser
                 WHERE nickname = :Name;";
     }
     
-    
-    
+    /**
+     * Associazione di un oggetto EUser ai campi di una query sql per la table users.
+     * @param PDOStatement $stmt lo statement contenente i campi da riempire
+     * @param EUser $user l'utente da cui prelevare i dati
+     */
     static function bindValues(PDOStatement &$stmt, EUser &$user)
     {
         $stmt->bindValue(':nickname', $user->getNickName(), PDO::PARAM_STR);

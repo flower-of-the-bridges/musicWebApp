@@ -207,6 +207,25 @@ class EUser extends EObject
         $this->mail = $mail;
     }
     
+    /**
+     * Funzione che ritorna i follower dell'utente
+     * @return array di EUser se l'utente ha follower | NULL se l'utente non ha follower 
+     */
+    function getFollower() 
+    {
+        return FPersistantManager::getInstance()->load(EUser::class, $this->id, FTarget::LOAD_FOLLOWERS);
+    }
+    
+    /**
+     * Funzione che ritorna gli utenti seguiti.
+     * @return array di EUser se l'utente segue qualche utente | NULL se l'utente non segue nessuno
+     */
+    function getFollowing()
+    {
+        return FPersistantManager::getInstance()->load(EUser::class, $this->id, FTarget::LOAD_FOLLOWING);
+    }
+    
+    
     function __toString()
     {
         return "Nome: ".$this->nickname."\nId: ".$this->id;

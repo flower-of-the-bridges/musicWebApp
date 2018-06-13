@@ -4,6 +4,7 @@ require_once 'Controller/FrontController.php';
 require_once 'Controller/CUser.php';
 require_once 'Controller/CSong.php';
 require_once 'Controller/CSession.php';
+require_once 'Controller/CFollower.php';
 require_once 'View/VUser.php';
 require_once 'View/VSong.php';
 require_once 'View/VObject.php';

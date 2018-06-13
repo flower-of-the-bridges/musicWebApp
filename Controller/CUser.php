@@ -57,18 +57,9 @@ class CUser
     {
         $vUser = new VUser();
         $loggedUser = CSession::getUserFromSession();
-        
-        if ($string && $_SERVER['REQUEST_METHOD'] == 'GET') // se la stringa e' specificata, l'url e' completa e si puo procedere
+        if($_SERVER['REQUEST_METHOD']=='GET')
         {
-            if (is_numeric($string)) // se presenta solo l'id
-            {
-                $profileUser = FPersistantManager::getInstance()->load(EUser::class, $string); // si cerca di caricare l'utente dal database
-                if ($profileUser) // se esiste...
-                    $vUser->showProfile($profileUser, $loggedUser, 'None'); // si mostra il profilo base
-                else
-                    $vUser->showErrorPage($loggedUser, 'The user id doesn\'t match any DeepMusic\'s user!'); // altrimenti si reindirizza ad una pagina di errore
-            } 
-            elseif ($params = explode('&', $string)) // se l'url e' nella forma "id&content", si separano i valori
+            if ($params = explode('&', $string)) // se l'url e' nella forma "id&content", si separano i valori
             {
                 if (is_numeric($params[0])) // se il primo valore e' l'id...
                 {
@@ -77,26 +68,56 @@ class CUser
                     
                     if ($profileUser) 
                     {
-                        if ($params[1] == 'song')  // se il parametro e' song
-                        {
-                            // si carica la lista delle canzoni dell'utente (caricate se musician, preferite se listener)
-                            $songs = FPersistantManager::getInstance()->load(ESong::class, $params[0], FTarget::LOAD_MUSICIAN_SONG);
-                            $vUser->showProfile($profileUser, $loggedUser, 'Song List', $songs);
+                        $following = false; // bool che denota se l'utente della sessione sta seguendo l'utente del profilo
+                        
+                        if($loggedUser->getId()!=$profileUser->getId())
+                        { // se l'id dei due utenti e' diverso, si verifica che se l'utente segue l'utente del profilo
+                            $follower = new EFollower();
+                            $follower->setUser($profileUser);
+                            $follower->setFollower($loggedUser);
+                            $following = $follower->exists();
                         }
+                        
+                        $array; // array contenente i dati dell'utente da visualizzare
+                        $content; // stringa che rappresenta il contenuto da mostrare
+                        
+                        if ($params[1] == 'song')  // se il parametro e' song
+                        { // si carica la lista delle canzoni dell'utente (caricate se musician, preferite se listener)
+                            $array = FPersistantManager::getInstance()->load(ESong::class, $params[0], FTarget::LOAD_MUSICIAN_SONG);
+                            $content = 'Song List';
+                        }
+                        elseif($params[1] == 'follower') // se il parametro e' follower
+                        { // si carica la lista dei follower del profilo utente
+                            $array = FPersistantManager::getInstance()->load(EUser::class, $profileUser->getId(), FTarget::LOAD_FOLLOWERS);
+                        }
+                        elseif ($params[1] == 'following') // se il parametro e' following
+                        { // si carica la lista dei following del profilo utente
+                            $array = FPersistantManager::getInstance()->load(EUser::class, $profileUser->getId(), FTarget::LOAD_FOLLOWING);
+                        }
+                        $vUser->showProfile($profileUser, $loggedUser, $following, $content, $array); // mostra il profilo
                     } 
                     else
                         $vUser->showErrorPage($loggedUser, 'The user id doesn\'t match any DeepMusic\'s user!');
                 } 
                 else
-                    header('Location: HTTP/1.1 Invalid URL scheme');
+                    $vUser->showErrorPage($user, 'The URL is invalid!');
             } 
             else
-                header('Location: HTTP/1.1 Invalid HTTP method detected');
+                $vUser->showErrorPage($user, 'The URL is invalid!');
         } 
         else
             $vUser->showErrorPage($loggedUser, 'The URL has too few arguments');
     }
-
+    
+    /**
+     * Effettua il logout.
+     */
+    static function logout()
+    {
+        CSession::destroySession();
+        header('Location: /deepmusic/home');
+    }
+    
     /**
      * La funzione Authentication verifica che le credenziali di accesso inserite da un utente
      * siano corrette: in tal caso, l'applicazione lo riporterà verso la sua pagina, altrimenti
@@ -115,9 +136,9 @@ class CUser
             
             if($userId) // se e' stato prelevato un id...
             {
-               
+                
                 $loggedUser->setId($userId); // viene assegnato all'utente l'user id
-
+                
                 if($loggedUser->checkPassword()) // se la password e' corretta
                 {
                     unset($loggedUser); // l'istanza utilizzata per il login viene rimossa
@@ -126,7 +147,7 @@ class CUser
                     $authenticated = true; // l'utente e' autenticato
                     
                     CSession::startSession($user);
-                                    
+                    
                     header('Location: /deepmusic/index');
                 }
             }
@@ -156,14 +177,14 @@ class CUser
                 && !FPersistantManager::getInstance()->exists(EUser::class, FTarget::EXISTS_MAIL, $loggedUser->getMail()))
             {
                 // se il nickname e la mail non sono stati ancora usati, si puo salvare l'utente
- 
+                
                 $loggedUser->hashPassword(); // si cripta la password
-            
+                
                 FPersistantManager::getInstance()->store($loggedUser); // si salva l'utente
                 
                 CSession::startSession($loggedUser);
-               
-                $vUser->showProfile($loggedUser, $loggedUser, 'None');
+                
+                header('Location: /deepmusic/user/profile/'.$loggedUser->getId().'&song');
             }
             else
                 $vUser->showSignUp(true);
@@ -172,16 +193,6 @@ class CUser
             $vUser->showSignUp();
             
     }
-    
-    /**
-     * Effettua il logout.
-     */
-    static function logout()
-    {
-        CSession::destroySession();
-        header('Location: /deepmusic/home');
-    }
-    
     
 }
 

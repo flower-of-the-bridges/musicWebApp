@@ -11,8 +11,8 @@ class FFollower {
      */
     static function storeFollower() : string 
     {
-        return "INSERT INTO followers
-                VALUES :id, :id_follower ;";
+        return "INSERT INTO followers(id, id_follower)
+                VALUES (:id, :id_follower) ;";
     }
     
     /**
@@ -23,7 +23,7 @@ class FFollower {
     {
         return "SELECT users.*
                 FROM followers, users
-                WHERE followers.id_user = :id AND followers.id_user = users.id ; ";
+                WHERE followers.id = :id AND followers.id = users.id ; ";
     }
     
     /**
@@ -53,9 +53,9 @@ class FFollower {
      */
     static function existsFollower() : string
     {
-        return "EXISTS(SELECT *
-                       FROM followers
-                       WHERE id = :value AND id_follower = :value2 ; ";
+        return "SELECT *
+                FROM followers
+                WHERE id = :value AND id_follower = :value2 ; ";
     }
     
     /**
@@ -65,8 +65,9 @@ class FFollower {
      */
     static function bindValues(PDOStatement &$stmt, EFollower &$follower)
     {
-        $stmt->bindValue(':id', $follower->getUser()->getId(), PDO::PARAM_STR);
-        $stmt->bindValue(':id_follower', $follower->getFollower()->getId(), PDO::PARAM_STR);
+        $stmt->bindValue(':id', $follower->getUser()->getId(), PDO::PARAM_INT);
+        $stmt->bindValue(':id_follower', $follower->getFollower()->getId(), PDO::PARAM_INT);
+        var_dump($stmt);
     }
     
 }

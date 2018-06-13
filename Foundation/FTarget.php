@@ -11,6 +11,8 @@
  *  - EXISTS_NICKNAME
  *  - EXISTS_MAIL
  *  - EXISTS_USER
+ *  - LOAD_FOLLOWERS
+ *  - LOAD_FOLLOWING
  *  
  * ESong supporta:
  * 
@@ -19,8 +21,6 @@
  * 
  * EFollower supporta necessariamente:
  * 
- *  - LOAD_FOLLOWERS
- *  - LOAD_FOLLOWING
  *  - EXISTS_FOLLOWER
  *  
  * ESupporter supporta necessariamente:
