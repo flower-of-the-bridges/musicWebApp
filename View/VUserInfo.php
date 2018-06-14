@@ -94,6 +94,14 @@ class VUserInfo extends VObject
         
         //TODO
     }
+    
+    function validateUserInfo(EUserInfo $eui)
+    {
+        $eui->validateInfo($this->check['firstName'], $this->check['lastName'], $this->check['birthPlace'], $this->check['birthDate']);
+    }
+    
+    
+    
 }
 
 ?>

@@ -99,6 +99,42 @@ class EUserInfo extends EObject
         return $this->genre;
     }
       
+    function validateInfo(&$fn, &$ln, &$bp, &$bd)
+    {
+        if (ctype_alpha($this->firstName)) 
+        {
+            strtolower($this->firstName);
+            ucfirst($this->firstName);
+            $fn=true;
+        } else $fn = false;
+        
+        if (ctype_alpha($this->lastName)) 
+        {
+            strtolower($this->lastName);
+            ucwords($this->lastName);
+            $ln=true;
+        } else $ln = false;
+        
+        if (ctype_alpha($this->birthPlace))
+        {
+            strtolower($this->birthPlace);
+            ucwords($this->birthPlace);
+            $bp=true;
+        } else $bp = false;
+        
+        
+        if(ctype_digit($this->birthDate))
+        {
+            date_format($this->birthDate, 'DD/MM/YYYY');
+            if($this->birthDate <= mktime(0,0,0,1,1,2000))
+            {
+                $bd = true;
+            } else $bd = false;
+        } else $bd = false;
+        
+    }
+    
+    
 }
 
 
