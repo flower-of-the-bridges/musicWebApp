@@ -36,9 +36,10 @@
 			{/if}
 			<h2>Register Info</h2>
 					<form method="post" enctype="multipart/form-data" action="signupinfo">
+						{if $uType!='musician'}
 						<div class="form-group">
 							<label for="SongName">First Name: *</label> <input type="text"
-								class="form-control" firstName="firstName"
+								class="form-control" firstName="firstName" {if $uInfo->getFirstName()}value="{$uInfo->getFirstName()}"{/if}
 								placeholder="Enter your first name...">
 						</div>
 						<div class="form-group">
@@ -46,6 +47,7 @@
 								class="form-control" lastName="lastName"
 								placeholder="Enter your last name...">
 						</div>
+						{/if}
 						<div class="form-group">
 							<label for="SongName">Birth Place: *</label> <input type="text"
 								class="form-control" birthPlace="birthPlace"
@@ -54,7 +56,7 @@
 						<div class="form-group">
 							<label for="SongName">Birth Date: *</label> <input type="text"
 								class="form-control" birthDate="birthDate"
-								placeholder="Enter your birth date...">
+								placeholder="Enter your birth date... (dd/mm/aaaa)">
 						</div>
 						<div class="form-group">
 							<label for="SongName">Bio : *</label> <input type="text"

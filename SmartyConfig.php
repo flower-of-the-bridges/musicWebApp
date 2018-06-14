@@ -5,10 +5,22 @@ class SmartyConfig
     
     static function configure() : Smarty
     {
+        /*
         if(WHO == 'marco'){ return SmartyConfig::marcoConf(); }
         else if(WHO == 'davide')
         { return SmartyConfig::davideConf(); }
         else if(WHO == 'giovanni'){ return SmartyConfig::giovConf(); }
+        */
+        require('lib/Smarty/Smarty.class.php');
+        
+        $smarty = new Smarty();
+        
+        $smarty->setTemplateDir('smarty/templates');
+        $smarty->setCompileDir('smarty/templates_c');
+        $smarty->setCacheDir('smarty/cache');
+        $smarty->setConfigDir('smarty/configs');
+        
+        return $smarty;
     }
     
     
