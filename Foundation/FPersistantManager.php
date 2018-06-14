@@ -7,8 +7,9 @@
  * ai dati persistenti da parte degli strati superiore dell'applicazione sia piu' intuitivo.
  * @author gruppo 2
  */
+if(file_exists('config.inc.php'))
+    require_once 'config.inc.php';
 
-require_once 'config.inc.php';
 require_once 'inc.php';
 
 class FPersistantManager {

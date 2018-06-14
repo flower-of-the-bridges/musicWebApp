@@ -4,7 +4,6 @@ class FrontController
 {
     function run()
     {
-        $method = $_SERVER['REQUEST_METHOD'];
         $resources = explode("/", $_SERVER['REQUEST_URI']);
         
         $controller = 'C' . ucfirst($resources[2]);
