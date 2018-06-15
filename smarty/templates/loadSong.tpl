@@ -33,49 +33,78 @@
 			</div>
 			{/if}
 			<h2>Load Song</h2>
+			<fieldset class="form-group">
+				<legend></legend>
 					<form method="post" enctype="multipart/form-data" action="/deepmusic/song/load">
-						<div class="form-group">
-							<label for="SongName">Name: *</label> <input type="text"
-								class="form-control" name="name"
-								placeholder="Enter Song's Name...">
-						</div>
-						<div class="form-group">
-							<label for="SongGenre">Genre: *</label> <input type="text"
-								class="form-control" name="genre"
-								placeholder="Enter Song's Genre...">
-						</div>
+						
+						<div class="form-group row">
+      						<label for="SongName" class="col-sm-2 col-form-label {if !$check.name} text-danger{/if}">Name: *</label>
+      						<div class="col-sm-7">
+        						<input type="text" class="form-control is-invalid" id="SongName" name="name" placeholder="Insert song's name...">
+      						</div>
+      						{if ! $check.name}
+      						<div class="col-sm-3">
+        						<small id="nameHelp" class="text-danger">
+          							Must be 3-20 characters long.
+        						</small>      
+     						</div>
+     						{/if}
+    					</div>
+						<div class="form-group row">
+      						<label for="SongGenre" class="col-sm-2 col-form-label {if !$check.genre} text-danger{/if}">Genre: *</label>
+      						<div class="col-sm-7">
+        						<input type="text" class="form-control is-invalid" id="SongGenre" name="genre" placeholder="Insert song's genre...">
+      						</div>
+      						{if ! $check.genre}
+      						<div class="col-sm-3">
+        						<small id="genreHelp" class="text-danger">
+          							Must be 3-20 characters long.
+        						</small>      
+     						</div>
+     						{/if}
+    					</div>
+    				
 						 <div class="form-group">
     						<label for="exampleInputFile">File input: *</label>
     						<input type="file" class="form-control-file" name="file">
+    						{if ! $check.file}
+      						<div class="col-sm-3">
+        						<small id="fileHelp" class="text-danger">
+          							File must be mp3.
+        						</small>      
+     						</div>
+     						{/if}
   						</div>
-						<fieldset class="form-group">
-							<legend>View Options:</legend>
-							<div class="form-check">
-								<label class="form-check-label"> <input type="radio"
-									class="form-check-input" name="view" value="all" checked>
-									For All.
-								</label>
-							</div>
-							<div class="form-check">
-								<label class="form-check-label"> <input type="radio"
-									class="form-check-input" name="view" value="registered">
-									DeepMusic's users only. 
-								</label>
-							</div>
-							<div class="form-check">
-								<label class="form-check-label"> <input type="radio"
-									class="form-check-input" name="view" value="supporters">
-									Supporters only. 
-								</label>
-							</div>
+  				</fieldset>		
+				<fieldset class="form-group">
+					<legend></legend>
+					<h4 id="important">View Options:</h4>
+					<div class="form-check">
+						<label class="form-check-label"> <input type="radio"
+							class="form-check-input" name="view" value="all" checked>
+								For All.
+						</label>
+					</div>
+					<div class="form-check">
+						<label class="form-check-label"> <input type="radio"
+								class="form-check-input" name="view" value="registered">
+								DeepMusic's users only. 
+						</label>
+					</div>
+					<div class="form-check">
+						<label class="form-check-label"> <input type="radio"
+								class="form-check-input" name="view" value="supporters">
+								Supporters only. 
+						</label>
+					</div>
 							
   							
-						</fieldset>
-						<button type="submit" class="btn btn-primary">Load Song!</button>
-					</form>
+				</fieldset>
+				<button type="submit" class="btn btn-primary">Load Song!</button>
+			</form>
 
 
-		</div>
+	</div>
 	<div class="col-sm-3">
 		
 	</div>

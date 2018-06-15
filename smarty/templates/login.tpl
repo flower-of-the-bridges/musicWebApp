@@ -32,19 +32,37 @@
 			</div>
 			{/if}
 			<h2>Login</h2>
+			<br>
 					<form class="form-horizontal" method="post" action="login">
-						<div class="form-group">
-							<label class="control-label " for="user">User Name:</label> <input
-								type="text" class="form-control" id="user"
-								placeholder="Enter username" name="name">
-
-						</div>
-						<div class="form-group">
-							<label class="control-label" for="pwd">Password:</label> <input
-								type="password" class="form-control" id="pwd"
-								placeholder="Enter password" name="pwd">
-
-						</div>
+						
+						<div class="form-group row">
+      						<label for="user" class="col-sm-2 col-form-label {if !$check.name} text-danger{/if}">User:</label>
+      						<div class="col-sm-7">
+        						<input type="password" class="form-control is-invalid" id="user" name="name" placeholder="Insert username...">
+      						</div>
+      						{if ! $check.name}
+      						<div class="col-sm-3">
+        						<small id="passwordHelp" class="text-danger">
+          							Must be 3-20 characters long.
+        						</small>      
+     						</div>
+     						{/if}
+    					</div>
+    					
+    					<div class="form-group row">
+      						<label for="inputPassword" class="col-sm-2 col-form-label {if !$check.pwd} text-danger{/if}">Password:</label>
+      						<div class="col-sm-7">
+        						<input type="password" class="form-control is-invalid" id="inputPassword" name="pwd" placeholder="Password">
+      						</div>
+      						{if ! $check.pwd}
+      						<div class="col-sm-3">
+        						<small id="passwordHelp" class="text-danger">
+          							Must be 8-20 characters long.
+        						</small>      
+     						</div>
+     						{/if}
+    					</div>
+    					
 						<div class="form-group">
 
 							<div class="checkbox">

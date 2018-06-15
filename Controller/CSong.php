@@ -206,7 +206,7 @@ class CSong
                     $vSong->showErrorPage($user, 'An error occurs!');
             } 
             else
-                $vSong->showLoadForm($user, true);
+                $vSong->showLoadForm($user, false);
         } 
         else
             $vSong->showErrorPage($user, 'You can\'t upload a song! You are not a musician!');
@@ -237,7 +237,7 @@ class CSong
                     header('Location: /deepmusic/song/show/'.$songNew->getId());
                 }
                 else
-                    $vSong->showEditForm($user, $songOld, true);
+                    $vSong->showEditForm($user, $songOld, false);
                     
             }
             else

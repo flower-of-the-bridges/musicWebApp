@@ -70,7 +70,10 @@ class VSong extends VObject
       
         $this->smarty->registerObject('user', $user);
         $this->smarty->assign('uType', lcfirst(substr(get_class($user), 1)));
+        
         $this->smarty->assign('error', $error);
+        $this->smarty->assign('check', $this->check);
+        
         $this->smarty->display('loadSong.tpl');
     }
     
@@ -99,6 +102,8 @@ class VSong extends VObject
             
             $this->smarty->assign('uType', lcfirst(substr(get_class($user), 1)));
             $this->smarty->assign('error', $error);
+            $this->smarty->assign('check', $this->check);
+            
             $this->smarty->assign('checked', $checked);
             $this->smarty->display('editSong.tpl');
     }

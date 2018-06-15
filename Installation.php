@@ -2,7 +2,9 @@
 
 class Installation
 {
-    
+    /**
+     * Effettua l'installazione dell'applicazione
+     */
     static function makeInstallation()
     {
         if($_SERVER['REQUEST_METHOD']=='GET')
@@ -11,6 +13,11 @@ class Installation
             Installation::install();
     }
     
+    /**
+     * Funzione che mostra la form per inserire i dati dell'installazione, ovvero i parametri di
+     * configurazione del dbms locale per la creazione del database. Se la versione di PHP installata
+     * sulla macchina e' minore della 7.0.0 , verrà visualizzato un messaggio di errore.
+     */
     private function showForm()
     {
         $smarty = SmartyConfig::configure();
@@ -21,9 +28,13 @@ class Installation
         $smarty->display('install.tpl');
     }
     
+    /**
+     * Funzione che installa l'applicazione a partire dai dati inseriti dall'utente.
+     */
     private function install()
     {
-        try {
+        try 
+        {
             $address = 'localhost'; // l'installazione e' in default in localhost
             // costruzione parametri di accesso
             
@@ -34,7 +45,7 @@ class Installation
             $db->beginTransaction(); // inizia la transazione
             
             $query = 'DROP DATABASE IF EXISTS ' . $database . ';
-                      CREATE DATABASE ' . $database . ' DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+                      CREATE DATABASE ' . $database . ' ;
                       USE ' . $database . ';'; // costruisce il database
             
             $query = $query . file_get_contents('tables.sql'); // aggiunge tables alla query
@@ -45,9 +56,10 @@ class Installation
             $script = '<?php $address= \'localhost\'; $database= \'' . $database . '\'; $admin= \'' . $admin . '\';$pass= \'' . $pass . '\'; ?>';
             fwrite($file, $script);
             fclose($file);
-            header('Location: /deepmusic/index');
+            header('Location: /deepmusic/index'); // redirect verso l'applicazione
         }
-        catch (PDOException $e){
+        catch (PDOException $e)
+        {
             echo "Errore : " . $e->getMessage();
             $db->rollBack();
             die;
