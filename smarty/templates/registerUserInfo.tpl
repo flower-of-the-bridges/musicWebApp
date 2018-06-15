@@ -17,6 +17,10 @@
 </head>
 <body>
 
+	{user->getNickName assign='uName'}
+	{user->getId assign='uId'} 
+
+
 	{include file="navbar.tpl"}
 	
 	<div class="container text-center">
@@ -35,7 +39,13 @@
 			</div>
 			{/if}
 			<h2>Register Info</h2>
-					<form method="post" enctype="multipart/form-data" action="signupinfo">
+					
+					<div class="form-group">
+    					<label for="exampleInputFile">Select Profile Pic: *</label>
+    					<input type="file" class="form-control-file" name="file">
+  					</div>
+			
+					<form method="post" enctype="multipart/form-data" action="editInfo">
 						{if $uType!='musician'}
 						<div class="form-group">
 							<label for="SongName">First Name: *</label> <input type="text"

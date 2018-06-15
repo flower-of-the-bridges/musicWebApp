@@ -17,12 +17,19 @@ class CUserInfo
         
         $loggedUser->setUserInfo($loggedUserInfo);
         
+        $pic=$vUserInfo->createUserPic();
+        
+        if($pic)
+        {
+            $loggedUser->setImage($pic);   
+        }
+        
         #in teoria prima di tornare al profilo dopo la registrazione l'utente deve essere guidato qui
         header('Location: /deepmusic/user/profile/'.$loggedUser->getId().'&song');
         
     }
     
-    static function signupinfo()
+    static function editInfo()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST')
         {
@@ -32,6 +39,17 @@ class CUserInfo
         {
             CUserInfo::showUserInfoForm();
         }
+    }
+ 
+    
+    private function showUserInfoForm()
+    {
+        $vUserInfo = new VUserInfo();
+        $loggedUser = CSession::getUserFromSession();
+        
+        $ui = $loggedUser->getUserInfo();
+        
+        $vUserInfo->showUserInfoForm($loggedUser);
     }
     
 }

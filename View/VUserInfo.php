@@ -16,6 +16,7 @@ class VUserInfo extends VObject
             'birthPlace' => true,
             'birthDate' => true,
             'bio' => true,
+            'file' => true
         );
     }
     
@@ -42,6 +43,22 @@ class VUserInfo extends VObject
         return $userInfo;
     }
     
+    /**
+     * Funzione che permette la creazione delle info utente con i valori prelevati da una form
+     * @return EUserInfo ottenuta dai campi della form
+     */
+    function  createUserPic() : EImg
+    {
+        $img = null;   
+        if(isset($_POST['file'])){
+            $img = new EImg();
+            $img->setImg(file_get_contents($_FILES['file']['tmp_name']));
+            $img->setSize($_FILES['file']['size']);
+            $img->setType($_FILES['file']['type']);
+        }
+        return $img;
+    }
+    
     
     /**
      * Mostra le informazioni del profilo di un utente
@@ -55,7 +72,11 @@ class VUserInfo extends VObject
      */
     function showProfileInfo(EUserInfo &$profileInfo, EUser &$loggedUser, array $array = null)
     {
-        //TODO
+        $this->smarty->registerObject('user', $loggedUser);
+        
+        $this->smarty->assign('array', $array);
+        
+        #$this->smarty->display('profileInfo.tpl');???????
     }
     
     
@@ -78,6 +99,11 @@ class VUserInfo extends VObject
         $this->smarty->display('registerUserInfo.tpl');
     }
     
+    function validateUserInfo(EUserInfo $eui)
+    {
+        $eui->validateInfo($this->check['firstName'], $this->check['lastName'], $this->check['birthPlace'], $this->check['birthDate']);
+    }
+    
     
     /**
      * Mostra la form di modifica delle info utente
@@ -85,21 +111,15 @@ class VUserInfo extends VObject
      * @param bool $error
      *            facoltativo se presente un errore
      */
-    function showModifyInfo(bool $error = null)
+    function showUserInfoForm(EUser &$user, bool $error = NULL)
     {
-        if(!$error)
+        if (! $error)
             $error = false;
             
-        $userInfo = new EUserInfo();
-        
-        //TODO
+        $this->smarty->registerObject('user', $user);
+        $this->smarty->assign('error', $error);
+        $this->smarty->display('registerUserInfo.tpl');
     }
-    
-    function validateUserInfo(EUserInfo $eui)
-    {
-        $eui->validateInfo($this->check['firstName'], $this->check['lastName'], $this->check['birthPlace'], $this->check['birthDate']);
-    }
-    
     
     
 }
