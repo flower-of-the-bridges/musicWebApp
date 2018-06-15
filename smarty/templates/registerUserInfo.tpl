@@ -32,51 +32,84 @@
 			<div class="alert alert-warning">
 				<strong>Warning!</strong><br>Wrong combination of user and password. <br>Please retry.
 			</div>
-			<div class="col-sm-7 well">
-			{if $error}
-			<div class="alert alert-warning">
-				<strong>Warning!</strong><br>Wrong combination of user and password. <br>Please retry.
-			</div>
 			{/if}
+
 			<h2>Register Info</h2>
 					
-					<div class="form-group">
-    					<label for="exampleInputFile">Select Profile Pic: *</label>
-    					<input type="file" class="form-control-file" name="file">
-  					</div>
+				<div class="form-group row">
+    				<label for="exampleInputFile">Select Profile Pic: *</label>
+    				<input type="file" class="form-control-file" name="file">
+  				</div>
 			
-					<form method="post" enctype="multipart/form-data" action="editInfo">
-						{if $uType!='musician'}
-						<div class="form-group">
-							<label for="SongName">First Name: *</label> <input type="text"
-								class="form-control" firstName="firstName" {if $uInfo->getFirstName()}value="{$uInfo->getFirstName()}"{/if}
-								placeholder="Enter your first name...">
-						</div>
-						<div class="form-group">
-							<label for="SongName">Last Name: *</label> <input type="text"
-								class="form-control" lastName="lastName"
-								placeholder="Enter your last name...">
-						</div>
-						{/if}
-						<div class="form-group">
-							<label for="SongName">Birth Place: *</label> <input type="text"
-								class="form-control" birthPlace="birthPlace"
-								placeholder="Enter your birth place...">
-						</div>
-						<div class="form-group">
-							<label for="SongName">Birth Date: *</label> <input type="text"
-								class="form-control" birthDate="birthDate"
-								placeholder="Enter your birth date... (dd/mm/aaaa)">
-						</div>
-						<div class="form-group">
-							<label for="SongName">Bio : *</label> <input type="text"
-								class="form-control" bio="bio"
-								placeholder="Say something about yourself...">
+				<form method="post" enctype="multipart/form-data" action="editInfo">
+					
+					{if $uType!='musician'}
+						
+						<div class="form-group row">
+							<label for="FirstNAme" class="col-sm-2 col-form-label {if !$check.firstName} text-danger{/if}">
+								First Name: *
+							</label> 
+							<input type="text" class="form-control" name="firstName" 
+								{if $uInfo->getFirstName()}
+									value="{$uInfo->getFirstName()}"
+								{/if}
+								placeholder="Enter your first name..."
+							>
 						</div>
 						
-						<button type="submit" class="btn btn-primary">Submit</button>
-					</form>
+						<div class="form-group row">
+							<label for="LastName" class="col-sm-2 col-form-label {if !$check.lastName} text-danger{/if}">
+								Last Name: *
+							</label> 
+							<input type="text" class="form-control" name="lastName" 
+								{if $uInfo->getLastName()}
+									value="{$uInfo->getLastName()}"
+								{/if}
+								placeholder="Enter your last name..."
+							>
+						</div>
+					
+					{/if}
+				
+					<div class="form-group row">
+						<label for="BirthPlace" class="col-sm-2 col-form-label {if !$check.birthPlace} text-danger{/if}">
+							Birth Place: *
+						</label>
+						<input type="text" class="form-control" name="birthPlace" 
+							{if $uInfo->getBirthPlace()}
+								value="{$uInfo->getBirthPlace()}"
+							{/if}
+							placeholder="Enter your birth place..."
+						>
 					</div>
+
+					<div class="form-group row">
+						<label for="BirthDate" class="col-sm-2 col-form-label {if !$check.birthDate} text-danger{/if}">
+							Birth Date: *
+						</label>
+						<input type="text" class="form-control" name="birthDate" 
+							{if $uInfo->getBirthDate()}
+								value="{$uInfo->getBirthDate()}"
+							{/if}
+							placeholder="Enter your birth date... (dd/mm/aaaa)"
+						>
+					</div>
+
+					<div class="form-group row">
+						<label for="Bio" class="col-sm-2 col-form-label {if !$check.bio} text-danger{/if}">
+							Bio : *
+						</label>
+						<input type="text" class="form-control" name="bio" 
+							{if $uInfo->getBio()}
+								value="{$uInfo->getBio()}"
+							{/if}
+							placeholder="Say something about yourself..."
+						>
+					</div>
+						
+					<button type="submit" class="btn btn-primary">Submit</button>
+				</form>
+	</div>
 	<div class="col-sm-3">
 		
 	</div>
