@@ -38,7 +38,7 @@ class FImg
         $stmt->bindValue(':id',$img->getId(), PDO::PARAM_INT);
         $stmt->bindValue(':size',$img->getSize(), PDO::PARAM_INT);
         $stmt->bindValue(':type',$img->getType(), PDO::PARAM_STR);
-        $stmt->bindParam(':mp3',$img->getImg(), PDO::PARAM_LOB);
+        $stmt->bindParam(':img',$img->getImg(), PDO::PARAM_LOB);
     }
     
     static function createObjectFromRow($row) : EImg

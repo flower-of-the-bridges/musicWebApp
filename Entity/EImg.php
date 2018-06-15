@@ -24,8 +24,10 @@ class EImg extends EObject
      *
      * @return mixed
      */
-    function getImg ()
+    function getImg (bool $encode = null)
     {
+        if($encode)
+            $this->img = base64_encode($this->img);
         return $this->img;
     }
     
@@ -74,5 +76,16 @@ class EImg extends EObject
     function setImg (&$img)
     {
         $this->img = $img;
+    }
+    
+    function setStatic()
+    {
+        $file = dirname(__DIR__)."/def/defProPic.jpg";
+        
+        $this->img = file_get_contents($file);
+        $this->type = mime_content_type($file);
+        $this->size = (int) filesize($file);
+        
+        var_dump($this);
     }
 }

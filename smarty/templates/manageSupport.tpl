@@ -18,6 +18,7 @@
 <body>
 
 	{user->getNickName assign='uName'}
+	{user->getId assign='uId'}
 
 	{include file="navbar.tpl"}
 	
