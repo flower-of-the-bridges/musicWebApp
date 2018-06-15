@@ -88,8 +88,8 @@
 							Birth Date: *
 						</label>
 						<input type="text" class="form-control" name="birthDate" 
-							{if $uInfo->getBirthDate()}
-								value="{$uInfo->getBirthDate()}"
+							{if $uInfo->getBirthDate(true)}
+								value="{$uInfo->getBirthDate(true)}"
 							{/if}
 							placeholder="Enter your birth date... (dd/mm/aaaa)"
 						>

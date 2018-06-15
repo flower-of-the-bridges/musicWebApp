@@ -26,7 +26,7 @@ class VUserInfo extends VObject
      */
     function createUserInfo() : EUserInfo
     {
-        $userInfo;
+        $userInfo = new EUserInfo();
         if(isset($_POST['firstName']))
             $userInfo->setFirstName($_POST['firstName']);
         if(isset($_POST['lastName']))
@@ -49,9 +49,10 @@ class VUserInfo extends VObject
      */
     function  createUserPic() : EImg
     {
-        $img = null;   
-        if(isset($_POST['file'])){
-            $img = new EImg();
+        $img = new EImg();
+        
+        if(isset($_POST['file']))
+        {
             $img->setImg(file_get_contents($_FILES['file']['tmp_name']));
             $img->setSize($_FILES['file']['size']);
             $img->setType($_FILES['file']['type']);
@@ -86,14 +87,16 @@ class VUserInfo extends VObject
      * @param bool $error
      *            facoltativo se presente un errore
      */
-    function showSignUpInfo (bool $error = null)
+    function showSignUpInfo (EUser $user, bool $error = null)
     {
         if(!$error)
             $error = false;
         
         $userInfo = new EUserInfo();
-        
-        $this->smarty->registerObject('userInfo', $userInfo);
+ 
+        $this->smarty->registerObject('user', $user);
+        $this->smarty->assign('userInfo', $userInfo);
+        $this->smarty->assign('uType', lcfirst(substr(get_class($user), 1)));
 
         $this->smarty->assign('error', $error);
         $this->smarty->display('registerUserInfo.tpl');
@@ -115,8 +118,13 @@ class VUserInfo extends VObject
     {
         if (! $error)
             $error = false;
-            
+          
+        $userInfo = $user->getUserInfo();
         $this->smarty->registerObject('user', $user);
+        $this->smarty->assign('uInfo', $userInfo);
+        
+        $this->smarty->assign('uType', lcfirst(substr(get_class($user), 1)));
+        
         $this->smarty->assign('error', $error);
         $this->smarty->display('registerUserInfo.tpl');
     }

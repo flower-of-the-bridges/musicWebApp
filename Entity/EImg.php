@@ -31,9 +31,9 @@ class EImg extends EObject
     
     /**
      *
-     * @return int
+     * @return int | NULL
      */
-    function getSize () : int
+    function getSize () 
     {
         return $this->size;
     }

@@ -116,7 +116,11 @@ class EUser extends EObject
      */
     function getUserInfo()
     {
-        $this->userInfo = FPersistantManager::getInstance()->load(EUserInfo::class, $this->id); 
+        $uInfo = FPersistantManager::getInstance()->load(EUserInfo::class, $this->id); 
+        if($uInfo)
+            $this->userInfo = $uInfo;
+        else 
+            $this->userInfo = new EUserInfo();
         return $this->userInfo;
     }
     
@@ -131,11 +135,11 @@ class EUser extends EObject
         
         if(!FPersistantManager::getInstance()->load(EUserInfo::class, $this->id)) // se le informazioni non sono presenti...
         { //vengono caricate nel db
-            FPersistantManager::getInstance()->store($this->info);
+            FPersistantManager::getInstance()->store($this->userInfo);
         }
         else 
         { //altrimenti vengono aggiornate
-            FPersistantManager::getInstance()->update($this->info);
+            FPersistantManager::getInstance()->update($this->userInfo);
         }
         
         

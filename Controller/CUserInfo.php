@@ -14,18 +14,17 @@ class CUserInfo
         $vUserInfo = new VUserInfo();
         $loggedUser = CSession::getUserFromSession();
         $loggedUserInfo = $vUserInfo->createUserInfo();
-        
+        var_dump($loggedUserInfo);
+        var_dump($loggedUserInfo->getBirthDate());
         $loggedUser->setUserInfo($loggedUserInfo);
         
-        $pic=$vUserInfo->createUserPic();
+        $pic = $vUserInfo->createUserPic();
         
-        if($pic)
+        if($pic->getSize())
         {
             $loggedUser->setImage($pic);   
         }
         
-        #in teoria prima di tornare al profilo dopo la registrazione l'utente deve essere guidato qui
-        header('Location: /deepmusic/user/profile/'.$loggedUser->getId().'&song');
         
     }
     
@@ -46,10 +45,13 @@ class CUserInfo
     {
         $vUserInfo = new VUserInfo();
         $loggedUser = CSession::getUserFromSession();
+        if(get_class($loggedUser)!=EGuest::class)
+        {
+            $vUserInfo->showUserInfoForm($loggedUser);
+        }
+        else 
+            $vUserInfo->showErrorPage($loggedUser, 'You must be a DeepMusic\'s user to edit your info!');
         
-        $ui = $loggedUser->getUserInfo();
-        
-        $vUserInfo->showUserInfoForm($loggedUser);
     }
     
 }

@@ -17,6 +17,12 @@ class EUserInfo extends EObject
     function __construct()
     {
         parent::__construct();
+        $this->firstName='';
+        $this->lastName='';
+        $this->birthPlace='';
+        $this->birthDate='';
+        $this->bio='';
+        $this->genre='';
     }
     
     
@@ -49,7 +55,7 @@ class EUserInfo extends EObject
     {
         $this->firstName = $firstName;
     }
-    function getFirstName () : string
+    function getFirstName () 
     {
         return $this->firstName;
     }
@@ -58,7 +64,7 @@ class EUserInfo extends EObject
     {
         $this->lastName = $lastname;
     }
-    function getLastName () : string
+    function getLastName () 
     {
         return $this->lastName;
     }
@@ -67,25 +73,35 @@ class EUserInfo extends EObject
     {
         $this->birthPlace = $birthPlace;
     }
-    function getBirthPlace () : string
+    
+    function getBirthPlace () 
     {
         return $this->birthPlace;
     }
     
-    function setBirthDate (DateTime $birthDate)
+    function setBirthDate (string $birthDate)
     {
-        $this->birthDate = $birthDate;
+        $this->birthDate = new DateTime($birthDate);
     }
-    function getBirthDate () : DateTime
+    function getBirthDate (bool $showFormat = null)
     {
-        return $this->birthDate;
+        if($this->birthDate)
+        {
+            $format = "y-m-d";
+            if($showFormat)
+               $format = "m/d/y";
+                
+            return $this->birthDate->format($format);
+        }
+        else 
+            return NULL;
     }
     
     function setBio (string $bio)
     {
         $this->bio = $bio;
     }
-    function getBio () : string
+    function getBio () 
     {
         return $this->bio;
     }
@@ -94,7 +110,7 @@ class EUserInfo extends EObject
     {
         $this->genre = $genre;
     }
-    function getGenre () : string
+    function getGenre ()
     {
         return $this->genre;
     }
