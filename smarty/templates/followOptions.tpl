@@ -14,7 +14,7 @@
 	{/if}
 	{else}
 		{if $uType eq 'musician'}
-	<p>	<a href="#">Gestione supporti </a>	</p>
+	<p>	<a href="/deepmusic/supInfo/edit">Gestione supporti </a>	</p>
 		{/if}
 	{/if}
 </div>

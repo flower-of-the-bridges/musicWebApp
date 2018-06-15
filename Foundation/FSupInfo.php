@@ -13,7 +13,7 @@ class FSupInfo
      * @param PDO $db la connessione verso il dbms
      * @return string la query sql da eseguire
      */
-    static function storeSupportInfo() : string
+    static function storeSupInfo() : string
     {
         return "INSERT INTO support_info(id_artist, contribute, period)
 				VALUES(:id, :contribute, :period)";
@@ -25,7 +25,7 @@ class FSupInfo
      * @param int $id l'id della canzone
      * @return object string la query sql da eseguire
      */
-    static function loadSupportInfo( ) : string
+    static function loadSupInfo( ) : string
     {
         return "SELECT *
                 FROM support_info

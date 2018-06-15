@@ -181,6 +181,12 @@ class CUser
                 
                 FPersistantManager::getInstance()->store($loggedUser); // si salva l'utente
                 
+                if(is_a($loggedUser, EMusician::class)) // se l'utente e' musicista...
+                {
+                    $supInfo = new ESupInfo();
+                    $loggedUser->showSupportInfo($supInfo); // ..carica le info di supporto di default
+                }
+                
                 CUserInfo::setDefaultUserImg($loggedUser);
                 
                 CSession::startSession($loggedUser);
