@@ -76,6 +76,31 @@ class ESupporter
     {
         $this->support = $support;
     }
+    
+    function isValid() : bool
+    {
+        if($this->artist->getId()!=$this->support->getId())
+      {
+        if(is_a($this->getArtist(), EMusician::class))
+           return true;
+                else 
+                    return false;
+            
+        }
+           else
+                return false;
+    }
+    
+    function exists() : bool
+    {
+        $uId = $this->artist->getId();
+        $pId = $this->support->getId();
+        
+        if(FPersistantManager::getInstance()->exists(ESupporter::class, FTarget::EXISTS_SUPPORTER, $uId, $pId))
+            return true;
+            else return false;
+    }
+    
 
     public function __construct()
     {}
