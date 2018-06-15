@@ -22,6 +22,30 @@ class EReport extends EObject
         parent::__construct();
     }
     
+    function validateTitle() : bool
+    {
+        return $this->title != "";
+    }
+    
+    function validateDescription() : bool
+    {
+        return $this->description != "";
+    }
+    
+    function validateIdSegnalatore() : bool
+    {
+        if($this->idSegnalatore != "")
+        {
+            return FPersistantManager::getInstance()->load(EUser::class, $this->idSegnalatore);
+        }else 
+            return  false;
+    }
+    
+    function validateObject() : bool
+    {
+        return FPersistantManager::getInstance()->load(E.ucfirst($this->objectTtype)::class, $this->idObject);
+    }
+    
     
     function getTitle () : string
     {
