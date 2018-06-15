@@ -38,7 +38,7 @@
 						<div class="form-group row">
       						<label for="user" class="col-sm-2 col-form-label {if !$check.name} text-danger{/if}">User:</label>
       						<div class="col-sm-7">
-        						<input type="password" class="form-control is-invalid" id="user" name="name" placeholder="Insert username...">
+        						<input type="text" class="form-control is-invalid" id="user" name="name" placeholder="Insert username...">
       						</div>
       						{if ! $check.name}
       						<div class="col-sm-3">

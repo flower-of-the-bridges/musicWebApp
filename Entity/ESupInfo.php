@@ -7,9 +7,9 @@ class ESupInfo extends EObject
     const CONT_BASE = "1 $";
     const CONT_MIDDLE = "5 $";
     const CONT_TOP = "10 $";
-    const BASE_TIME = "7";
-    const MIDDLE_TIME = "30";
-    const TOP_TIME = "365";
+    const TIME_BASE = "7";
+    const TIME_MIDDLE = "30";
+    const TIME_TOP = "365";
     
     private $contribute;
     private $period;
@@ -19,8 +19,8 @@ class ESupInfo extends EObject
     
     function __construct()
     {
-       $this->contribute = 1;
-       $this->period = 7;
+       $this->contribute = ESupInfo::CONT_BASE;
+       $this->period = ESupInfo::TIME_BASE;
     }
     
     
@@ -41,7 +41,7 @@ class ESupInfo extends EObject
     /**
      * @param mixed $contribute
     */
-    function setContribute(int $contribute)
+    function setContribute(string $contribute)
     {
         $this->contribute = $contribute ;
     
@@ -57,19 +57,19 @@ class ESupInfo extends EObject
 
     function validateContribute() : bool
     {
-        if ($this->contribute != ESupInfo::CONT_BASE || $this->contribute != ESupInfo::CONT_MIDDLE || $this->contribute != ESupInfo::CONT_TOP) 
+        if ($this->contribute != ESupInfo::CONT_BASE && $this->contribute != ESupInfo::CONT_MIDDLE && $this->contribute != ESupInfo::CONT_TOP) 
             return false;
-            else
-                return true;
+        else
+            return true;
     }
     
     
     function validatePeriod() : bool
     {
-        if ($this->period != ESupInfo::BASE_TIME|| $this->period != ESupInfo::MIDDLE_TIME || $this->period != ESupInfo::TOP_TIME)
+        if ($this->period != ESupInfo::TIME_BASE && $this->period != ESupInfo::TIME_MIDDLE && $this->period != ESupInfo::TIME_TOP)
             return false;
-            else
-                return true;
+        else
+            return true;
     }
     
     

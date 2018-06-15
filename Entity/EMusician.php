@@ -12,7 +12,7 @@ include_once 'Entity/EObject.php';
  */
 class EMusician extends EUser
 {
-    private $supInfo; // le informazioni per il supporto dell'utente
+    private $supInfo; /** le informazioni per il supporto dell'utente */
     
     /**
      *

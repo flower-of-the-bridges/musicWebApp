@@ -181,9 +181,17 @@ class CUser
                 
                 FPersistantManager::getInstance()->store($loggedUser); // si salva l'utente
                 
-                CUserInfo::setDefaultUserImg($loggedUser);
-                
                 CSession::startSession($loggedUser);
+                
+                if(is_a($loggedUser, EMusician::class)) // se l'utente e' musicista...
+                {
+                    $supInfo = new ESupInfo();
+                    $loggedUser->getSupportInfo($supInfo); // ..carica le info di supporto di default
+                }
+                // imposta l'immagine di default
+                $defaultImage = new EImg();
+                $defaultImage->setStatic($defaultImage);
+                $loggedUser->setImage($defaultImage);
                 
                 #nuovo header che reindirizza verso VUserInfo->showSignUpInfo()?
                 header('Location: /deepmusic/user/profile/'.$loggedUser->getId().'&song');

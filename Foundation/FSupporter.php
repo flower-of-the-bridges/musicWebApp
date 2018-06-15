@@ -11,7 +11,7 @@ class FSupporter {
      */
     static function storeSupporter() : string
     {
-        return "INSERT INTO supporter
+        return "INSERT INTO supporter(id, id2, expirationDate, renewal)
                 VALUES :id, :id2, :expirationDate, :renewal;";
     }
     
@@ -69,7 +69,7 @@ class FSupporter {
      */
     static function existsSupporter() : string
     {
-        return "EXISTS(SELECT *
+        return        "SELECT *
                        FROM supporter
                        WHERE id_artist = :value AND id_supporter= :value2 ; ";
     }

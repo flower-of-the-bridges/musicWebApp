@@ -250,7 +250,7 @@ class FPersistantManager {
         try {
             
             FPersistantManager::bindValues($stmt, $obj); // si associano i valori dell'oggetto alle entry della query
-            
+            var_dump($stmt);
             $stmt->execute();
             if ($stmt->rowCount()) // si esegue la query
             {
