@@ -181,6 +181,8 @@ class CUser
                 
                 FPersistantManager::getInstance()->store($loggedUser); // si salva l'utente
                 
+                CUserInfo::setDefaultUserImg($loggedUser);
+                
                 CSession::startSession($loggedUser);
                 
                 #nuovo header che reindirizza verso VUserInfo->showSignUpInfo()?
@@ -191,7 +193,6 @@ class CUser
         }
         else
             $vUser->showSignUp();
-            
     }
     
 }
