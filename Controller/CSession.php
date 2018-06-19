@@ -1,5 +1,13 @@
 <?php
 require_once 'inc.php';
+
+/**
+ * La classe CSession regola la sessione dell'utente nella navigazione dell'applicazione.
+ * Le sue funzionalità permettono di iniziare, terminare e riprendere una sessione di un particolare
+ * utente, costruendo/ricostruendo i suoi parametri principali (quali nome, tipologia...)
+ * @author gruppo2
+ * @package Controller
+ */
 class CSession
 {
     /**

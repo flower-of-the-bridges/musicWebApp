@@ -2,12 +2,42 @@
 
 require_once 'inc.php';
 
+/**
+ * La classe CUserInfo implementa la funzionalità 'Gestione Profilo': le sue funzioni infatti
+ * presentano/ricevono una form in cui l'utente inserirà informazioni su di se, come :
+ * - Nome e Cognome (se non è un Musician)
+ * - Info 
+ * - Data di Nascita
+ * - Luogo di Nascita
+ * - Immagine del profilo
+ * 
+ * @author gruppo2
+ * @package Controller
+ *
+ */
 class CUserInfo
 {
-
-       
     /**
-     * La funzione Register permette di creare un nuovo oggetto info utente
+     * A seconda del tipo di metodo richiesto dal client, verranno attivate funzioni diverse.
+     * In particolare:
+     * - register() salva su DB le informazioni inserite dall'utente.
+     * - showUserInfoForm() mostra all'utente la form in cui inserire i dati.
+     */
+    static function editInfo()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST')
+        {
+            CUserInfo::register();
+        }
+        elseif ($_SERVER['REQUEST_METHOD'] == 'GET')
+        {
+            CUserInfo::showUserInfoForm();
+        }
+    }
+    
+    /**
+     * La funzione Register permette di creare un nuovo oggetto info utente e salvarlo sul DB.
+     * Se anche l'immagine è stata caricata, salverà anche il corrispondente oggetto EImg
      */
     private function register()
     {
@@ -26,19 +56,10 @@ class CUserInfo
         
     }
     
-    static function editInfo()
-    {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST')
-        {
-            CUserInfo::register();
-        }
-        elseif ($_SERVER['REQUEST_METHOD'] == 'GET')
-        {
-            CUserInfo::showUserInfoForm();
-        }
-    }
- 
-    
+    /**
+     * Mostra all'utente la form per la modifica delle informazioni. Se l'utente è Guest, verrà
+     * reindirizzato ad un messaggio di errore.
+     */
     private function showUserInfoForm()
     {
         $vUserInfo = new VUserInfo();

@@ -5,6 +5,7 @@ include_once 'Entity/EObject.php';
 
 /**
  * @author gruppo 2
+ * @package Entity
  * La classe ESong caratterizza le canzoni su cui si basa l'applicazione. Oltre a 
  * caratteristiche generali, quali nome artista e genere, la classe permette di impostare
  * la visibilita' del brano in modo tale da proporlo a specifiche categorie di utenti.
@@ -13,19 +14,27 @@ include_once 'Entity/EObject.php';
 class ESong extends EObject
 {
     //generics
-    private $name;          //string containing song name
-    private $artist;        //string containing the reference to the EMusician instance
-    
-    private $genre; 	    //string containing genre of the song
+    /**  Il nome della canzone */
+    private $name;          
+    /** EMusician rappresentante l'autore del brano */
+    private $artist;        
+    /** Il genere musicale del brano */
+    private $genre; 	    
     
     //booleans used to set privacy settings respect to...
-    private $guest;              //...guest
-    private $supporter;         //...utenti supporters
-    private $registered;        //...utenti registrati
+    /** Denota se la canzone può essere ascoltata dagli utenti guest */
+    private $guest;
+    /** Denota se la canzone può essere ascoltata dagli utenti registrati */
+    private $supporter;        
+    /** Denota se la canzone può essere ascoltata dagli utenti che supportano il musicista autore del brano. */
+    private $registered;        
     
-    //stringa che contiene la maniglia all'oggetto Emp3
+    /** EMp3 che rappresenta il file audio della canzone */
     private $mp3; 
     
+    /**
+     * Instanzia un oggetto ESong vuoto, di default non visibile a nessuna tipologia di utente
+     */
     function __construct ()
     {
         $this->mp3 = new EMp3();

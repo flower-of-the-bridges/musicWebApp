@@ -2,8 +2,18 @@
 require_once 'inc.php';
 include_once 'Entity/EObject.php';
 
+/**
+ * La classe EGuest estende la classe padre EUser e implementa la tipologia di utente Guest.
+ * @author gruppo2
+ * @package Entity
+ *
+ */
 class EGuest extends EUser
 {
+    /**
+     * Costruisce un utente Guest. L'id viene posto a 0 e il suo nickname e' semplicemente
+     * 'Visitor' (quest'ultimo e' un valore simbolico e non incide a livello di procedure).
+     */
     function __construct()
     {
         parent::__construct();

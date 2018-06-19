@@ -6,7 +6,8 @@ include_once 'Entity/EUser.php';
  *
  * @author gruppo 2
  *         La classe EListener rappresenta l'utente base dell'applicazione.
- *         Puo' seguire altri utenti e, in caso di musicisti, puo' supportarli
+ *         Puo' seguire altri utenti e, in caso di musicisti, puo' supportarli.
+ * @package Entity
  */
 class EListener extends EUser
 {

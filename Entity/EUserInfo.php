@@ -4,16 +4,31 @@ include_once 'Entity/EObject.php';
 
 //this class is made to be a container for all the
 //informations about the users that are not crucial or necessary
-
+/**
+ * La classe EUserInfo e' pensata per contenere tutte le informazioni sull'utente che non 
+ * sono necessarie in fase di autenticazione/registrazione/ricerca. Proprio per questo, estende
+ * la classe EObject avendo come id lo stesso identificativo dell'utente a cui appartengono.
+ * @author gruppo2
+ * @package Entity
+ */
 class EUserInfo extends EObject
 {
+    /** il nome dell'utente */
     private $firstName;         //the first name of the user
+    /** il cognome dell'utente */
     private $lastName;          //the last name of the user
+    /** il luogo di nascita dell'utente */
     private $birthPlace;        //the birth place of the user    
+    /** la data di nascita dell'utente */
     private $birthDate;         //the birth date of the user    
+    /** la biografia dell'utente */
     private $bio;               //a self made introduction of the user himself
+    /** il genere musicale dell'utente */
     private $genre;             //the generated genre of this user
     
+    /**
+     * Costruisce un oggetto EUserInfo vuoto.
+     */
     function __construct()
     {
         parent::__construct();
@@ -26,7 +41,9 @@ class EUserInfo extends EObject
     }
     
     
-    //this method make a new genre based on user preferences
+    /**
+     * Costruisce il genere musicale dell'utente a partire dalle canzoni passate alla funzione.
+     */
     function generateGenre(string $genre = null)
     {
         if($genre!=NULL)
@@ -50,39 +67,74 @@ class EUserInfo extends EObject
         }
     }
     
-    
+    /**
+     * 
+     * @param string $firstName il nome dell'utente
+     */
     function setFirstName (string $firstName)
     {
         $this->firstName = $firstName;
     }
+    
+    /**
+     * 
+     * @return string il nome dell'utente
+     */
     function getFirstName () 
     {
         return $this->firstName;
     }
     
+    /**
+     * 
+     * @param string $lastname il cognome dell'utente
+     */
     function setLastName (string $lastname)
     {
         $this->lastName = $lastname;
     }
+    
+    /**
+     * 
+     * @return string il cognome dell'utente
+     */
     function getLastName () 
     {
         return $this->lastName;
     }
     
+    /**
+     * 
+     * @param string $birthPlace il luogo di nascita
+     */
     function setBirthPlace (string $birthPlace)
     {
         $this->birthPlace = $birthPlace;
     }
     
+    /**
+     * 
+     * @return string il luogo di nascita
+     */
     function getBirthPlace () 
     {
         return $this->birthPlace;
     }
     
+    /**
+     * 
+     * @param string $birthDate la data di nascita
+     */
     function setBirthDate (string $birthDate)
     {
         $this->birthDate = new DateTime($birthDate);
     }
+    
+    /**
+     * Restituisce la data di nascita dell'utente
+     * @param bool $showFormat (opzionale) imposta la data nel formato di visualizzazione
+     * @return string contenente la data in formato y-m-d (m/d/y se il campo bool e' true) e' specificata | NULL altrimenti
+     */
     function getBirthDate (bool $showFormat = null)
     {
         if($this->birthDate)
@@ -97,24 +149,50 @@ class EUserInfo extends EObject
             return NULL;
     }
     
+    /**
+     * 
+     * @param string $bio la biografia dell'utente
+     */
     function setBio (string $bio)
     {
         $this->bio = $bio;
     }
+    
+    /**
+     * 
+     * @return string la biografia dell'utente
+     */
     function getBio () 
     {
         return $this->bio;
     }
     
+    /**
+     * 
+     * @param string $genre il genere musicale
+     */
     function setGenre (string $genre)
     {
         $this->genre = $genre;
     }
+    
+    /**
+     * 
+     * @return string il genere musicale
+     */
     function getGenre ()
     {
         return $this->genre;
     }
       
+    /**
+     * Controlla che i dati dell'oggetto siano validi. I valori booleani passati per riferimento
+     * saranno true o false a seconda se il dato attributo sia valido o meno.
+     * @param bool $fn controllo del primo nome
+     * @param bool $ln controllo del cognome
+     * @param bool $bp controllo del luogo di nascita
+     * @param bool $bd controllo della data di nascita
+     */
     function validateInfo(&$fn, &$ln, &$bp, &$bd)
     {
         if (ctype_alpha($this->firstName)) 

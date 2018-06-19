@@ -1,8 +1,21 @@
 <?php
 require_once 'inc.php';
 
-class CFollower
+/**
+ * La classe CSupporter implementa la funzionalità 'Supporta Musicista'. Le funzioni support/unsupport
+ * permettono ad un utente di supportare/smettere di supportare un musicista, non prima di aver
+ * fatto prendere nota all'utente delle informazioni sul supporto del musicista. 
+ * @author gruppo2
+ * @package Controller
+ */
+class CSupporter
 {
+    /**
+     * La funzione support permette di supportare un musicista. L'utente, se confermerà la sua
+     * scelta dopo aver visionato i parametri di supporto imposti dal musicista, verrà associato
+     * al musicista attraverso un oggetto ESupporter, che salverà tale associazione nel database.
+     * @param int $id l'identificativo dell'utente da seguire
+     */
     static function support($id)
     {
         $vUser = new VUser();
@@ -39,6 +52,12 @@ class CFollower
             $vUser->showErrorPage($user, 'You must be a DeepMusic\'s user to use the support function!');
     }
     
+    /**
+     * La funzione unsupport permette di terminare il supporto di un musicista. Se l'associazione tra
+     * utente e musicista è effettivamente presente, verrà regolata attraverso un oggetto ESupporter, 
+     * che rimuoverà tale associazione nel database.
+     * @param int $id l'identificativo del musicista da non seguire
+     */
     static function unsupport($id)
     {
         $vUser = new VUser();

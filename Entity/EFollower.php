@@ -3,17 +3,19 @@
 require_once 'inc.php';
 
 /**
- * La classe EFollower fornisce un modello per la funzionalità Segui. Un'istanza di tale classe mette in
- * relazione un utente con un ulteriore utente, che ha deciso di seguirlo. 
+ * La classe EFollower fornisce un modello per il caso d'uso 'Segui Utente'. 
+ * Un'istanza di tale classe mette in relazione un utente con un ulteriore utente, che ha deciso di seguirlo. 
  * @author gruppo2
  */
 class EFollower
 {
-    private $user; // l'utente oggetto del follow
-    private $follower; // l'utente follower
+    /**  EUser contenente l'utente oggetto del follow */
+    private $user; 
+    /** EUser contenente l'utente follower */
+    private $follower; 
     
     /**
-     * 
+     * Istanzia un oggetto vuoto di tipo EFollower
      */
     function __construct(){}
     

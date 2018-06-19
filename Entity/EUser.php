@@ -5,17 +5,33 @@ include_once 'Entity/EObject.php';
 //This is the EUser Class, a class made to handle all 
 //kind of users of the application,
 //this is going to be the main class for every action performed
-
+/**
+ * La classe EUser contiene tutti gli attributi e metodi base che sono adoperati da tutte
+ * le tipologie di utente. Contiene metodi per impostare, ottenere, validare i seguenti attributi:
+ * - nickname: il nome utente utilizzato nell'applicazione
+ * - mail: l'indirizzo utilizzato in fase di registrazione
+ * - password: la password per accedere nell'applicazione
+ * - info: oggetto EUserInfo contenente informazioni da modificare e visualizzabili nel profilo
+ * - img: oggetto EImg contenente l'immagine da visualizzare nel profilo
+ * @author gruppo2
+ * @package Entity
+ */
 class EUser extends EObject
 {
-    protected $nickname; // il nome dell'utente
-    protected $mail; // la mail dell'utente
-    protected $password; // la password dell'utente
-    
-    protected $userInfo; // le informazioni dell'utente
-    protected $img; // l'immagine dell'utente 
+    /** il nome dell'utente */
+    protected $nickname; 
+    /** la mail dell'utente */
+    protected $mail; 
+    /** la password dell'utente */
+    protected $password; 
+    /** EUserInfo rappresentante le informazioni dell'utente */
+    protected $userInfo;
+    /** EImg rappresentante l'immagine dell'utente */
+    protected $img; 
      
-        
+    /**
+     * 
+     */    
     function __construct()
     {
         parent::__construct();

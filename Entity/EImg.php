@@ -6,11 +6,11 @@ include_once 'Entity/EObject.php';
 class EImg extends EObject
 {
     
-    //size of the uploaded image
+    /** Dimensione dell'immagine */
     private $size;
-    //mime type of the blob
+    /** Mime Type dell'immagine */
     private $type;
-    //the blob itself
+    /** I byte del file */
     private $img;
     
     /**
@@ -21,8 +21,8 @@ class EImg extends EObject
     /****************************************** GETTER **************************************************/
     
     /**
-     *
-     * @return mixed
+     * @param bool $encode (opzionale) se posto a true, effettua la codifica in base64 per la visualizzazione
+     * @return mixed I byte dell'immagine
      */
     function getImg (bool $encode = null)
     {
@@ -33,7 +33,7 @@ class EImg extends EObject
     
     /**
      *
-     * @return int | NULL
+     * @return int la dimensione dell'immagine | NULL se non e' specificata
      */
     function getSize () 
     {
@@ -42,7 +42,7 @@ class EImg extends EObject
     
     /**
      *
-     * @return string
+     * @return string il mime-type del file.
      */
     function getType () : string
     {
@@ -53,7 +53,7 @@ class EImg extends EObject
     
     /**
      *
-     * @param int $size
+     * @param int $size la dimensione dell'immagine
      */
     function setSize (int $size)
     {
@@ -62,7 +62,7 @@ class EImg extends EObject
     
     /**
      *
-     * @param string $type
+     * @param string $type il mime-type dell'immagine
      */
     function setType (string $type)
     {
@@ -71,13 +71,17 @@ class EImg extends EObject
     
     /**
      *
-     * @param mixed $img
+     * @param mixed $img i byte contenuti nel file
      */
-    function setImg (&$img)
+    function setImg ($img)
     {
         $this->img = $img;
     }
     
+    /**
+     * Imposta l'oggetto con valori statici, ricavati da un immagine contenuta nella directory
+     * di lavoro.
+     */
     function setStatic()
     {
         $file = dirname(__DIR__)."/def/defProPic.jpg";
@@ -85,7 +89,5 @@ class EImg extends EObject
         $this->img = file_get_contents($file);
         $this->type = mime_content_type($file);
         $this->size = (int) filesize($file);
-        
-        var_dump($this);
     }
 }

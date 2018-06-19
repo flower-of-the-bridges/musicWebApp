@@ -15,6 +15,8 @@
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link rel="script
+	href="/deepmusic/smarty/templates/script.js">
 
 </head>
 <body>
@@ -30,7 +32,7 @@
 			{if $canSee}
 			<h4><a href="/deepmusic/user/profile/{$song->getArtist()->getId()}&song">{$song->getArtist()->getNickName()}</a> : {$song->getName()} ({$song->getGenre()})</h4>
 		    <audio controls="controls" autoplay="">
-				<source src="" type="">
+				<source src="player({$song->getId()})" type="audio/mpeg">
 			</audio>
 			{else}
 			<h4>You can't listen this song.<h4>

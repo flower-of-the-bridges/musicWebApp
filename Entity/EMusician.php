@@ -9,10 +9,12 @@ include_once 'Entity/EObject.php';
  *         di EListener (di cui infatti eredita i metodi). Un utente istanza di EMusician
  *         ha infatti un genere musicale, ricavato dalla lista di canzoni che egli stesso puo'
  *         caricare.
+ * @package Entity
  */
 class EMusician extends EUser
 {
-    private $supInfo; /** le informazioni per il supporto dell'utente */
+    /** le informazioni per il supporto dell'utente */
+    private $supInfo; 
     
     /**
      *

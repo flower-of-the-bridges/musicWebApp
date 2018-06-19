@@ -2,6 +2,12 @@
 
 require_once 'inc.php';
 
+/**
+ * La classe CUser implementa il caso d'uso 'Gestione Utenti'. Le varie funzionalità permettono 
+ * la creazione, autenticazione e visualizzazione di un profilo di un utente.
+ * @author gruppo2 
+ * @package Controller
+ */
 class CUser
 {
     /**
@@ -28,6 +34,11 @@ class CUser
             header('Location: HTTP/1.1 Invalid HTTP method detected');
     }
 
+    /**
+     * Metodo che implementa la funzionalità di registrazione. Se richiamato a seguito di una richiesta
+     * GET da parte del client, mostra la form di compilazione; altrimenti se richiamato tramite POST
+     * riceve i dati forniti dall'utente e procede con la creazione di un nuovo utente.
+     */
     static function signup()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') //se il metodo http utilizzato e' GET...

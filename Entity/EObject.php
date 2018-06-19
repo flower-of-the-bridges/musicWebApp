@@ -3,14 +3,16 @@ require_once 'inc.php';
 /**
  * La classe EObject caratterizza un oggetto Entity a partire dal suo Id.
  * @author gruppo2
+ * @package Entity
  */
 
 class EObject
 {
-    protected $id;                                      //l'id dell'oggetto
+    protected $id; /** l'id che identifica l'oggetto */
     
     /**
-     * @param int $id
+     * Costruisce un oggetto vuoto
+     * @param int $id (opzionale) l'identificativo dell'oggetto Entity
      */
     protected function __construct(int $id=null) {
         $this->id = $id;
@@ -26,7 +28,7 @@ class EObject
     }
     
     /**
-     * @param mixed $id
+     * @param int $id l'identificativo dell'oggetto Entity
      */
     function setId(int $id) {
         $this->id = $id;

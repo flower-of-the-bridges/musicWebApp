@@ -2,36 +2,55 @@
 require_once 'inc.php';
 include_once 'Entity/EObject.php';
 
+/**
+ * La classe ESupInfo e' utilizzata da un EMusician per fornire agli altri utenti dell'applicazione
+ * le informazioni per supportarlo: tali informazioni riguardano il contributo e il periodo in cui 
+ * versarlo e sono mantenuti in costanti.
+ * @author gruppo2
+ * @package Entity
+ *
+ */
 class ESupInfo extends EObject
 {
-    const CONT_BASE = "1 $";
+    /** Sottoscrizione base */
+    const CONT_BASE = "1 $"; 
+    /** Sottoscrizione media */
     const CONT_MIDDLE = "5 $";
+    /** Sottoscrizione alta */
     const CONT_TOP = "10 $";
-    const TIME_BASE = "7";
+    /** Tempo base */
+    const TIME_BASE = "7"; 
+    /** Tempo medio */
     const TIME_MIDDLE = "30";
-    const TIME_TOP = "365";
+    /** Tempo alto */
+    const TIME_TOP = "365"; 
     
-    private $contribute;
-    private $period;
+    /** il contributo da versare */
+    private $contribute; 
+    /** il periodo in cui la sottoscrizione e' valida e non va rinnovata */
+    private $period; 
+    
     /**
-     * @return mixed
+     * Costruisce un oggetto ESupInfo default, avente una sottoscrizione base valida per
+     * il periodo base.
      */
-    
     function __construct()
     {
        $this->contribute = ESupInfo::CONT_BASE;
        $this->period = ESupInfo::TIME_BASE;
     }
     
-    
-    
+    /**
+     * 
+     * @return string il contributo da versare all'utente 
+     */
     function getContribute() : string
     {
         return $this->contribute;
     }
 
     /**
-     * @return mixed
+     * @return int il numero di giorni in cui la sottoscrizione e' valida
      */
     function getPeriod() : int
     {
@@ -39,7 +58,7 @@ class ESupInfo extends EObject
     }
 
     /**
-     * @param mixed $contribute
+     * @param string $contribute il contributo da versare all'utente
     */
     function setContribute(string $contribute)
     {
@@ -48,13 +67,18 @@ class ESupInfo extends EObject
     }
 
     /**
-     * @param mixed $renewal
+     * @param int $period il numero di giorni in cui la sottoscrizione è valida 
      */
     function setPeriod(int $period)
     {
         $this->period = $period;
     }
 
+    /**
+     * Verifica che il contributo sia valido. L'attributo $contribute e' considerato valido se i valori
+     * del contributo corrispondono con le costanti.
+     * @return bool true se il contributo e' valido, false altrimenti
+     */
     function validateContribute() : bool
     {
         if ($this->contribute != ESupInfo::CONT_BASE && $this->contribute != ESupInfo::CONT_MIDDLE && $this->contribute != ESupInfo::CONT_TOP) 
@@ -63,7 +87,11 @@ class ESupInfo extends EObject
             return true;
     }
     
-    
+    /**
+     * Verifica che il periodo sia valido. L'attributo $period e' considerato valido se i valori
+     * del periodo corrispondono con le costanti.
+     * @return bool true se il periodo e' valido, false altrimenti
+     */
     function validatePeriod() : bool
     {
         if ($this->period != ESupInfo::TIME_BASE && $this->period != ESupInfo::TIME_MIDDLE && $this->period != ESupInfo::TIME_TOP)

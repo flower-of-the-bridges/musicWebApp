@@ -1,12 +1,13 @@
 <?php
 
 /**
- * Description of FPersistantManager
  * Lo scopo di questa classe e' quello di fornire un accesso unico al DBMS, incapsulando
  * al proprio interno i metodi statici di tutte le altre classi Foundation, cosi che l'accesso
  * ai dati persistenti da parte degli strati superiore dell'applicazione sia piu' intuitivo.
  * @author gruppo 2
+ * @package Foundation
  */
+
 if(file_exists('config.inc.php'))
     require_once 'config.inc.php';
 
@@ -14,8 +15,10 @@ require_once 'inc.php';
 
 class FPersistantManager {
     
-    private static $instance = null; 	// l'unica istanza della classe
-    private $db; 						// oggetto PDO che effettua la connessione al dbms
+    /** l'unica istanza della classe */
+    private static $instance = null; 	
+    /** oggetto PDO che effettua la connessione al dbms */
+    private $db; 						
   
 /***********************************    METODI DI INIZIALIZZAZIONE     *********************************/
     

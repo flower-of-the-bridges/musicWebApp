@@ -1,11 +1,20 @@
 <?php
 
+/**
+ * La classe VObject contiene gli attributi e le funzioni base adoperati in tutto il package View.
+ * Oltre ad un metodo per la visualizzazione di una pagina di errore, il costruttore istanzia l'oggetto
+ * Smarty adoperato alla visualizzazione dei template .tpl.
+ * @author gruppo2 
+ * @package View
+ *
+ */
 class VObject
 {
+    /** l'oggetto smarty incaricato di visualizzare i template */
+    protected $smarty; 
 
-    protected $smarty; /*** l'oggetto smarty incaricato di visualizzare i template */
-
-    protected $check; /*** un array avente come indice i campi delle form di cui controllare gli errori. Ogni classe lo definira' secondo le sue esigenze */
+    /** un array avente come indice i campi delle form di cui controllare gli errori. Ogni classe lo definira' secondo le sue esigenze */
+    protected $check; 
 
     protected function __construct()
     {

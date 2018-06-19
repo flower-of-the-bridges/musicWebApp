@@ -4,7 +4,8 @@ require_once 'inc.php';
 /**
  * @author gruppo2
  * Il Controller CSong implementa le funzionalità del caso d'uso 'Gestione Brano'.
- *
+ * Un musicista può creare un brano, ed insieme ai moderatori può modificarlo o rimuoverlo.
+ * @package Controller
  */
 class CSong
 {

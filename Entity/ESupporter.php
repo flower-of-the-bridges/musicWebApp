@@ -2,19 +2,33 @@
 
 require_once 'inc.php';
 
+/**
+ * La classe ESupporter mette in relazione un utente e il musicista che vuole seguire.
+ * @author gruppo2
+ * @package Entity
+ */
 class ESupporter
 {
-        
+    /** la data di scadenza del supporto */    
     private $expirationData;
+    /** campo bool che denota se l'utente rinnoverà o meno la sottoscrizione */
     private $renewal;
+    /** EMusician che denota il musicista che si sta supportando */
     private $artist;
+    /** EUser che denota l'utente che effettua l'operazione di supporto */
     private $support;
     
-    
+    /**
+     * 
+     */
+    function __construct()
+    {
+        
+    }
     
     
     /**
-     * @return mixed
+     * @return DateTime la data di scadenza del supporto
      */
     public function getExpirationData() : DateTime
     {
@@ -22,7 +36,7 @@ class ESupporter
     }
 
     /**
-     * @return mixed
+     * @return bool true se l'utente rinnova la sottoscrizione, false altrimenti
      */
     public function getRenewal() : bool
     {
@@ -30,15 +44,15 @@ class ESupporter
     }
 
     /**
-     * @return mixed
+     * @return EMusician il musicista oggetto del supporto
      */
-    public function getArtist() : EUser
+    public function getArtist() : EMusician
     {
         return $this->artist;
     }
 
     /**
-     * @return mixed
+     * @return EUser l'utente che effettua il supporto
      */
     public function getSupport() : EUser
     {
@@ -46,23 +60,23 @@ class ESupporter
     }
 
     /**
-     * @param mixed $expirationData
+     * @param mixed $expirationData la data di scadenza
      */
-    public function setExpirationData(DateTime $expirationData)
+    function setExpirationData(DateTime $expirationData)
     {
         $this->expirationData = $expirationData;
     }
 
     /**
-     * @param mixed $renewal
+     * @param bool $renewal true se l'utente rinnova il supporto, false altrimenti
      */
-    public function setRenewal(bool $renewal)
+    function setRenewal(bool $renewal)
     {
         $this->renewal = $renewal;
     }
 
     /**
-     * @param mixed $artist
+     * @param EMusician $artist l'artista oggetto del supporto
      */
     public function setArtist(EUser $artist)
     {
@@ -70,27 +84,34 @@ class ESupporter
     }
 
     /**
-     * @param mixed $support
+     * @param EUser $support l'utente che effettua l'operazione di supporto
      */
     public function setSupport(EUser $support)
     {
         $this->support = $support;
     }
-    
-    function isValid() : bool
+
+    /**
+     * Verifica che il supporto tra i due utenti sia valido
+     * @return bool
+     */
+    function isValid(): bool
     {
-        if($this->artist->getId()!=$this->support->getId())
-      {
-        if(is_a($this->getArtist(), EMusician::class))
-           return true;
-                else 
-                    return false;
-            
-        }
-           else
+        if ($this->artist->getId() != $this->support->getId())
+        {
+            if (is_a($this->getArtist(), EMusician::class))
+                return true;
+            else
                 return false;
+        } 
+        else
+            return false;
     }
     
+    /**
+     * Verifica se il supporto tra i due utenti esiste gia
+     * @return bool true se il supporto esiste, false altrimenti
+     */
     function exists() : bool
     {
         $uId = $this->artist->getId();
@@ -98,11 +119,8 @@ class ESupporter
         
         if(FPersistantManager::getInstance()->exists(ESupporter::class, FTarget::EXISTS_SUPPORTER, $uId, $pId))
             return true;
-            else return false;
+        else return false;
     }
     
-
-    public function __construct()
-    {}
 }
 

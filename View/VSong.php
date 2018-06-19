@@ -3,6 +3,12 @@
 require_once 'inc.php';
 include_once 'View/VObject.php';
 
+/**
+ * La classe VSong si occupa dell'input-output per quanto riguarda i dati riguardanti le 
+ * canzoni.
+ * @author gruppo2
+ * @package View
+ */
 class VSong extends VObject
 {
     

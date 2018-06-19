@@ -1,8 +1,21 @@
 <?php
 require_once 'inc.php';
 
+/**
+ * La classe CSupporter implementa la funzionalità 'Segui Utente'. Le funzioni follow/unfollow
+ * permettono ad un utente di seguire/smettere di seguire un altro utente, in modo tale da poter
+ * raggiungere la sua pagina in maniera più immediata.
+ * @author gruppo2
+ * @package Controller
+ */
 class CFollower
 {
+    /**
+     * La funzione follow permette di seguire un utente. L'utente, se effettivamente non sta
+     * seguendo l'utente da seguire, verrà associato ad esso attraverso un oggetto EFollower, 
+     * che salverà tale associazione nel database.
+     * @param int $id l'identificativo dell'utente da seguire
+     */
     static function follow($id)
     {
         $vUser = new VUser();
@@ -39,6 +52,13 @@ class CFollower
             $vUser->showErrorPage($user, 'You must be a DeepMusic\'s user to use the follow function!');
     }
     
+    
+    /**
+     * La funzione unfollow permette di smettere di seguire un utente. Se l'associazione tra i due
+     * utenti è effettivamente presente, verrà regolata attraverso un oggetto EFollower,
+     * che rimuoverà tale associazione nel database.
+     * @param int $id l'identificativo del musicista da non seguire
+     */
     static function unfollow($id)
     {
         $vUser = new VUser();
