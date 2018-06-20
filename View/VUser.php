@@ -104,6 +104,7 @@ class VUser extends VObject
         $this->smarty->assign('uType', lcfirst(substr(get_class($loggedUser), 1)));
         
         $this->smarty->registerObject('profile', $profileUser);
+        $this->smarty->assign('pType', lcfirst(substr(get_class($profileUser), 1)));
       
         $this->smarty->assign('isFollowing', $isFollowing);
         $this->smarty->assign('array', $array);

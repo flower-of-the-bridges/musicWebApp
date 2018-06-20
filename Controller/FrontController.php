@@ -38,7 +38,7 @@ class FrontController
                     $controller::$method($param1, $param2, $param3);
                 elseif($param2) // se solo due sono definiti...
                     $controller::$method($param1, $param2); 
-                elseif($param) // se solo uno e' definito
+                elseif($param1) // se solo uno e' definito
                     $controller::$method($param1);
                 else // se nessun parametro e' definito
                     $controller::$method();

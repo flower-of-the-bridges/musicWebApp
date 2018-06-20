@@ -423,13 +423,15 @@ class FPersistantManager {
     function exists(string $class, string $target, $value, $value2 = null) 
     {
         $sql = '';
+        
         if (class_exists($class)) 
         {
             $resource = substr($class, 1);
             $foundClass = 'F' . $resource;
             $method = 'exists' . $target;
             
-            $sql = $foundClass::$method();
+            if(method_exists($foundClass, $method))
+                $sql = $foundClass::$method();
         }
         if ($sql)
         {
@@ -459,17 +461,17 @@ class FPersistantManager {
         {
             $stmt = $this->db->prepare($sql); // a partire dalla stringa sql viene creato uno statement
             if (is_int($value))
-                $stmt->bindValue(":value", $value, PDO::PARAM_INT); // si associa l'intero al campo della query
+                $stmt->bindValue(":value", (int) $value, PDO::PARAM_INT); // si associa l'intero al campo della query
             if (is_string($value))
                 $stmt->bindValue(":value", $value, PDO::PARAM_STR); // si associa la stringa al campo della query
             if ($value2) // se il secondo valore e' stato inserito
             {
                 if (is_int($value2))
-                    $stmt->bindValue(":value2", $value2, PDO::PARAM_INT); // si associa l'intero al campo della query
+                    $stmt->bindValue(":value2", (int) $value2, PDO::PARAM_INT); // si associa l'intero al campo della query
                 if (is_string($value2))
                     $stmt->bindValue(":value2", $value2, PDO::PARAM_STR); // si associa la stringa al campo della query
             }
-            
+ 
             $result = $stmt->execute(); // esegue lo statement e ritorna il risultato
             $stmt->setFetchMode(PDO::FETCH_ASSOC); // i risultati del db verranno salvati in un array con indici le colonne della table
   

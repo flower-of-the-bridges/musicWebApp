@@ -77,15 +77,17 @@ class CUser
                     // si effettua il caricamento dell'utente
                     $profileUser = FPersistantManager::getInstance()->load(EUser::class, $id);
                     
-                    if ($profileUser) 
+                    if ($profileUser) // se l'utente esiste...
                     {
                         $following = false; // bool che denota se l'utente della sessione sta seguendo l'utente del profilo
                         
-                        if($loggedUser->getId()!=$profileUser->getId())
+                        $follower = new EFollower();
+                        $follower->setUser($profileUser);
+                        $follower->setFollower($loggedUser);
+                        
+                        if($follower->isValid())
                         { // se l'id dei due utenti e' diverso, si verifica che se l'utente segue l'utente del profilo
-                            $follower = new EFollower();
-                            $follower->setUser($profileUser);
-                            $follower->setFollower($loggedUser);
+                            var_dump($following);
                             $following = $follower->exists();
                         }
                         

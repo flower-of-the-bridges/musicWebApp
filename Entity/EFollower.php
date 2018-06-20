@@ -54,13 +54,18 @@ class EFollower
 
     /**
      * Verifica che l'associazione tra i due utenti sia valida, ovvero che un utente non stia 
-     * seguendo se stesso.
+     * seguendo se stesso. Inoltre nessuno dei due utenti deve essere un Guest.
      * @return bool true se l'associazione è valida, false altrimenti
      */
     function isValid() : bool
     {
         if($this->user->getId()!=$this->follower->getId())
-            return true;
+        {
+            if(is_a($this->user, EGuest::class) || is_a($this->follower, EGuest::class))
+                return false;
+            else 
+                return true;
+        }
         else
             return false;
     }
