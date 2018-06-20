@@ -1,14 +1,26 @@
 <?php
 
+/**
+ * La classe FUserInfo fornisce query per gli oggetti EUserInfo
+ * @author gruppo2
+ * @package Foundation
+ */
 class FUserInfo
 {
-    
+    /**
+     * Salva un oggetto EUserInfo nel database
+     * @return string la query sql per la INSERT
+     */
     static function storeUserInfo() : string
     {
         return "INSERT INTO user_info(id, first_name, last_name, birth_place, birth_date, bio, genre)
                 VALUES (:id, :first_name, :last_name, :birth_place, :birth_date, :bio, :genre);";
     }
     
+    /**
+     * Aggiorna un oggetto EUserInfo
+     * @return string la query sql per la UPDATE
+     */
     static function updateUserInfo() : string
     {
         return "UPDATE user_info
@@ -22,6 +34,10 @@ class FUserInfo
                 WHERE id = :id;";
     }
     
+    /**
+     * Carica un oggetto EUserInfo dal database
+     * @return string la query sql per la SELECT
+     */
     static function loadUserInfo() : string
     {
         return "SELECT *
@@ -29,13 +45,11 @@ class FUserInfo
                 WHERE id = :id;";
     }
     
-    static function searchUserByGenre() : string
-    {
-        return "SELECT id
-                FROM usersInfo
-                WHERE LOCATE( :Genre , genre) > 0;";
-    }
-    
+    /**
+     * Associa ai campi di una query sql gli attributi di un oggetto EUserInfo
+     * @param PDOStatement $stmt lo statement contenente la query sql  
+     * @param EUserInfo $userInfo l'oggetto da cui prelevare i valori
+     */
     static function bindValues(PDOStatement &$stmt, EUserInfo &$userInfo)
     {
         $stmt->bindValue(':id', $userInfo->getId(), PDO::PARAM_INT);
@@ -84,6 +98,11 @@ class FUserInfo
             
     }
     
+    /**
+     * Costruisce un oggetto EUserInfo a partire da una tupla ricavata dal DB
+     * @param array $row
+     * @return EUserInfo
+     */
     static function createObjectFromRow($row) : EUserInfo
     {
         $user = new EUserInfo();

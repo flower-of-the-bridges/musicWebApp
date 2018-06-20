@@ -1,17 +1,18 @@
 <?php
 /**
+ * La classe FSong fornisce query rispetto alla classe ESong.
  * @author gruppo 2
+ * @package Foundation
  */
 class FSong {
     
-    private $blob; //momentaneamente utilizzato per upload statico di mp3
 
 /******************************************* QUERY ********************************************/
     
     /**
      * Salva una ESong nel database
      * @param PDO $db la connessione verso il dbms
-     * @return string la query sql da eseguire
+     * @return string la query sql per la INSERT
      */
     static function storeSong() : string
     {
@@ -20,10 +21,8 @@ class FSong {
     }
         
     /**
-     * Carica una canzone dal database e la salva in un oggetto ESong.
-     * @param PDO $db  la connessione verso il dbms
-     * @param int $id l'id della canzone
-     * @return object string la query sql da eseguire
+     * Carica una canzone dal database.
+     * @return string la query sql per la SELECT
      */
     static function loadSong() : string
     {
@@ -34,8 +33,6 @@ class FSong {
     
     /**
      * Carica dal database canzoni di un certo utente.
-     * @param PDO $db  la connessione verso il dbms
-     * @param int $id l'id dell'utente a cui appartengono le canzoni
      * @return string la query sql da eseguire
      */
     static function loadMusicianSongs() : string
@@ -87,14 +84,14 @@ class FSong {
     {
         return "SELECT song.*, users.nickname
                 FROM song, users
-                WHERE song.name = :Name AND song.id_artist = users.id;";
+                WHERE LOCATE( :Name , song.name) > 0 AND song.id_artist = users.id;";
     }
     
     static function searchSongByGenre() : string
     {
         return "SELECT song.*, users.nickname
                 FROM song, users
-                WHERE song.genre = :Genre AND song.id_artist = users.id;";
+                WHERE LOCATE( :Genre , song.genre) > 0 AND song.id_artist = users.id;";
     }
     
 /***************************** METODI ASSOCIAZIONI ENTITY - TUPLE *****************************/

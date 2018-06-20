@@ -32,16 +32,25 @@
  */
 class FTarget
 {
-    const LOAD_MUSICIAN_SONG = 'MusicianSongs'; /** caricamento delle canzoni di un musicista **/
-    const LOAD_FOLLOWERS = 'Followers'; /** caricamento dei follower di un utente **/
-    const LOAD_FOLLOWING = 'Following'; /** caricamento dei following di un utente **/
-    const LOAD_MOD_REPORTS = 'ModReports'; /** caricamento dei report di un moderatore **/
-    const LOAD_SUPPORTERS = 'Supporters'; /** caricamento dei supporters **/
-    const LOAD_SUPPORTING = 'Supporting'; /** caricamento dei musicisti supportati **/
-    const EXISTS_NICKNAME = 'NickName'; /** verifica che un nickname non sia utilizzato **/
-    const EXISTS_MAIL = 'Mail'; /** verifica che una mail non sia utilizzata **/
-    const EXISTS_USER = 'User'; /** verifica che un utente sia autenticato correttamente **/
-    const EXISTS_SUPPORTER = 'Supporter'; /** verifica che un utente sta supportando un musicista **/
-    const EXISTS_FOLLOWER = 'Follower'; /** verifica che un utente sta seguendo un altro utente **/
+    /** caricamento delle canzoni di un musicista */
+    const LOAD_MUSICIAN_SONG = 'MusicianSongs'; 
+    /** caricamento dei follower di un utente */
+    const LOAD_FOLLOWERS = 'Followers'; 
+    /** caricamento dei following di un utente */
+    const LOAD_FOLLOWING = 'Following'; 
+    /** caricamento dei report di un moderatore */
+    const LOAD_MOD_REPORTS = 'ModReports';
+    /** caricamento dei supporters */
+    const LOAD_SUPPORTERS = 'Supporters'; 
+    /** caricamento dei musicisti supportati */
+    const LOAD_SUPPORTING = 'Supporting'; 
+    /** verifica che un nickname non sia utilizzato */
+    const EXISTS_NICKNAME = 'NickName'; 
+    /** verifica che una mail non sia utilizzata */
+    const EXISTS_MAIL = 'Mail'; 
+    /** verifica che un utente sta supportando un musicista */
+    const EXISTS_SUPPORTER = 'Supporter';
+    /** verifica che un utente sta seguendo un altro utente */
+    const EXISTS_FOLLOWER = 'Follower'; 
 }
 

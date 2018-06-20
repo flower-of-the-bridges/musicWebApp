@@ -2,6 +2,13 @@
 require_once 'inc.php';
 include_once 'View/VObject.php';
 
+/**
+ * La classe VUser si occupa dell'input-output per quanto riguarda la gestione di un utente. In particolare:
+ * - Costruisce da una form un oggetto EUser e ne verifica la validità
+ * - Permette al client di visualizzare pagine relative all'utente (login-signup-profilo)
+ * @author gruppo2
+ * @package View
+ */
 class VUser extends VObject
 {
 

@@ -1,7 +1,9 @@
 <?php
 
 /**
+ * La classe FFollower fornisce le query sql rispetto alla classe EFollower.
  * @author gruppo 2
+ * @package Follower
  */
 class FFollower {
     

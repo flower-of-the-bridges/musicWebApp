@@ -62,26 +62,6 @@ class VUserInfo extends VObject
     
     
     /**
-     * Mostra le informazioni del profilo di un utente
-     *
-     * @param EUserInfo $profileInfo
-     *            l'oggetto di cui mostrare le informazioni
-     * @param EUser $loggedUser
-     *            l'utente che ha effettuato l'accesso alla sessione
-     * @param array $array
-     *            l'array dei contenuti da visualizzare
-     */
-    function showProfileInfo(EUserInfo &$profileInfo, EUser &$loggedUser, array $array = null)
-    {
-        $this->smarty->registerObject('user', $loggedUser);
-        
-        $this->smarty->assign('array', $array);
-        
-        #$this->smarty->display('profileInfo.tpl');???????
-    }
-    
-    
-    /**
      * Mostra la form di prima inserzione delle info utente
      *
      * @param bool $error
@@ -102,6 +82,10 @@ class VUserInfo extends VObject
         $this->smarty->display('registerUserInfo.tpl');
     }
     
+    /**
+     * Controlla se l'oggetto EUserInfo sia valido
+     * @param EUserInfo $eui di norma e' un oggetto ottenuto dal metodo createUserInfo()
+     */
     function validateUserInfo(EUserInfo $eui)
     {
         $eui->validateInfo($this->check['firstName'], $this->check['lastName'], $this->check['birthPlace'], $this->check['birthDate']);

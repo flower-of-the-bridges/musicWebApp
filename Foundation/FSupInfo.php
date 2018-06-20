@@ -1,16 +1,17 @@
 <?php
 
-
+/**
+ * La classe FSupInfo fornisce query per l'oggetto ESupInfo
+ * @author gruppo2
+ * @package Foundation
+ */
 class FSupInfo
-
 {
-    
     
     /******************************************* QUERY ********************************************/
     
     /**
-     * Salva una ESong nel database
-     * @param PDO $db la connessione verso il dbms
+     * Salva un oggetto ESupInfo nel database
      * @return string la query sql da eseguire
      */
     static function storeSupInfo() : string
@@ -20,9 +21,7 @@ class FSupInfo
     }
     
     /**
-     * Carica una canzone dal database e la salva in un oggetto ESong.
-     * @param PDO $db  la connessione verso il dbms
-     * @param int $id l'id della canzone
+     * Carica le informazioni sulle informazioni di supporto di un musicista dal database.
      * @return object string la query sql da eseguire
      */
     static function loadSupInfo( ) : string
@@ -35,7 +34,7 @@ class FSupInfo
  
     /**
      * Aggiorna i dati di una canzone
-     * @param PDO $db, ESONG $song
+     * @return string la query sql per l'UPDATE
      */
     static function updateSupInfo() : string
     {
@@ -77,10 +76,6 @@ class FSupInfo
         
         return $supInfo;
     }
-
-
-
-    
 
 }
 

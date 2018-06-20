@@ -5,7 +5,9 @@ include_once 'View/VObject.php';
 
 /**
  * La classe VSong si occupa dell'input-output per quanto riguarda i dati riguardanti le 
- * canzoni.
+ * canzoni. Ovvero:
+ * - dai dati inseriti dall'utente costruisce un oggetto ESong
+ * - predispone e visualizza le varie pagine HTML per la creazione/modifica/rimozione/visualizzazione di una canzone.
  * @author gruppo2
  * @package View
  */

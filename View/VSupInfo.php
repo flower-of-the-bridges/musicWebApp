@@ -2,9 +2,18 @@
 require_once 'inc.php';
 include_once 'View/VObject.php';
 
+/**
+ * La classe VSupInfo si occupa dell'input-output rispetto alle informazioni di supporto di un
+ * musicista.
+ * @author gruppo2
+ * @package View
+ *
+ */
 class VSupInfo extends VObject
 {
-    
+    /**
+     * Inizializza l'oggetto e crea un array per il controllo degli errori
+     */
     function __construct()
     {
         parent::__construct();
@@ -15,7 +24,10 @@ class VSupInfo extends VObject
         );
     }
     
-    
+    /**
+     * Crea un oggetto ESupInfo a partire dai dati inseriti dall'utente tramite form.
+     * @return ESupInfo le informazioni di supporto inserite dal musicista.
+     */
     function createSupInfo() : ESupInfo
     {
         $supInfo = new ESupInfo();
@@ -49,7 +61,11 @@ class VSupInfo extends VObject
         
     }
     
-    
+    /**
+     * Controlla se il caricamento delle informazioni di supporto sia valido
+     * @param ESupInfo $supInfo l'oggetto ESupInfo da controllare. E' l'oggetto generato dal metodo createSupInfo()
+     * @return bool true se l'oggetto e' valido, false altrimenti
+     */
     function validateLoad(ESupInfo &$supInfo) : bool
     {
         if($this->check['contribute']=$supInfo->validateContribute() && $this->check['period']=$supInfo->validatePeriod())

@@ -1,15 +1,28 @@
 <?php
 
+/**
+ * La classe FMp3 fornisce query rispetto agli oggetti EMp3
+ * @author gruppo2
+ * @package Foundation
+ */
 class FMp3
 {
     /**************************************   QUERY   ******************************************/
     
+    /**
+     * Salva un oggetto EMp3 nel database
+     * @return string la query sql per la INSERT
+     */
     static function storeMp3() : string
     {
         return "INSERT INTO `mp3`(`id_song`, `size`, `type`, `mp3`) 
                 VALUES (:id,:size,:type,:mp3)";
     }
     
+    /**
+     * Carica un oggetto EMp3 nel database
+     * @return string la query sql per la SELECT
+     */
     static function loadMp3() : string
     {
         return "SELECT *
@@ -19,6 +32,11 @@ class FMp3
     
     /*******************************   BIND MODEL - TUPLE **************************************/
     
+    /**
+     * Associa ai campi di una query sql gli attributi di un oggetto EMp3
+     * @param PDOStatement $stmt statement che racchiude la query
+     * @param EMp3 $mp3 l'oggetto da cui prelevare i valori
+     */
     static function bindValues(PDOStatement &$stmt, EMp3 &$mp3)
     {
         $stmt->bindValue(':id',$mp3->getId(), PDO::PARAM_INT);
@@ -27,6 +45,11 @@ class FMp3
         $stmt->bindParam(':mp3',$mp3->getMp3(), PDO::PARAM_LOB);
     }
     
+    /**
+     * Ricava da una tupla ottenuta dal DB un oggetto EMp3
+     * @param array $row
+     * @return EMp3 l'oggetto risultante
+     */
     static function createObjectFromRow($row) : EMp3
     {
         $mp3 = new EMp3();

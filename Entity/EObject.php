@@ -5,10 +5,10 @@ require_once 'inc.php';
  * @author gruppo2
  * @package Entity
  */
-
 class EObject
 {
-    protected $id; /** l'id che identifica l'oggetto */
+    /** l'id che identifica l'oggetto */
+    protected $id; 
     
     /**
      * Costruisce un oggetto vuoto

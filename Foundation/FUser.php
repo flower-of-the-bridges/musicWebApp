@@ -1,6 +1,10 @@
 <?php
 
-
+/**
+ * La classe FUser fornisce query per gli oggetti EUser
+ * @author gruppo2
+ * @package Foundation
+ */
 class FUser
 {
     /**
@@ -92,13 +96,24 @@ class FUser
     
     /**
      * Query che seleziona dalla table users degli utenti in base al nome
-     * @return string
+     * @return string la query sql
      */
     static function searchUserByName() : string
     {
         return "SELECT *
                 FROM users
-                WHERE nickname = :Name;";
+                WHERE LOCATE( :Name , nickname) > 0;";
+    }
+    
+    /**
+     * Query che seleziona dalla table users degli utenti in base al genere
+     * @return string la query sql
+     */
+    static function searchUserByGenre() : string
+    {
+        return "SELECT users.* 
+                FROM users, usersInfo
+                WHERE LOCATE( :Genre , genre) > 0 AND usersInfo.id = users.id;";
     }
     
     /**
