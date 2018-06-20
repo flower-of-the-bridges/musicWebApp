@@ -27,7 +27,7 @@
 					{/if} 
 					
 				</ul>
-				<form class="navbar-form navbar-right" role="search" action="search">
+				<form class="navbar-form navbar-right" role="search" action="search/simple">
 					<div class="form-group input-group">
 						<input type="text" class="form-control" name="str"  placeholder="Search..">
 						<span class="input-group-btn">

@@ -153,9 +153,9 @@ class FPersistantManager {
             case($key=='Musician'): // search di EMusicians
                 
                 if($value=='Name')
-                    $sql = FUser::searchMusicianByName();
+                    $sql = FUser::searchUserByName();
                 if($value=='Genre')
-                    $sql = FUserInfo::searchMusicianByGenre();
+                    $sql = FUser::searchUserByGenre();
                 break;
                 
             case($key=='Song'): // search di un ESongs

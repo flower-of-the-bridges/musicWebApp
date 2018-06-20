@@ -64,18 +64,18 @@ class CUser
      *  - /deepmusic/user/profile/id&following mostra la lista dei following dell'utente
      * @param $string l'argomento della url. se non specificato, si viene reindirizzati ad una pagina di errore.
      */
-    static function profile($string = null)
+    static function profile($id, $content)
     {
         $vUser = new VUser();
         $loggedUser = CSession::getUserFromSession();
         if($_SERVER['REQUEST_METHOD']=='GET')
         {
-            if ($params = explode('&', $string)) // se l'url e' nella forma "id&content", si separano i valori
+            if ($id && $content) // se l'url e' nella forma "id&content", si separano i valori
             {
-                if (is_numeric($params[0])) // se il primo valore e' l'id...
+                if (is_numeric($id)) // se il primo valore e' l'id...
                 {
                     // si effettua il caricamento dell'utente
-                    $profileUser = FPersistantManager::getInstance()->load(EUser::class, $params[0]);
+                    $profileUser = FPersistantManager::getInstance()->load(EUser::class, $id);
                     
                     if ($profileUser) 
                     {
@@ -90,21 +90,23 @@ class CUser
                         }
                         
                         $array; // array contenente i dati dell'utente da visualizzare
-                        $content; // stringa che rappresenta il contenuto da mostrare
                         
-                        if ($params[1] == 'song')  // se il parametro e' song
+                        if ($content == 'song')  // se il parametro e' song
                         { // si carica la lista delle canzoni dell'utente (caricate se musician, preferite se listener)
-                            $array = FPersistantManager::getInstance()->load(ESong::class, $params[0], FTarget::LOAD_MUSICIAN_SONG);
+                            $array = FPersistantManager::getInstance()->load(ESong::class, $profileUser->getId(), FTarget::LOAD_MUSICIAN_SONG);
                             $content = 'Song List';
                         }
-                        elseif($params[1] == 'follower') // se il parametro e' follower
+                        elseif($content == 'follower') // se il parametro e' follower
                         { // si carica la lista dei follower del profilo utente
                             $array = FPersistantManager::getInstance()->load(EUser::class, $profileUser->getId(), FTarget::LOAD_FOLLOWERS);
                         }
-                        elseif ($params[1] == 'following') // se il parametro e' following
+                        elseif ($content == 'following') // se il parametro e' following
                         { // si carica la lista dei following del profilo utente
                             $array = FPersistantManager::getInstance()->load(EUser::class, $profileUser->getId(), FTarget::LOAD_FOLLOWING);
                         }
+                        else 
+                            $content = 'None';
+                        
                         $vUser->showProfile($profileUser, $loggedUser, $following, $content, $array); // mostra il profilo
                     } 
                     else

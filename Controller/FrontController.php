@@ -12,11 +12,12 @@ class FrontController
      * La funzione run effettua il dispatching verso i metodi di un determinato controller.
      * Un URL ha il seguente formato: 
      *                  /deepmusic/controller/method/(params)
+     * dove i parametri possono essere per un massimo di tre e possono essere delimitati da metacaratteri come '&' o '?'
      * Se l'URL non e' valida, l'utente viene reindirizzato alla pagina principale
      */
     function run()
     {
-        $resources = explode("/", $_SERVER['REQUEST_URI']); // individua le componenti dell'url
+        $resources = preg_split("#[][&?/]#", $_SERVER['REQUEST_URI']); // individua le componenti dell'url
         
         $controller = 'C' . ucfirst($resources[2]); // costruisce il nome della classe del Controller 
         if (class_exists($controller)) // se la classe esiste
@@ -24,13 +25,23 @@ class FrontController
             $method = $resources[3];
             if (method_exists($controller, $method)) // se il metodo e' valido...
             { // verifica la presenza di eventuali parametri
-                $param = NULL;
+                $param1 = NULL; $param2 = NULL; $param3 = NULL;
+                
                 if(isset($resources[4]))
-                    $param = $resources[4];
-                    if($param) // se i parametri sono definiti
-                        $controller::$method($param); // li passa al controller
-                    else
-                        $controller::$method();
+                    $param1 = $resources[4];
+                if(isset($resources[5])) // se anche un secondo parametro e' definito
+                    $param2 = $resources[5];
+                if(isset($resources[6]))
+                    $param3 = $resources[6];
+                
+                if($param3) // se tutti i parametri sono definiti...
+                    $controller::$method($param1, $param2, $param3);
+                elseif($param2) // se solo due sono definiti...
+                    $controller::$method($param1, $param2); 
+                elseif($param) // se solo uno e' definito
+                    $controller::$method($param1);
+                else // se nessun parametro e' definito
+                    $controller::$method();
             }
             else // se il metodo non esiste, si viene reindirizzati alla pagina principale
             {
