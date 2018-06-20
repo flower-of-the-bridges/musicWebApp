@@ -63,8 +63,9 @@ class ESupporter
      */
     function makeExpirationDateFromPeriod(int $days)
     {
-        $date = strtotime(strtotime(date("y-m-d")) . " +".$days." day");
-        $this->expirationData = date("y-m-d", $date);
+        $date = new DateTime();
+        $date->modify("+".$days."days");
+        $this->expirationData = $date->format('y-m-d');
     }
 
 

@@ -3,9 +3,10 @@
 --
 
 CREATE TABLE IF NOT EXISTS `followers` (
-  `id` smallint(5) NOT NULL,
-  `id_follower` smallint(5) NOT NULL,
-  PRIMARY KEY (`id`,`id_follower`)
+  `id` smallint(5) UNSIGNED NOT NULL,
+  `id_follower` smallint(5) UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`,`id_follower`),
+  KEY `id_follower` (`id_follower`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -15,7 +16,7 @@ CREATE TABLE IF NOT EXISTS `followers` (
 --
 
 CREATE TABLE IF NOT EXISTS `image` (
-  `id` smallint(5) NOT NULL,
+  `id` smallint(5) UNSIGNED NOT NULL,
   `size` varchar(25) NOT NULL,
   `type` varchar(25) NOT NULL,
   `img` blob NOT NULL,
@@ -62,15 +63,16 @@ CREATE TABLE IF NOT EXISTS `report` (
 
 CREATE TABLE IF NOT EXISTS `song` (
   `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `id_artist` smallint(5) NOT NULL,
+  `id_artist` smallint(5) UNSIGNED NOT NULL,
   `name` varchar(30) NOT NULL,
   `genre` varchar(40) NOT NULL,
   `forall` tinyint(1) DEFAULT '0',
   `registered` tinyint(1) DEFAULT '1',
   `supporters` tinyint(1) DEFAULT '1',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`,`id_artist`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  UNIQUE KEY `name` (`name`,`id_artist`),
+  KEY `id_artist` (`id_artist`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -79,11 +81,11 @@ CREATE TABLE IF NOT EXISTS `song` (
 --
 
 CREATE TABLE IF NOT EXISTS `supporter` (
-  `id_artist` smallint(5) NOT NULL,
-  `id_supporter` smallint(5) NOT NULL,
+  `id` smallint(5) UNSIGNED NOT NULL,
+  `id_supporter` smallint(5) UNSIGNED NOT NULL,
   `expiration_date` date NOT NULL,
-  `renewal` tinyint(1) NOT NULL,
-  PRIMARY KEY (`id_artist`,`id_supporter`)
+  PRIMARY KEY (`id`,`id_supporter`),
+  KEY `id_supporter` (`id_supporter`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -93,18 +95,11 @@ CREATE TABLE IF NOT EXISTS `supporter` (
 --
 
 CREATE TABLE IF NOT EXISTS `support_info` (
-  `id_artist` smallint(5) NOT NULL,
+  `id_artist` smallint(5) UNSIGNED NOT NULL,
   `contribute` varchar(10) NOT NULL,
   `period` smallint(5) NOT NULL,
   PRIMARY KEY (`id_artist`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `support_info`
---
-
-INSERT INTO `support_info` (`id_artist`, `contribute`, `period`) VALUES
-(22, '1 $', 365);
 
 -- --------------------------------------------------------
 
@@ -121,15 +116,16 @@ CREATE TABLE IF NOT EXISTS `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `mail` (`mail`),
   UNIQUE KEY `nickname` (`nickname`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `user_info`
 --
 
 CREATE TABLE IF NOT EXISTS `user_info` (
-  `id` smallint(5) NOT NULL,
+  `id` smallint(5) UNSIGNED NOT NULL,
   `first_name` varchar(30) DEFAULT NULL,
   `last_name` varchar(30) DEFAULT NULL,
   `birth_place` varchar(30) DEFAULT NULL,
@@ -144,12 +140,46 @@ CREATE TABLE IF NOT EXISTS `user_info` (
 --
 
 --
+-- Constraints for table `followers`
+--
+ALTER TABLE `followers`
+  ADD CONSTRAINT `followers_ibfk_1` FOREIGN KEY (`id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `followers_ibfk_2` FOREIGN KEY (`id_follower`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `image`
+--
+ALTER TABLE `image`
+  ADD CONSTRAINT `image_ibfk_1` FOREIGN KEY (`id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Constraints for table `mp3`
 --
 ALTER TABLE `mp3`
   ADD CONSTRAINT `song_mp3_constraint` FOREIGN KEY (`id_song`) REFERENCES `song` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-COMMIT;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+--
+-- Constraints for table `song`
+--
+ALTER TABLE `song`
+  ADD CONSTRAINT `song_ibfk_1` FOREIGN KEY (`id_artist`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `supporter`
+--
+ALTER TABLE `supporter`
+  ADD CONSTRAINT `supporter_ibfk_1` FOREIGN KEY (`id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `supporter_ibfk_2` FOREIGN KEY (`id_supporter`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `support_info`
+--
+ALTER TABLE `support_info`
+  ADD CONSTRAINT `support_info_ibfk_1` FOREIGN KEY (`id_artist`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `user_info`
+--
+ALTER TABLE `user_info`
+  ADD CONSTRAINT `user_info_ibfk_1` FOREIGN KEY (`id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+COMMIT;

@@ -91,19 +91,21 @@ class EMp3 extends EObject
      */
     function validateSize() : bool
     {
-        if($this->size>=1437521)
+        if($this->size>=10000)
             return true;
         else
             return false;
     }
     
     /**
-     * Verifica che il mime type sia effettivamente audio/mpeg
+     * Verifica che il mime type sia effettivamente riferito ad un mp3. Possibili mime-type sono:
+     * - audio/mpeg
+     * - audio/mp3
      * @return bool true se il mime type e' corretto, false altrimenti
      */
     function validateType() : bool
     {
-        if($this->type!='audio/mpeg')
+        if($this->type!='audio/mpeg' && $this->type!='audio/mp3')
             return false;
         else 
             return true;
