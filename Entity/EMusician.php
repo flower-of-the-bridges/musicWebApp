@@ -38,8 +38,11 @@ class EMusician extends EUser
      * Imposta le informazioni sul supporto 
      * @param ESupInfo $supInfo
      */
-    function setSupportInfo(ESupInfo $supInfo)
+    function setSupportInfo(ESupInfo $supInfo = null)
     {
+        if(!$supInfo)
+            $supInfo = new ESupInfo();
+        
         $supInfo->setId($this->id);
         
         if(!FPersistantManager::getInstance()->load(ESupInfo::class, $this->id))

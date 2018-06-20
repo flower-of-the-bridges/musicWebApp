@@ -87,7 +87,6 @@ class CUser
                         
                         if($follower->isValid())
                         { // se l'id dei due utenti e' diverso, si verifica che se l'utente segue l'utente del profilo
-                            var_dump($following);
                             $following = $follower->exists();
                         }
                         
@@ -200,16 +199,14 @@ class CUser
                 
                 if(is_a($loggedUser, EMusician::class)) // se l'utente e' musicista...
                 {
-                    $supInfo = new ESupInfo();
-                    $loggedUser->getSupportInfo($supInfo); // ..carica le info di supporto di default
+                    $loggedUser->setSupportInfo(); // ..carica le info di supporto di default
                 }
-                // imposta l'immagine di default
-                $defaultImage = new EImg();
-                $defaultImage->setStatic($defaultImage);
-                $loggedUser->setImage($defaultImage);
                 
-                #nuovo header che reindirizza verso VUserInfo->showSignUpInfo()?
-                header('Location: /deepmusic/user/profile/'.$loggedUser->getId().'&song');
+                $loggedUser->setUserInfo();
+                $loggedUser->setImage();
+  
+        
+                header('Location: /deepmusic/userInfo/editInfo/');
             }
             else
                 $vUser->showSignUp(true);

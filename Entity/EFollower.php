@@ -77,11 +77,12 @@ class EFollower
     function exists() : bool
     {
         $uId = $this->user->getId();
-        $pId = $this->follower->getId();
+        $fId = $this->follower->getId();
         
-        if(FPersistantManager::getInstance()->exists(EFollower::class, FTarget::EXISTS_FOLLOWER, $uId, $pId))
+        if(FPersistantManager::getInstance()->exists(EFollower::class, FTarget::EXISTS_FOLLOWER, $uId, $fId))
             return true;
-        else return false;
+        else 
+            return false;
     }
     
     

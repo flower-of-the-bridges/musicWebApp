@@ -142,10 +142,13 @@ class EUser extends EObject
     
     /**
      * Imposta le informazioni dell'utente
-     * @param EUserInfo $info
+     * @param EUserInfo $info 
      */
-    function setUserInfo(EUserInfo $info)
+    function setUserInfo(EUserInfo $info = null)
     {
+        if(!$info)
+            $info = new EUserInfo();
+        
         $info->setId($this->id);
         $this->userInfo = $info;
         
@@ -175,8 +178,13 @@ class EUser extends EObject
      * Imposta l'immagine dell'utente
      * @param EImg $img
      */
-    function setImage(EImg $img)
+    function setImage(EImg $img = null)
     {
+        if(!$img)
+        {
+            $img = new EImg();
+            $img->setStatic();
+        }
         $img->setId($this->id);
         
         if(!FPersistantManager::getInstance()->load(EImg::class, $this->id)) // se le informazioni non sono presenti...
