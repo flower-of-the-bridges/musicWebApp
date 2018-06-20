@@ -11,8 +11,6 @@ class ESupporter
 {
     /** la data di scadenza del supporto */    
     private $expirationData;
-    /** campo bool che denota se l'utente rinnoverà o meno la sottoscrizione */
-    private $renewal;
     /** EMusician che denota il musicista che si sta supportando */
     private $artist;
     /** EUser che denota l'utente che effettua l'operazione di supporto */
@@ -28,19 +26,11 @@ class ESupporter
     
     
     /**
-     * @return DateTime la data di scadenza del supporto
+     * @return string la data di scadenza del supporto
      */
-    public function getExpirationData() : DateTime
+    public function getExpirationData() : string
     {
         return $this->expirationData;
-    }
-
-    /**
-     * @return bool true se l'utente rinnova la sottoscrizione, false altrimenti
-     */
-    public function getRenewal() : bool
-    {
-        return $this->renewal;
     }
 
     /**
@@ -60,20 +50,23 @@ class ESupporter
     }
 
     /**
-     * @param mixed $expirationData la data di scadenza
+     * @param string $expirationData la data di scadenza nel formato y-m-d
      */
-    function setExpirationData(DateTime $expirationData)
+    function setExpirationData(string $expirationData)
     {
         $this->expirationData = $expirationData;
     }
-
+    
     /**
-     * @param bool $renewal true se l'utente rinnova il supporto, false altrimenti
+     * Costruisce la data di scadenza sommando alla data attuale il numero di giorni passati alla funzione.
+     * @param int $days i giorni da sommare alla data
      */
-    function setRenewal(bool $renewal)
+    function makeExpirationDateFromPeriod(int $days)
     {
-        $this->renewal = $renewal;
+        $date = strtotime(strtotime(date("y-m-d")) . " +".$days." day");
+        $this->expirationData = date("y-m-d", $date);
     }
+
 
     /**
      * @param EMusician $artist l'artista oggetto del supporto
@@ -92,15 +85,22 @@ class ESupporter
     }
 
     /**
-     * Verifica che il supporto tra i due utenti sia valido
-     * @return bool
+     * Verifica che il supporto tra i due utenti sia valido, ovvero che un utente non sia 
+     * supportando se stesso. L'utente che riceve il supporto deve essere musicista, chi lo offre
+     * non deve essere guest.
+     * @return bool true se l'associazione e' valida, false altrimenti
      */
     function isValid(): bool
     {
         if ($this->artist->getId() != $this->support->getId())
         {
             if (is_a($this->getArtist(), EMusician::class))
-                return true;
+            {
+                if(is_a($this->getSupport(), EGuest::class))
+                    return false;
+                else
+                    return true;
+            }
             else
                 return false;
         } 
@@ -114,12 +114,13 @@ class ESupporter
      */
     function exists() : bool
     {
-        $uId = $this->artist->getId();
-        $pId = $this->support->getId();
+        $artistId = $this->artist->getId();
+        $supporterId = $this->support->getId();
         
-        if(FPersistantManager::getInstance()->exists(ESupporter::class, FTarget::EXISTS_SUPPORTER, $uId, $pId))
+        if(FPersistantManager::getInstance()->exists(ESupporter::class, FTarget::EXISTS_SUPPORTER, $artistId, $supporterId))
             return true;
-        else return false;
+        else 
+            return false;
     }
     
 }

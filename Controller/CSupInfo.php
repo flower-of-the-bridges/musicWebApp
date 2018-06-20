@@ -35,10 +35,13 @@ class CSupInfo
         $vSupInfo = new VSupInfo();
         $user = CSession::getUserFromSession();
         
-        if(get_class($user)!=EMusician::class)
+        if(get_class($user)!=EMusician::class) // se l'utente non e' musicista...
             $vSupInfo->showErrorPage($user, 'You don\'t have the permession!'); //...mostra errore
         else
-            $vSupInfo->showManageSupport($user);
+        { //...altrimenti mostra le info insieme ai supporter
+            $supporters = FPersistantManager::getInstance()->load(EUser::class, $user->getId(), FTarget::LOAD_SUPPORTERS);
+            $vSupInfo->showManageSupport($user, $supporters);
+        }
                          
     }
     

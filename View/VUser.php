@@ -90,13 +90,15 @@ class VUser extends VObject
      * @param EUser $loggedUser
      *            l'utente che ha effettuato l'accesso alla sessione
      * @param bool $isFollowing
-     *            true se l'utente della sessione segue l'utente del profilo, false altrimenti 
+     *            true se l'utente della sessione segue l'utente del profilo, false altrimenti
+     * @param bool $isSupporting
+     *            true se l'utente della sessione supporta l'utente del profilo, false altrimenti  
      * @param string $content
      *            il contenuto da visualizzare nel profilo (Song, Follower, Following)
      * @param array $array
      *            l'array del contenuto da visualizzare
      */
-    function showProfile(EUser &$profileUser, EUser &$loggedUser, bool $isFollowing, string $content, array $array = NULL)
+    function showProfile(EUser &$profileUser, EUser &$loggedUser, bool $isFollowing, bool $isSupporting, string $content, array $array = NULL)
     {
         $this->smarty->assign('content', $content);
  
@@ -107,6 +109,8 @@ class VUser extends VObject
         $this->smarty->assign('pType', lcfirst(substr(get_class($profileUser), 1)));
       
         $this->smarty->assign('isFollowing', $isFollowing);
+        $this->smarty->assign('isSupporting', $isSupporting);
+        
         $this->smarty->assign('array', $array);
         
         $this->smarty->display('profile.tpl');

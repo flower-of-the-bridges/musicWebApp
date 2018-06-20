@@ -42,9 +42,10 @@ class VSupInfo extends VObject
     /**
      * Mostra la pagina per la modifica delle informazioni sul supporto
      * @param EMusician $user l'utente della sessione, di tipo Musician
+     * @param array $supporters contenente oggetti EUser (puo' essere NULL)
      * @param bool $success true se l'accesso alla pagina avviene dopo la modifica delle informazioni
      */
-    function showManageSupport(EMusician &$user, bool $success = null)
+    function showManageSupport(EMusician &$user, $supporters, bool $success = null)
     {
         if(!$success)
             $success = false;
@@ -55,6 +56,8 @@ class VSupInfo extends VObject
         
         $this->smarty->registerObject('user', $user); // assegno l'utente al template
         $this->smarty->assign('uType', lcfirst(substr(get_class($user), 1))); // assegno il tipo dell'utente al
+        $this->smarty->assign('supporters', $supporters);
+        
         $this->smarty->assign('success', $success);
         
         $this->smarty->display('manageSupport.tpl');

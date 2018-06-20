@@ -24,7 +24,6 @@
 </head>
 <body>
 
-
 	{include file="navbar.tpl"}
 	
 	
@@ -35,8 +34,24 @@
 			<div class="col-sm-7 well">
 				{if $content eq 'Song List'}
 					{include file="SongList.tpl"}
+				{elseif $content eq 'Followers'}
+					<h4 id="important">Follower List</h4>
+					<a href="/deepmusic/user/profile/{$pId}">Back to Profile</a>
+					{include file="UserList.tpl"}
+				{elseif $content eq 'Following'}
+					<h4 id="important">Following List</h4>
+					<a href="/deepmusic/user/profile/{$pId}">Back to Profile</a>
+					{include file="UserList.tpl"}
+				{elseif $content eq 'Supporters'}
+					<h4 id="important">Supporters List</h4>
+					<a href="/deepmusic/user/profile/{$pId}">Back to Profile</a>
+					{include file="UserList.tpl"}
+				{elseif $content eq 'Supporting'}
+					<h4 id="important">Supporting List</h4>
+					<a href="/deepmusic/user/profile/{$pId}">Back to Profile</a>
+					{include file="UserList.tpl"}
 				{elseif $content eq 'None'}
-				<h3>No content available</h3>
+				<h3>Hi! I'm a {ucfirst($pType)}!</h3>
 				{/if}
 			</div>
 		<div class="col-sm-2">

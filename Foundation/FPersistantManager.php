@@ -253,7 +253,7 @@ class FPersistantManager {
         try {
             
             FPersistantManager::bindValues($stmt, $obj); // si associano i valori dell'oggetto alle entry della query
-            var_dump($stmt);
+ 
             $stmt->execute();
             if ($stmt->rowCount()) // si esegue la query
             {
@@ -436,7 +436,9 @@ class FPersistantManager {
         if ($sql)
         {
             if($value2 && ($target==FTarget::EXISTS_SUPPORTER || $target==FTarget::EXISTS_FOLLOWER || $target==FTarget::EXISTS_USER))
+            {
                 return $this->execExists($sql, $value, $value2);
+            }
             else
                 return $this->execExists($sql, $value);
         }

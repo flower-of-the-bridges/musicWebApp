@@ -16,7 +16,7 @@
 					<li><a href="/deepmusic/user/signup"><span
 							class="glyphicon glyphicon-plus"></span> Sign Up</a></li>
 				    {else}
-					<li><a href="/deepmusic/user/profile/{$uId}&song"><span
+					<li><a href="/deepmusic/user/profile/{$uId}"><span
 							class="glyphicon glyphicon-user"></span> {$uName}'s Account </a></li>
 					{if $uType eq 'musician'}
 					<li><a href="/deepmusic/song/load"><span

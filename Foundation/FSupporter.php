@@ -11,31 +11,10 @@ class FSupporter {
      */
     static function storeSupporter() : string
     {
-        return "INSERT INTO supporter(id, id2, expirationDate, renewal)
-                VALUES :id, :id2, :expirationDate, :renewal;";
+        return "INSERT INTO supporter(id, id_supporter, expiration_date)
+                VALUES (:id, :id2, :expirationDate);";
     }
     
-    /**
-     * Carica i follower di un utente in un array di EUser
-     * @return string la stringa sql per la SELECT
-     */
-    static function loadSupporters() : string
-    {
-        return "SELECT users.*
-                FROM supporter, users
-                WHERE supporter.id_artist = :id AND supporter.id_supporter = users.id ; ";
-    }
-    
-    /**
-     * Carica i following di un utente in un array di EUser
-     * @return string la stringa sql per la SELECT
-     */
-    static function loadSupporting() : string
-    {
-        return "SELECT users.*
-                FROM supporter, users
-                WHERE supporter.id_user = :id AND supporter.id_supporter = users.id;";
-    }
     
     /**
      * Rimuove un follower
@@ -44,7 +23,7 @@ class FSupporter {
     static function removeSupporter() : string
     {
         return "DELETE FROM supporter
-                WHERE id_artist = :id AND id_supporter = :id2 ; ";
+                WHERE id = :id AND id_supporter = :id2 ; ";
     }
     
     static function updateSupporter() : string
@@ -53,8 +32,7 @@ class FSupporter {
         return "UPDATE supporter
                 SET id_artist = :id,
                     id_supporter = :id2,
-                    expiration_date = :expirationDate,
-                    renewal = :renewal
+                    expiration_date = :expirationDate
                 WHERE id_artist = :id1 AND id_support = :id2;";
                     
         
@@ -71,7 +49,7 @@ class FSupporter {
     {
         return        "SELECT *
                        FROM supporter
-                       WHERE id_artist = :value AND id_supporter= :value2 ; ";
+                       WHERE id = :value AND id_supporter= :value2 ; ";
     }
     
     /**
@@ -81,10 +59,9 @@ class FSupporter {
      */
     static function bindValues(PDOStatement &$stmt, ESupporter &$supporter)
     {
-        $stmt->bindValue(':id', $supporter->getArtist()->getId(), PDO::PARAM_STR);
-        $stmt->bindValue(':id2', $supporter->getSupport()->getId(), PDO::PARAM_STR);
+        $stmt->bindValue(':id', $supporter->getArtist()->getId(), PDO::PARAM_INT);
+        $stmt->bindValue(':id2', $supporter->getSupport()->getId(), PDO::PARAM_INT);
         $stmt->bindValue(':expirationDate', $supporter->getExpirationData(), PDO::PARAM_STR);
-        $stmt->bindValue(':renewal', $supporter->getRenewal(), PDO::PARAM_BOOL);
     }
     
 }

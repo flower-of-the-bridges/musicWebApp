@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<title>Remove {$song->getArtist()->getNickName()} - {$song->getName()}</title>
+<title>Support {$musician->getNickName()}</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet"
@@ -24,15 +24,15 @@
 
 	<div class="container text-center well">
 		<h3>Do you want to support {$musician->getNickName()}?</h3>
-		<ul class="list-group list-group-flush">
-  			<li class="list-group-item">Contribute : {$supInfo->getContribute()}</li>
-  			<li class="list-group-item">Days : {$supInfo->getPeriod()}</li>
-  			
+		<ul>
+  			<li>Contribute : {$supInfo->getContribute()}</li>
+  			<li>Days : {$supInfo->getPeriod()}</li>
 		</ul>
 		<form method="post" action="/deepmusic/supporter/support/{$musician->getId()}">
     		<button type="submit" class="btn btn-primary btn-lg active" name="action" value="yes">Yes</button>
     		<button type="submit" class="btn btn-primary btn-lg btn-danger active" name="action" value="no">No</button>
 		</form>
+		<p>When the support's period expires, a message will be sent to your e-mail.</p>
 	</div>
 
 </body>

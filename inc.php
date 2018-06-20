@@ -9,6 +9,7 @@ require_once 'Controller/CSession.php';
 require_once 'Controller/CFollower.php';
 require_once 'Controller/CUserInfo.php';
 require_once 'Controller/CSupInfo.php';
+require_once 'Controller/CSupporter.php';
 require_once 'Controller/CSearch.php';
 require_once 'View/VUser.php';
 require_once 'View/VReport.php';
@@ -17,6 +18,7 @@ require_once 'View/VObject.php';
 require_once 'View/VUserInfo.php';
 require_once 'View/VSupInfo.php';
 require_once 'View/VSearch.php';
+require_once 'View/VSupporter.php';
 
 require_once 'Entity/EListener.php';
 require_once 'Entity/EMusician.php';

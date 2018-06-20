@@ -2,10 +2,12 @@
 /**
  * 
  * @author gruppo 2
+ * @package Foundation
  * 
  * La classe FTarget contiene stringhe da utilizzare come parametro per FPersistantManager 
  * per specificare, in funzionalita come load o exists, i tipi di query che si vogliono
  * utilizzare per una data classe. In particolare:
+ * 
  * EUser supporta:
  * 
  *  - EXISTS_NICKNAME
@@ -13,6 +15,8 @@
  *  - EXISTS_USER
  *  - LOAD_FOLLOWERS
  *  - LOAD_FOLLOWING
+ *  - LOAD_SUPPORTERS
+ *  - LOAD_SUPPORTING
  *  
  * ESong supporta:
  * 
@@ -25,8 +29,7 @@
  *  
  * ESupporter supporta necessariamente:
  * 
- *  - LOAD_SUPPORTERS
- *  - LOAD_SUPPORTING
+
  *  - EXISTS_SUPPORTER
  * 
  */

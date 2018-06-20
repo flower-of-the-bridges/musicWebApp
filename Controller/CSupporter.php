@@ -20,7 +20,7 @@ class CSupporter
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') // se il metodo e' get...
         {
-            if
+            CSupporter::showSupportConfirmation($id);
         }
         else if ($_SERVER['REQUEST_METHOD'] == 'POST')
             CSupporter::makeSupport($id);
@@ -54,7 +54,7 @@ class CSupporter
                         if ($supporter->exists())
                         { // se i due utenti si supportano, si rimuove la corrispondenza dal database
                             FPersistantManager::getInstance()->remove(ESupporter::class, $supporter->getArtist()->getId(), $supporter->getSupport()->getId());
-                            header('Location: /deepmusic/user/profile/' . $supportUser->getId() . '&song');
+                            header('Location: /deepmusic/user/profile/' . $supportUser->getId());
                         }
                         else
                             $vUser->showErrorPage($user, 'You are not supporting ' . $supportUser->getNickName() . '!');
@@ -72,41 +72,47 @@ class CSupporter
     
     private function makeSupport($id)
     {
-        
-        $vUser = new VUser();
+        $vSupporter = new VSupporter();
         $user = CSession::getUserFromSession();
         
-        if (! is_a($user, EGuest::class))
+        if (! is_a($user, EGuest::class)) 
         { // se l'utente non e' guest
-            if (is_numeric($id))
+            if (is_numeric($id)) 
             { // se l'url contiene un id
                 $supportUser = FPersistantManager::getInstance()->load(EUser::class, $id); // si carica l'utente
                 if ($supportUser) // se l'utente esiste
-                { // si costruisce l'oggetto supporter
-                    $supporter = new ESupporter();
-                    $supporter->setArtist($supportUser);
-                    $supporter->setSupport($user);
-                    if ($supporter->isValid())
-                    { // se l'associazione e' valida
-                        if (! $supporter->exists()) // se i due utenti non si supportano
-                        { // salva l'associazione nel database
-                            FPersistantManager::getInstance()->store($supporter);
-                            header('Location: /deepmusic/user/profile/' . $supportUser->getId() . '&song'); // redirect al profilo
-                        }
+                {
+                    if ($vSupporter->validateChoice()) // se l'utente ha scelto di supportare il musicista
+                    { // si costruisce l'oggetto supporter
+                        $supporter = new ESupporter();
+                        $supporter->setArtist($supportUser);
+                        $supporter->setSupport($user);
+                        if ($supporter->isValid()) { // se l'associazione e' valida
+                            if (! $supporter->exists()) // se i due utenti non si supportano
+                            { // salva l'associazione nel database
+                                $supInfo = $supportUser->getSupportInfo();
+                                
+                                $supporter->makeExpirationDateFromPeriod($supInfo->getPeriod());
+                                
+                                FPersistantManager::getInstance()->store($supporter);
+                                
+                                header('Location: /deepmusic/user/profile/' . $supportUser->getId()); // redirect al profilo
+                            } 
+                            else
+                                $vSupporter->showErrorPage($user, 'You already suppport ' . $supportUser->getNickName() . '!');
+                        } 
                         else
-                            $vUser->showErrorPage($user, 'You already suppport ' . $supportUser->getNickName() . '!');
-                    }
+                            $vSupporter->showErrorPage($user, 'You can\'t support yourself!');
+                    } 
                     else
-                        $vUser->showErrorPage($user, 'You can\'t support yourself!');
+                        header('Location: /deepmusic/user/profile/' . $supportUser->getId() ); // redirect al profilo
                 }
-            }
+            } 
             else
-                $vUser->showErrorPage($user, 'The URL is invalid!');
-        }
+                $vSupporter->showErrorPage($user, 'The URL is invalid!');
+        } 
         else
-            $vUser->showErrorPage($user, 'You must be a DeepMusic\'s user to use the support function!');
-   
-        
+            $vSupporter->showErrorPage($user, 'You must be a DeepMusic\'s user to use the support function!');
     }
     
     private function showSupportConfirmation($id)

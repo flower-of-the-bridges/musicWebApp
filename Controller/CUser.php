@@ -59,20 +59,20 @@ class CUser
     /**
      * La funzione mostra il profilo di un utente. A seconda del tipo di URL, saranno visualizzati contenuti differenti.
      * In particolare:
-     *  - /deepmusic/user/profile/id&song mostra la lista delle canzoni
-     *  - /deepmusic/user/profile/id&follower mostra la lista dei follower
+     *  - /deepmusic/user/profile/id mostra la pagina base: per un musicista mostra la lista delle canzoni, per gli altri utenti un messaggio di benvenuto
+     *  - /deepmusic/user/profile/id&followers mostra la lista dei follower
      *  - /deepmusic/user/profile/id&following mostra la lista dei following dell'utente
      * @param $string l'argomento della url. se non specificato, si viene reindirizzati ad una pagina di errore.
      */
-    static function profile($id, $content)
+    static function profile($id, $content = null)
     {
         $vUser = new VUser();
         $loggedUser = CSession::getUserFromSession();
         if($_SERVER['REQUEST_METHOD']=='GET')
         {
-            if ($id && $content) // se l'url e' nella forma "id&content", si separano i valori
+            if ($id) // se l'url ha almeno l'id si procede
             {
-                if (is_numeric($id)) // se il primo valore e' l'id...
+                if (is_numeric($id)) // se effettivamente la variabile id corrisponde ad un numero
                 {
                     // si effettua il caricamento dell'utente
                     $profileUser = FPersistantManager::getInstance()->load(EUser::class, $id);
@@ -85,30 +85,63 @@ class CUser
                         $follower->setUser($profileUser);
                         $follower->setFollower($loggedUser);
                         
-                        if($follower->isValid())
-                        { // se l'id dei due utenti e' diverso, si verifica che se l'utente segue l'utente del profilo
-                            $following = $follower->exists();
+                        if($follower->isValid()) 
+                        { // se l'id dei due utenti e' diverso, si verifica che l'associazione sia presente
+                            $following = $follower->exists(); // verifica che l'utente della sessione segue l'utente del profilo
                         }
                         
-                        $array; // array contenente i dati dell'utente da visualizzare
+                        $supporting = false; // bool che denota se l'utente della sessione sta seguendo l'utente del profilo
+                        
+                       if(get_class($profileUser) == EMusician::class) // se l'utente del profilo e' un musicista...
+                       { // ...si costruisce l'utente ESupporter
+                           $supporter = new ESupporter();
+                           $supporter->setArtist($profileUser);
+                           $supporter->setSupport($loggedUser);
+                           if($supporter->isValid())
+                           { // se l'id dei due utenti e' diverso, si verifica che se l'utente segue l'utente del profilo
+                               $supporting = $supporter->exists();
+                           }
+                       }
+                                         
+                        $array = NULL; // array contenente i dati dell'utente da visualizzare
                         
                         if ($content == 'song')  // se il parametro e' song
                         { // si carica la lista delle canzoni dell'utente (caricate se musician, preferite se listener)
                             $array = FPersistantManager::getInstance()->load(ESong::class, $profileUser->getId(), FTarget::LOAD_MUSICIAN_SONG);
                             $content = 'Song List';
                         }
-                        elseif($content == 'follower') // se il parametro e' follower
+                        elseif($content == 'followers') // se il parametro e' follower
                         { // si carica la lista dei follower del profilo utente
                             $array = FPersistantManager::getInstance()->load(EUser::class, $profileUser->getId(), FTarget::LOAD_FOLLOWERS);
+                            $content = 'Followers';
                         }
                         elseif ($content == 'following') // se il parametro e' following
                         { // si carica la lista dei following del profilo utente
                             $array = FPersistantManager::getInstance()->load(EUser::class, $profileUser->getId(), FTarget::LOAD_FOLLOWING);
+                            $content = 'Following';
                         }
-                        else 
-                            $content = 'None';
+                        elseif ($content == 'supporters') // se il parametro e' following
+                        { // si carica la lista dei following del profilo utente
+                            $array = FPersistantManager::getInstance()->load(EUser::class, $profileUser->getId(), FTarget::LOAD_SUPPORTERS);
+                            $content = 'Supporters';
+                        }
+                        elseif ($content == 'supporting') // se il parametro e' following
+                        { // si carica la lista dei following del profilo utente
+                            $array = FPersistantManager::getInstance()->load(EUser::class, $profileUser->getId(), FTarget::LOAD_SUPPORTING);
+                            $content = 'Supporting';
+                        }
+                        else // se il contenuto non e' specificato, e' stato inserito solo l'id e quindi si visualizza la pagina base
+                        {
+                            if(get_class($profileUser)==EMusician::class)
+                            { // per un musicista corrisponde alla lista delle canzoni caricate
+                                $array = FPersistantManager::getInstance()->load(ESong::class, $profileUser->getId(), FTarget::LOAD_MUSICIAN_SONG);
+                                $content = 'Song List';
+                            }
+                            else // altrimenti ad una semplice pagina di benvenuto
+                                $content = 'None';
+                        }
                         
-                        $vUser->showProfile($profileUser, $loggedUser, $following, $content, $array); // mostra il profilo
+                        $vUser->showProfile($profileUser, $loggedUser, $following, $supporting, $content, $array); // mostra il profilo
                     } 
                     else
                         $vUser->showErrorPage($loggedUser, 'The user id doesn\'t match any DeepMusic\'s user!');

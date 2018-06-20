@@ -30,7 +30,7 @@
         </div>
 		<div class="col-sm-7 well">
 			{if $canSee}
-			<h4><a href="/deepmusic/user/profile/{$song->getArtist()->getId()}&song">{$song->getArtist()->getNickName()}</a> : {$song->getName()} ({$song->getGenre()})</h4>
+			<h4><a href="/deepmusic/user/profile/{$song->getArtist()->getId()}">{$song->getArtist()->getNickName()}</a> : {$song->getName()} ({$song->getGenre()})</h4>
 		    <audio controls="controls" autoplay="">
 				<source src="player({$song->getId()})" type="audio/mpeg">
 			</audio>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<title>Log In</title>
+<title>Support Informations</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet"
@@ -27,7 +27,7 @@
 		
         </div>
 		<div class="col-sm-7 well">
-			<h2>Register</h2>
+			<h2>Support Informations</h2>
 			{if $success}
 			<div class="alert alert-success">
 				<strong>Great!</strong><br><p>The support info have been updated!</p>
@@ -61,10 +61,21 @@
 			<br>
 	
 			<h4 id="important">Supporters</h4>
+			{if $supporters}
 			<table class="table table-responsive">
-				<tbody>
+				<tbody>					
+				{foreach $supporters as $user}
+					<tr>
+					
+						<td><a href="/deepmusic/user/profile/{$user->getId()}">{$user->getNickName()}</a></td>
+						<td>{substr(get_class($user),1)}</td>
+					</tr>
+				{/foreach}
 				</tbody>
 			</table>
+			{else}
+			<p>We are sorry, nobody is supporting you!</p>
+			{/if}
 
 		</div>
 		<div class="col-sm-3">

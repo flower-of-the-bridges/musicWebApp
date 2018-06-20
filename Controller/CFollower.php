@@ -36,7 +36,7 @@ class CFollower
                         if (! $follower->exists()) // se i due utenti non si seguono
                         { // salva l'associazione nel database
                             FPersistantManager::getInstance()->store($follower);
-                            header('Location: /deepmusic/user/profile/' . $followUser->getId() . '&song'); // redirect al profilo
+                            header('Location: /deepmusic/user/profile/' . $followUser->getId()); // redirect al profilo
                         } 
                         else
                             $vUser->showErrorPage($user, 'You already follow ' . $followUser->getNickName() . '!');
@@ -79,7 +79,7 @@ class CFollower
                         if ($follower->exists()) 
                         { // se i due utenti si seguono, si rimuove la corrispondenza dal database
                             FPersistantManager::getInstance()->remove(EFollower::class, $follower->getUser()->getId(), $follower->getFollower()->getId());
-                            header('Location: /deepmusic/user/profile/' . $followUser->getId() . '&song');
+                            header('Location: /deepmusic/user/profile/' . $followUser->getId());
                         } 
                         else
                             $vUser->showErrorPage($user, 'You are not following ' . $followUser->getNickName() . '!');

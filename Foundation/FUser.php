@@ -69,7 +69,7 @@ class FUser
     {
         return "SELECT users.*
                 FROM followers, users
-                WHERE followers.id_user = :id AND followers.id_user = users.id ; ";
+                WHERE followers.id = :id AND followers.id_follower = users.id ; ";
     }
     
     /**
@@ -80,7 +80,29 @@ class FUser
     {
         return "SELECT users.*
                 FROM followers, users
-                WHERE followers.id_follower = :id AND followers.id_follower = users.id;";
+                WHERE followers.id_follower = :id AND followers.id = users.id;";
+    }
+    
+    /**
+     * Carica i supporter di un musicista in un array di EUser
+     * @return string la stringa sql per la SELECT
+     */
+    static function loadSupporters() : string
+    {
+        return "SELECT users.*
+                FROM supporter, users
+                WHERE supporter.id = :id AND supporter.id_supporter = users.id ; ";
+    }
+    
+    /**
+     * Carica i musicisti supportati da un utente in un array di EUser
+     * @return string la stringa sql per la SELECT
+     */
+    static function loadSupporting() : string
+    {
+        return "SELECT users.*
+                FROM supporter, users
+                WHERE supporter.id_supporter = :id AND supporter.id = users.id;";
     }
     
     /**
