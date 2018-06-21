@@ -11,7 +11,7 @@ class VReport extends VObject
         
         $this->check = array(
             'title' =>true,
-            'decription' => true,
+            'description' => true,
             'idSegnalatore' => true,
             'idObject' => true,
             'objectType' => true
@@ -26,27 +26,19 @@ class VReport extends VObject
     function createReport() : EReport
     {
         $report = new EReport();
+        
         if(isset($_POST['title'])){
             $report->setTitle($_POST['title']);
         }
-        if(isset($_POST['decription'])){
-            $report->setDescription($_POST['decription']);
+        if(isset($_POST['description'])){
+            $report->setDescription($_POST['description']);
         }
-        if(isset($_POST['idSegnalatore'])){
-            $report->setIdSegnalatore($_POST['idSegnalatore']);
-        }
-        if(isset($_POST['idObject'])){
-            $report->setIdObject($_POST['idObject']);
-        }
-        if(isset($_POST['objectType'])){
-            $report->setObjectType($_POST['objectType']);
-        }
-        
+ 
         return $report;
     }
     
     /**
-     * Verifica la validità del report
+     * Verifica la validitï¿½ del report
      *
      * @return true se non si sono commessi errori, false altrimenti
      */
@@ -54,11 +46,11 @@ class VReport extends VObject
     {
         if(
             $this->check['title'] = $rep->validateTitle() &&
-            $this->check['description'] = $rep->validateDescription() &&
+            $this->check['description'] = $rep->validateDescription()/* &&
             $this->check['idSegnalatore'] = $rep->validateIdSegnalatore() &&
             $this->check['idObject'] = $rep->validateObject() &&
             $this->check['objectType'] = $rep->validateObject()
-            )
+            */)
             return  true;
         else 
             return false;
@@ -66,13 +58,19 @@ class VReport extends VObject
     
     
     /**
-     * mostra i dettagli di un report
-     * pagina riservata solo al moderatore che ha accettato il report
+     * Mostra i dettagli di un report.
+     * Pagina riservata solo al moderatore che ha accettato il report.
      * 
      */
     function showReport (EReport $eReport, bool $error = null)
     {
-        if(!$error){ $error = false; }
+        $this->smarty->registerObject('user', $user);
+        $this->smarty->assign('report', $eReport);
+        
+        $this->smarty->assign('uType', lcfirst(substr(get_class($user), 1)));
+        
+        $this->smarty->assign('check', $this->check);
+        $this->smarty->display('report.tpl');
         
         
         
@@ -86,13 +84,20 @@ class VReport extends VObject
     }
     
     /**
-     * mostra la form di creazione del report
+     * Mostra la form di creazione del report
      * visibile all'utente che vuole inviare una segnalazione
      */
-    function showReportForm (bool $error = null) 
+    function showReportForm (EUser &$user, int $id, string $type) 
     {
-        if(!$error)
-        {   $error = false; }
+        $this->smarty->registerObject('user', $user);
+        $this->smarty->assign('id', $id);
+        $this->smarty->assign('type', $type);
+        
+        $this->smarty->assign('uType', lcfirst(substr(get_class($user), 1)));
+ 
+        $this->smarty->assign('check', $this->check);
+        
+        $this->smarty->display('makeReport.tpl');
         
         
     }

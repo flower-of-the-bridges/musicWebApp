@@ -28,16 +28,11 @@
 		
         </div>
         <div class="col-sm-7 well">
-			{if $error}
-			<div class="alert alert-warning">
-				<strong>Warning!</strong><br>Wrong combination of user and password. <br>Please retry.
-			</div>
-			{/if}
-
+			
 			<h2>Report</h2>
 					
 			
-				<form method="post" id="info" enctype="multipart/form-data" action="make">
+				<form method="post" id="info" enctype="multipart/form-data" action="/deepmusic/report/make/{$id}&{$type}">
 					
   					<fieldset class="form-group">
   						<legend></legend>
@@ -65,7 +60,7 @@
 							</label>
 							<div class="col-sm-7">
 								<textarea form="info" class="form-control" name="description" 
-								placeholder="Why are you reporting this item?"</textarea>
+								placeholder="Why are you reporting this item?"></textarea>
 							</div>
 							{if !$check.description}
 							<div class="col-sm-3">

@@ -11,6 +11,7 @@ require_once 'Controller/CUserInfo.php';
 require_once 'Controller/CSupInfo.php';
 require_once 'Controller/CSupporter.php';
 require_once 'Controller/CSearch.php';
+require_once 'Controller/CAdmin.php';
 require_once 'View/VUser.php';
 require_once 'View/VReport.php';
 require_once 'View/VSong.php';

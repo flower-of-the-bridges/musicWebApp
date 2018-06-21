@@ -28,84 +28,10 @@ class CManageReport
         else 
             header('Location: HTTP/1.1 405 Invalid URL detected');
     }
-        
-    
-    /**
-     * Mostra la pagina delle info base di tutti i report accettati dal moderatore loggato o quelli non accettati. 
-     * Reindirizza ad un messaggio di errore
-     * se l'utente che accede alla risorsa non e' un moderatore o se sta cercando di visualizzare qualcosa che non dovrebbe.
-     * @param int $idMod l'identificativo del moderatore.
-     */
-    private function showReportTable($idMod, bool $error = false)
-    {
-        if(!$error){$error=false;}
-        
-        $vReport = new VReport();
-        $loggedUser = CSession::getUserFromSession();
-        
-        if(CManageReport::checkModSession())
-        {
-            if($idMod=="" || $idMod == $loggedUser->getId())
-            {
-                $reportTable = FPersistantManager::getInstance()->load(EReport::class, $idMod, FTarget::LOAD_MOD_REPORT);
-                $vReport->showReportTable($reportTable);
-            }else 
-                $vReport->showErrorPage($loggedUser, "you are trying to visualize something that is none of your business");
-        }
-    }
-    
-    
-    /**
-     * Mostra la pagina delle info di un report. Reindirizza ad un messaggio di errore
-     * se l'utente che accede alla risorsa non e' un moderatore.
-     * @param int $id l'identificativo del report.
-     */
-    private function showReport($idMod, $idReport, bool $error = false)
-    {
-        if(!$error){$error=false;}
-        
-        $vReport = new VReport();
-        $loggedUser = CSession::getUserFromSession();
-        $eReport = FPersistantManager::getInstance()->load(EReport::class, $idReport);
-        
-        if(CManageReport::checkModSession())
-        {
-            if($loggedUser->getId() == $idMod)
-            {
-                if($eReport!=null)
-                {
-                    $vReport->showReport($eReport);    
-                }else 
-                    $vReport->showErrorPage($loggedUser, "you are trying to see something that not exist!");
-            }else 
-                $vReport->showErrorPage($loggedUser, "this report is not one of yours");
-        }
-    }
-    
-    
-    /**
-     * metodo statico che controlla se l'utente dispone dei diritti da moderatore
-     * 
-     * @return bool
-     *      se l'utente � un moderatore verra restituito il valore true
-     */
-    private function checkModSession() : bool
-    {
-        $vReport = new VReport();
-        
-        $loggedUser = CSession::getUserFromSession();
-        
-        if(get_class($loggedUser) != EModerator::class)
-        {
-            $vReport->showErrorPage($loggedUser, "you are not supposed to be here, how did you went this far from home?");
-            return false;
-        }else
-            return true;
-    }
     
     /**
      * metodo che permette all'utente moderatore di accettare una segnalazione
-     * 
+     *
      * @param $idReport int
      *      ossia il report che va aggiornato
      */
@@ -124,7 +50,7 @@ class CManageReport
                 {
                     $eReport->setIdModeratore($loggedUser->getId());
                     FPersistantManager::getInstance()->update($eReport);
-                }else 
+                }else
                     $vReport->showErrorPage($loggedUser, "this report is already under the attenction of a moderator");
             }else
                 $vReport->showErrorPage($loggedUser, "you are trying to accept something that does not exist");
@@ -186,6 +112,82 @@ class CManageReport
                 $vReport->showErrorPage($loggedUser, "you are trying to complete something that does not exist");
         }
     }
+    
+        
+    
+    /**
+     * Mostra la pagina delle info base di tutti i report accettati dal moderatore loggato o quelli non accettati. 
+     * Reindirizza ad un messaggio di errore
+     * se l'utente che accede alla risorsa non e' un moderatore o se sta cercando di visualizzare qualcosa che non dovrebbe.
+     * @param int $idMod l'identificativo del moderatore.
+     */
+    private function showReportTable($idMod, bool $error = false)
+    {
+        if(!$error){$error=false;}
+        
+        $vReport = new VReport();
+        $loggedUser = CSession::getUserFromSession();
+        
+        if(CManageReport::checkModSession())
+        {
+            if($idMod=="" || $idMod == $loggedUser->getId())
+            {
+                $reportTable = FPersistantManager::getInstance()->load(EReport::class, $idMod, FTarget::LOAD_MOD_REPORT);
+                $vReport->showReportTable($reportTable);
+            }else 
+                $vReport->showErrorPage($loggedUser, "you are trying to visualize something that is none of your business");
+        }
+    }
+    
+    
+    /**
+     * Mostra la pagina delle info di un report. Reindirizza ad un messaggio di errore
+     * se l'utente che accede alla risorsa non e' un moderatore.
+     * @param int $id l'identificativo del report.
+     */
+    private function showReport($idMod, $idReport, bool $error = false)
+    {
+        if(!$error){$error=false;}
+        
+        $vReport = new VReport();
+        $loggedUser = CSession::getUserFromSession();
+        $eReport = FPersistantManager::getInstance()->load(EReport::class, $idReport);
+        
+        if(CManageReport::checkModSession())
+        {
+            if($loggedUser->getId() == $idMod)
+            {
+                if($eReport!=null)
+                {
+                    $vReport->showReport($eReport);    
+                }else 
+                    $vReport->showErrorPage($loggedUser, "you are trying to see something that not exist!");
+            }else 
+                $vReport->showErrorPage($loggedUser, "this report is not one of yours");
+        }
+    }
+    
+    
+    /**
+     * Metodo che controlla se l'utente dispone dei diritti da moderatore
+     * 
+     * @return bool
+     *      se l'utente e' un moderatore verra restituito il valore true
+     */
+    private function checkModSession() : bool
+    {
+        $vReport = new VReport();
+        
+        $loggedUser = CSession::getUserFromSession();
+        
+        if(get_class($loggedUser) != EModerator::class)
+        {
+            $vReport->showErrorPage($loggedUser, "you are not supposed to be here, how did you went this far from home?");
+            return false;
+        }else
+            return true;
+    }
+    
     
     
 }

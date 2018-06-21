@@ -2,7 +2,35 @@
 
 require_once 'inc.php';
 
+
 class CReport {
+      
+    static function show($idReport=null)
+    {
+        if($_SERVER['REQUEST_METHOD'] == 'GET')
+        {
+            CReport::showReport($idReport);
+        }
+        else
+            header('Location: HTTP/1.1 405 Invalid URL detected');
+    }
+    /**
+     * Metodo che fa la distinzione tra i due metodi di richiesta GET e POST
+     * invocando la vista incaricata a mostrare l'appropriata interfaccia utente
+     */
+    static function make($id = null, $type = null)
+    {
+        if($_SERVER['REQUEST_METHOD'] == 'GET')
+        {
+            CReport::showMakeReportForm($id, $type);
+        }
+        else if($_SERVER['REQUEST_METHOD'] == 'POST')
+        {
+            CReport::registerReport($id, $type);
+        }
+        else
+            header('Location: Invalid HTTP method detected');
+    }
     
     /**
      * Permette l'invio di un report
@@ -13,34 +41,127 @@ class CReport {
      * EObject $obj
      *      l'oggetto segnalato
      */
-    private function registerReport ()
+    private function registerReport ($id = null, $type = null)
     {
         $loggedUser = CSession::getUserFromSession();
-        $vRep = new VReport();
-        $report = $vRep->createReport();
-        $report->setIdSegnalatore($loggedUser->getId());
-        $report->setIdModeratore("");
+        $vReport = new VReport();
+        $report = $vReport->createReport();
+        if(get_class($loggedUser)!=EGuest::class || get_class($loggedUser)!=EModerator::class)
+        {
+            if(CReport::makeReportedObject($id, $type, $vReport, $loggedUser))
+            {
+                $report->setIdSegnalatore($loggedUser->getId());
+                $report->setIdObject($id);
+                $report->setObjectType($type);
+                FPersistantManager::getInstance()->store($report);
+            }
+            
+        }
+        else
+            $vReport->showErrorPage($user, 'You must be logged to report application contents. Maybe you\'re a moderator!');
+            
         
-        FPersistantManager::getInstance()->store($report);
     }
     
-	/**
-	 * Metodo che fa la distinzione tra i due metodi di richiesta GET e POST
-	 * invocando la vista incaricata a mostrare l'appropriata interfaccia utente
-	 */
-    static function make()
+    /**
+     * Mostra la form per la creazione di un report
+     * @param int $id identificativo della risorsa da segnalare
+     * @param string $type tipologia della risorsa da segnalare ('user' o 'song')
+     */
+    private function showMakeReportForm($id = null, $type = null)
     {
-        if($_SERVER['REQUEST_METHOD'] == 'GET')
+        $vReport = new VReport(); // costruisce la view
+        $user = CSession::getUserFromSession(); // riottiene l'utente dalla sessione
+        if (get_class($user) != EGuest::class && get_class($user)!= EModerator::class)  // verifica che l'utente non sia guest o moderatore
         {
-            $vReport = new VReport();
-            $vReport->showReportForm();
+            if(CReport::makeReportedObject($id, $type, $vReport, $user))
+                $vReport->showReportForm($user, $id, $type);
         }
-        else if ($_SERVER['REQUEST_METHOD'] == 'POST')
+        else
+            $vReport->showErrorPage($user, 'You must be logged to report application contents. Maybe you\'re a moderator!');
+    }
+    
+    /**
+     * Costruisce un oggetto EReport partire dai valori id e type.
+     * @param int $id identificativo della risorsa da segnalare
+     * @param string $type tipologia della risorsa da segnalare ('user' o 'song')
+     * @param VReport $vReport la view occupata di visualizzare messaggi di errori
+     * @param EUser $user l'utente della sessione attiva
+     * @return boolean true se l'oggetto esiste, false altrimenti
+     */
+    private function makeReportedObject($id = null, $type = null, VReport &$vReport, EUser &$user)
+    {
+        if ($type) // verifica che il tipo sia specificato
         {
-            CReport::registerReport();   
+            $className = 'E' . ucfirst($type); // costruisce la classe Entity associata al tipo di risorsa
+            
+            if ($className == EUser::class || $className == ESong::class) // vede se si ha un EUser o un EMusician
+            {
+                if (is_numeric($id)) // controlla che sia specificato l'id
+                {
+                    $obj = FPersistantManager::getInstance()->load($className, $id); // carica l'oggetto dal db
+                    if ($obj) // se esiste mostra la form
+                        return true;
+                    else 
+                    {
+                        $vReport->showErrorPage($user, 'The id doesn\'t match any ' . $type . '!');
+                        return false;
+                    }
+                }
+                else
+                {
+                    $vReport->showErrorPage($user, 'The id is not specified!');
+                    return false;
+                }
+            }
+            else
+            {
+                $vReport->showErrorPage($user, 'The resource type doesn\'t support the report function');
+                return false;
+            }
+        }
+        else
+        {
+            $vReport->showErrorPage($user, 'The resource type is not specified!');
+            return false;
+        }
+    }
+    
+    /**
+     * Mostra la pagina delle info di un report. Reindirizza ad un messaggio di errore
+     * se l'utente che accede alla risorsa non e' un moderatore.
+     * @param int $id l'identificativo del report.
+     */
+    private function showReport($idReport = null)
+    {
+        
+        $vReport = new VReport();
+        $loggedUser = CSession::getUserFromSession();
+        
+        if(get_class($loggedUser)==EModerator::class) // se l'utente e' moderatore
+        {
+            
+            if(is_numeric($idReport)) // se l'id report e' specificato
+            { // si carica il report
+                $eReport = FPersistantManager::getInstance()->load(EReport::class, $idReport); // carica il report
+                
+                if($eReport) // se il report esiste
+                { // si verifica che il moderatore puo' vederlo (il report non deve essere assegnato oppure deve essere assegnato a lui)
+                    if(!$eReport->isAccepted() || $eReport->getIdModeratore() == $loggedUser->getId())
+                        $vReport->showReport($loggedUser, $eReport);
+                    else
+                        $vReport->showErrorPage($loggedUser, "this report is not one of yours");  
+                }
+                else 
+                    $vReport->showErrorPage($loggedUser, "you are trying to see something that not exist!");
+            }
+            else 
+                $vReport->showErrorPage($loggedUser, 'The id is not specified!');
         }
         else 
-            header('Location: Invalid HTTP method detected');
+            $vReport->showErrorPage($loggedUser, 'You must be a moderator to see reports!');
+        
+    
     }
     
 }

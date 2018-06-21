@@ -59,7 +59,7 @@ class CSupInfo
             if ($vSupInfo->validateLoad($supInfo)) // se l'oggetto e' valido
             {
                 $user->setSupportInfo($supInfo);
-                $vSupInfo->showManageSupport($user, true);
+                header('Location: /deepmusic/supInfo/edit');
             } 
             else
                 $vSupInfo->showManageSupport($user);
