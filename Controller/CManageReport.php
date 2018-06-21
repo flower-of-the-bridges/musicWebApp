@@ -29,19 +29,6 @@ class CManageReport
             header('Location: HTTP/1.1 405 Invalid URL detected');
     }
         
-    static function update($idReport=null,$action=null)
-    {
-        if($_SERVER['REQUEST_METHOD'] == 'POST')
-        {
-            if($idReport != null && $action != null)
-            {
-                $action=$action.'Report';
-                CManageReport::$action($idMod,$idReport);
-            }
-        }else 
-            header('Location: HTTP/1.1 405 Invalid URL detected');
-    }
-       
     
     /**
      * Mostra la pagina delle info base di tutti i report accettati dal moderatore loggato o quelli non accettati. 
@@ -122,7 +109,7 @@ class CManageReport
      * @param $idReport int
      *      ossia il report che va aggiornato
      */
-    private function acceptReport($idReport)
+    static function accept($idReport)
     {
         $vReport = new VReport();
         $eReport = FPersistantManager::getInstance()->load(EReport::class, $idReport);
@@ -151,7 +138,7 @@ class CManageReport
      * @param $idReport int
      *      ossia il report che va aggiornato
      */
-    private function declineReport($idReport)
+    static function decline($idReport)
     {
         $vReport = new VReport();
         $eReport = FPersistantManager::getInstance()->load(EReport::class, $idReport);
@@ -179,7 +166,7 @@ class CManageReport
      * @param $idReport int
      *      ossia il report che va aggiornato
      */
-    private function completeReport($idReport)
+    static function complete($idReport)
     {
         $vReport = new VReport();
         $eReport = FPersistantManager::getInstance()->load(EReport::class, $idReport);
