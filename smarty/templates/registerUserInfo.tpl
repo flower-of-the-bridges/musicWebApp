@@ -132,10 +132,8 @@
 							</label>
 							<div class="col-sm-7">
 								<textarea form="info" class="form-control" name="bio" 
-								{if $uInfo->getBio()}
-									value="{$uInfo->getBio()}"
-								{/if}
-								placeholder="Say something about yourself..."></textarea>
+								placeholder="Say something about yourself..."{if $uInfo->getBio()}>{$uInfo->getBio()}
+								</{else}></{/if}textarea>
 							</div>
 							{if !$check.bio}
 							<div class="col-sm-3">

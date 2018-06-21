@@ -110,6 +110,7 @@ class VUserInfo extends VObject
             $error = false;
           
         $userInfo = $user->getUserInfo();
+
         $this->smarty->registerObject('user', $user);
         $this->smarty->assign('uInfo', $userInfo);
         

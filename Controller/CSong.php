@@ -200,7 +200,10 @@ class CSong
                 {
                     $song->getMp3()->setId($song->getId()); // assegna all'mp3 l'id appena ottenuto
                     if (FPersistantManager::getInstance()->store($song->getMp3())) // se il caricamento dell'mp3 ha successo
+                    {
+                        $user->setGenre(); // aggiorna il genere musicale
                         header('Location: /deepmusic/user/profile/' . $user->getId());
+                    }
                     else 
                     { // altrimenti cancella la canzone nella table song e ritorna false
                         FPersistantManager::getInstance()->remove(ESong::class, $song->getId());
@@ -239,6 +242,9 @@ class CSong
                     $songNew->setId($songOld->getId());
                     $songNew->setArtist($songOld->getArtist());
                     FPersistantManager::getInstance()->update($songNew);
+                    
+                    $user->setGenre(); // aggiorna il genere musicale
+                    
                     header('Location: /deepmusic/song/show/'.$songNew->getId());
                 }
                 else
@@ -275,6 +281,8 @@ class CSong
                 if($vSong->validateRemove()) // se l'utente ha deciso di rimuoverla...
                 { // ...la canzone viene rimossa
                     FPersistantManager::getInstance()->remove(ESong::class, $song->getId()); // rimuove la canzone
+                    $user->setGenre(); // aggiorna il genere musicale
+                    
                     header('Location: /deepmusic/user/profile/'.$user->getId()); // l'utente viene reindirizzato al profilo
                 }
                 else // altrimenti si viene reindirizzati ad una pagina di errore 

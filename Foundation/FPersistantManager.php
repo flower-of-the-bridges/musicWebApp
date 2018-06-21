@@ -41,9 +41,10 @@ class FPersistantManager {
     /**
      * Metodo che chiude la connessione al dbms.
      */
-    function closeDBConnection()
+    function __destruct()
     {
         $this->db = null;
+        static::$instance = null;
     }
     
     /**
@@ -57,7 +58,8 @@ class FPersistantManager {
      */
     static function getInstance() : FPersistantManager
     {
-        if (static::$instance == null) {
+        if (static::$instance == null) 
+        {
             static::$instance = new FPersistantManager();
         }
         return static::$instance;
@@ -127,11 +129,14 @@ class FPersistantManager {
                    $obj[] = FPersistantManager::createObjectFromRow($class, $row);
                else $obj = FPersistantManager::createObjectFromRow($class, $row);            
             }
+            
+            $this->__destruct(); // chiude la connessione
+            
             return $obj;
         }
         catch (PDOException $e) 
         {
-            die($e->errorInfo);
+            $this->__destruct(); // chiude la connessione
             return null; //ritorna null se ci sono errori
         }
     }
@@ -180,12 +185,13 @@ class FPersistantManager {
             { // per ogni tupla restituita dal db...
                 $obj[] = FPersistantManager::createObjectFromRow($className, $row); //...istanzio l'oggetto
             }
-         
+            $this->__destruct(); // chiude la connessione
+            
             return $obj;
         }
         catch (PDOException $e)
         {
-            die($e->errorInfo);
+            $this->__destruct(); // chiude la connessione
             return null; // ritorna null se ci sono errori
         }
     }
@@ -237,8 +243,8 @@ class FPersistantManager {
         $stmt = $this->db->prepare($sql);
         
         // si prepara la query facendo un bind tra parametri e variabili dell'oggetto
-        try {
-            
+        try 
+        {
             FPersistantManager::bindValues($stmt, $obj); // si associano i valori dell'oggetto alle entry della query
  
             $stmt->execute();
@@ -247,20 +253,26 @@ class FPersistantManager {
                 if (method_exists($obj, 'getId') && $obj->getId() == 0) // ...se il valore e' non nullo, si assegna l'id
                     $obj->setId($this->db->lastInsertId()); // assegna all'oggetto l'ultimo id dato dal dbms
                 
-                return $this->db->commit(); // si ritorna il risultato del commit
+                $commit = $this->db->commit(); // effettua il commit
+                
+                $this->__destruct(); // chiude la connessione
+                
+                return $commit; // ritorna il risultato del commit
             } 
             else 
             {
                 // ...altrimenti si effettua il rollback e si ritorna false
                 $this->db->rollBack();
+                $this->__destruct(); // chiude la connessione
                 
                 return false;
             }
-        } catch (PDOException $e) {
-            // errore: rollback e return false
-            echo ('Errore: ' . $e->getMessage());
-            
+        } 
+        catch (PDOException $e) 
+        {  // errore: rollback e return false
+   
             $this->db->rollBack();
+            $this->__destruct(); // chiude la connessione
             
             return false;
         }
@@ -313,11 +325,16 @@ class FPersistantManager {
             $stmt->bindValue(':id', $obj->getId(), PDO::PARAM_INT); // associa l'id dell'oggetto alla query
             if($stmt->execute()) //se la tupla e' alterata...
             {
-                return $this->db->commit(); //...ritorna il risultato del commit
+                $commit = $this->db->commit(); // effettua il commit
+                
+                $this->__destruct(); // chiude la connessione
+                
+                return $commit; //...ritorna il risultato del commit
             }
             else //altrimenti l'update non ha avuto successo...
             {
                 $this->db->rollBack();
+                $this->__destruct(); // chiude la connessione
                 
                 return false; //...annulla la transazione e ritorna false
             }
@@ -327,6 +344,7 @@ class FPersistantManager {
             echo('Errore: '.$e->getMessage());
             
             $this->db->rollBack();
+            $this->__destruct(); // chiude la connessione
             
             return false;
         }
@@ -382,12 +400,16 @@ class FPersistantManager {
             if($id2) // se id2 e' stato inserito...
                 $stmt->bindValue(":id2", $id2, PDO::PARAM_INT); //...si associa id2 al campo della query
                 
-            return $stmt->execute(); //esegue lo statement e ritorna il risultato
+            $result = $stmt->execute(); //esegue lo statement
+            
+            $this->__destruct(); // chiude la connessione
+            
+            return $result; //ritorna il risultato
                 
         }
         catch (PDOException $e)
         {
-            die($e->errorInfo);
+            $this->__destruct(); // chiude la connessione
             return FALSE; //ritorna false se ci sono errori
         }
     }
@@ -461,48 +483,29 @@ class FPersistantManager {
                     $stmt->bindValue(":value2", $value2, PDO::PARAM_STR); // si associa la stringa al campo della query
             }
  
-            $result = $stmt->execute(); // esegue lo statement e ritorna il risultato
+            $result = $stmt->execute(); // esegue lo statement
             $stmt->setFetchMode(PDO::FETCH_ASSOC); // i risultati del db verranno salvati in un array con indici le colonne della table
-  
+            
             if ($stmt->rowCount()) {
                 $row = $stmt->fetch();
+                $this->__destruct(); // chiude la connessione
                 return $row['id'];
             } 
             else
+            {
+                $this->__destruct(); // chiude la connessione
                 return false;
+            }
            
                 
-        } catch (PDOException $e) {
-            die($e->errorInfo);
+        } 
+        catch (PDOException $e) 
+        {
+            $this->__destruct(); // chiude la connessione
             return FALSE; // ritorna false se ci sono errori
         }
     }
-    
-    
-/*************************************** TRUNCATE ***************************************************/    
-
-    
-    /**
-     * Cancella tutte le entry in un DBMS. A scopo di debug
-     * @param string $target il nome della table da cancellare
-     * @return bool il risultato dell'operazione.
-     */
-    function truncate(string $target)
-    {
-        switch($target)
-        {
-            case($target=='Musician'):
-                break;
-            case($target=='Listener'):
-                break;
-            case($target=='Song'):
-                FSong::emptyTable($this->db);
-                break;
-            default:
-                break;
-        }
-    }
-    
+        
 /*****************************   ASSOCIAZIONI ENTITY - DB    *********************************/    
     
     /**

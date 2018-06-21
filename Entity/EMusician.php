@@ -71,4 +71,18 @@ class EMusician extends EUser
         else
             return $songs;
     }
+    
+    /**
+     * Imposta il genere musicale dell'artista a partire dalle canzoni caricate.
+     */
+    function setGenre()
+    {
+        $songs = $this->getSongs(); // ricava le canzoni
+    
+        $info = $this->getUserInfo(); // ricava le info del musicista
+        
+        $info->generateGenre($songs); // le info generano il genere
+        
+        FPersistantManager::getInstance()->update($info); // aggiorna il genere
+    }
 }

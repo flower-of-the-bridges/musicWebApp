@@ -7,6 +7,8 @@
 			{if isset($value)}
 			{if $value eq 'Genre'}
 			<td>{$user->getUserInfo()->getGenre()}</td>
+			{/if}
+			{/if}
 			<td>{substr(get_class($user),1)}</td>
 		</tr>
 	{/foreach}

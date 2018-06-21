@@ -32,6 +32,7 @@ class EUserInfo extends EObject
     function __construct()
     {
         parent::__construct();
+        
         $this->firstName='';
         $this->lastName='';
         $this->birthPlace='';
@@ -43,29 +44,26 @@ class EUserInfo extends EObject
     
     /**
      * Costruisce il genere musicale dell'utente a partire dalle canzoni passate alla funzione.
+     * @param array $song contenente oggetti ESong da cui ricavare il genere | NULL se nessuna canzone e' presente
      */
-    function generateGenre(string $genre = null)
+    function generateGenre(&$songs)
     {
-        if($genre!=NULL)
-        {
-            $this->genre = $genre;
-        }
-        else
-        {
-            $this->genre = ''; //inizializza il genere
-            $songs = FPersistantManager::getInstance()->load('musicianSongs', $this->id);
-            if($songs)
+        $this->genre = ''; // il genere viene azzerato
+        
+        if ($songs) // se ci sono canzoni
+        {            
+            foreach ($songs as $song)  // per ogni canzone...
             {
-                foreach ($songs as $song)
-                {
-                    $songGenre = $song->getGenre();
-                    if(!preg_match('/\b'.$songGenre.'\b/',$this->genre)) //verifica che il genere non sia gia stato inserito
-                        $this->genre.=$songGenre." "; // aggiunge il valore al genere
-                }
+                $songGenre = $song->getGenre(); // ricava il genere
+                
+                if (! preg_match('/\b' . $songGenre . '\b/', $this->genre)) // verifica che il genere non sia gia stato inserito
+                    $this->genre .= $songGenre . " "; // aggiunge il valore al genere
             }
-            FPersistantManager::getInstance()->update($this);
+            
         }
+
     }
+
     
     /**
      * 
@@ -153,7 +151,7 @@ class EUserInfo extends EObject
      * 
      * @param string $bio la biografia dell'utente
      */
-    function setBio (string $bio)
+    function setBio(string $bio)
     {
         $this->bio = $bio;
     }
@@ -162,7 +160,7 @@ class EUserInfo extends EObject
      * 
      * @return string la biografia dell'utente
      */
-    function getBio () 
+    function getBio() 
     {
         return $this->bio;
     }

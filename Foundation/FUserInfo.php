@@ -24,8 +24,7 @@ class FUserInfo
     static function updateUserInfo() : string
     {
         return "UPDATE user_info
-                SET id = :id, 
-                    first_name = :first_name,
+                SET first_name = :first_name,
                     last_name = :last_name,
                     birth_place = :birth_place, 
                     birth_date = :birth_date, 
