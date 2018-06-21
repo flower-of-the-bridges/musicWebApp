@@ -56,10 +56,15 @@
 				{/if}
 			</div>
 		<div class="col-sm-2">
-			{include file="followOptions.tpl"}				
+			{include file="followOptions.tpl"}	
+			{if $uId!=$pId && $uType!='guest'}
+			<div class = "well">
+				<a href="/deepmusic/report/make/{$pId}&user">Report User</a>
+			</div>
+			{/if}		
 		</div>
 		
 	</div>
-	
+
 </body>
 </html>

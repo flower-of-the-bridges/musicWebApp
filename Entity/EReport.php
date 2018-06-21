@@ -46,7 +46,7 @@ class EReport extends EObject
         $className = E.ucfirst($this->objectType);
         if(class_exists($class_name))
         {
-            $obj = FPersistantManager::getInstance()->load($className::class, $this->idObject);
+            $obj = FPersistantManager::getInstance()->load($className, $this->idObject);
             if($obj)
                 return true;
             else
@@ -75,7 +75,7 @@ class EReport extends EObject
         $this->description = $desc;
     }
     
-    function getIdModeratore () : int
+    function getIdModeratore() 
     {
         return $this->idModeratore;
     }
@@ -119,7 +119,7 @@ class EReport extends EObject
         if(class_exists($className))
         {
             if($this->idObject)
-                $obj = FPersistantManager::getInstance()->load($className::class, $this->idObject);
+                $obj = FPersistantManager::getInstance()->load($className, $this->idObject);
         }
         
         return $obj;    
@@ -140,5 +140,17 @@ class EReport extends EObject
             $this->idObject = $obj->getId();
         }
             
+    }
+    
+    /**
+     * Verifica che il report sia stato preso in carico da un moderatore.
+     * @return bool true se e' stato preso in carico, false altrimenti 
+     */
+    function isAccepted() : bool
+    {
+        if($this->getIdModeratore())
+            return true;
+        else 
+            return false;
     }
 }

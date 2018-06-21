@@ -28,7 +28,8 @@
 		<div class="col-sm-3">
 		
         </div>
-		<div class="col-sm-7 well">
+		<div class="col-sm-7 ">
+			<div class="well">
 			{if $canSee}
 			<h4><a href="/deepmusic/user/profile/{$song->getArtist()->getId()}">{$song->getArtist()->getNickName()}</a> : {$song->getName()} ({$song->getGenre()})</h4>
 		    <audio controls="controls" autoplay="">
@@ -46,7 +47,15 @@
 			<a href="/deepmusic/song/remove/{$song->getId()}" 
 				class="btn btn-primary btn-lg btn-danger active" role="button" aria-pressed="true">Delete</a>
 			{/if}
+			{if $canSee && $uId!=$song->getArtist()->getId() && $uType!='guest'}
+			</div>
+			<div class = "well">
+				<a href="/deepmusic/report/make/{$song->getId()}&song">Report Song</a>
+			</div>
+			{/if}
 		</div>
+		
+			
 	</div>
 </body>
 </html>

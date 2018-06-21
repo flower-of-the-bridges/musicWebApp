@@ -43,14 +43,17 @@ class FReport
     }
     
     static function bindValues(PDOStatement &$stmt, EReport &$rep)
-    {
-        $stmt->bindValue(':id', $rep->getId(), PDO::PARAM_STR);
-        $stmt->bindValue(':id_moderatore', $rep->getIdModeratore(), PDO::PARAM_STR);
+    {       
+        if($rep->getIdModeratore())
+            $stmt->bindValue(':id_moderatore', $rep->getIdModeratore(), PDO::PARAM_INT);
+        else 
+            $stmt->bindValue(':id_moderatore', 'NULL');
+        
         $stmt->bindValue(':title', $rep->getTitle(), PDO::PARAM_STR);
         $stmt->bindValue(':description', $rep->getDescription(), PDO::PARAM_STR);
-        $stmt->bindValue(':id_segnalatore', $rep->getIdSegnalatore(), PDO::PARAM_STR);
-        $stmt->bindValue(':id_object', $rep->getIdObject(), PDO::PARAM_STR);
-        $stmt->bindValue(':object_type', $rep->getType(), PDO::PARAM_STR);
+        $stmt->bindValue(':id_segnalatore', $rep->getIdSegnalatore(), PDO::PARAM_INT);
+        $stmt->bindValue(':id_object', $rep->getIdObject(), PDO::PARAM_INT);
+        $stmt->bindValue(':object_type', $rep->getObjectType(), PDO::PARAM_STR);
     }
     
     static function createObjectFromRow($row) : EReport
