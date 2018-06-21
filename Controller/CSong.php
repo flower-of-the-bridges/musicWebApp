@@ -3,7 +3,7 @@ require_once 'inc.php';
 
 /**
  * @author gruppo2
- * Il Controller CSong implementa le funzionalità del caso d'uso 'Gestione Brano'.
+ * Il Controller CSong implementa le funzionalità 'Gestione Brano'.
  * Un musicista può creare un brano, ed insieme ai moderatori può modificarlo o rimuoverlo.
  * @package Controller
  */
@@ -11,9 +11,9 @@ class CSong
 {
 
     /**
-     * La funzione load permette la visualizzazione della form per il caricamento di una canzone, 
-     * a seguito di un metodo GET, o l'inserimento di una canzone da parte di un utente a seguito 
-     * del metodo POST.
+     * La funzione load corrisponde al caso d'uso 'Carica Brano' e permette la visualizzazione della form 
+     * per il caricamento di una canzone, a seguito di una richiesta GET, o l'inserimento di una canzone da parte di un utente a seguito 
+     * di una richiesta POST.
      */
     static function load()
     {
@@ -26,9 +26,12 @@ class CSong
     }
     
     /**
-     * La funzione load permette la visualizzazione della form per la modifica di una canzone,
-     * a seguito di un metodo GET, o l'inserimento delle modifiche di una canzone
-     * da parte di un utente a seguito del metodo POST.
+     * La funzione edit implementa il caso d'uso 'Modifica Brano' e permette la visualizzazione 
+     * della form per la modifica di una canzone, a seguito di una richiesta GET, 
+     * o l'inserimento delle modifiche di una canzone da parte di un utente a seguito di una richiesta POST.
+     *
+     * @param int $id l'identificativo della canzone, specificato nell'URL.
+     * 
      */
     static function edit($id)
     {
@@ -46,9 +49,11 @@ class CSong
     }
     
     /**
-     * La funzione remove permette la visualizzazione della form per la rimozione di una canzone,
-     * a seguito di un metodo GET, o l'inserimento delle modifiche di una canzone
-     * da parte di un utente a seguito del metodo POST.
+     * La funzione remove implementa il caso d'uso 'Rimuovi Brano' e permette la visualizzazione 
+     * della form per la rimozione di una canzone, a seguito di una richiesta GET, o la conferma 
+     * dell'operazione da parte di un utente a seguito di una richiesta POST.
+     * 
+     * @param int $id l'identificativo della cazone, prelevato dall'URL.
      */
     static function remove($id)
     {
@@ -69,7 +74,8 @@ class CSong
      * La funzione show permette la visualizzazione della canzone da parte di un utente. Se l'utente 
      * può effettivamente visualizzarla, sarà possibile riprodurla, altrimenti verrà mostrato un 
      * messaggio d'errore. In caso la canzone sia visualizzata dall'artista stesso o da un moderatore,
-     * sarà possibile visualizzare funzionalità come la modifica o la rimozione
+     * sarà possibile visualizzare funzionalità come la modifica o la rimozione.
+     * 
      * @param int $id l'identificativo della canzone da visualizzare.
      */
     static function show($id)
@@ -90,7 +96,7 @@ class CSong
                 else if ($song->isForRegisteredOnly() && get_class($user)!=EGuest::class) // se è per i registrati e l'utente non è guest...
                     $canSee = true;
                 else if ($song->isForSupportersOnly() &&
-                         FPersistantManager::getInstance()->exists(ESupporter::class, FTarget::EXISTS_SUPPORTER, $user->getId(), $song->getArtist()->getId()))
+                    FPersistantManager::getInstance()->exists(ESupporter::class, FTarget::EXISTS_SUPPORTER, $song->getArtist()->getId(), $user->getId()))
                     // se è per i supporter e l'utente supporta l'artista della canzone...
                     $canSee = true;
                             
@@ -189,8 +195,6 @@ class CSong
             $song = $vSong->createSong(); // la view restituisce una ESong costruita a partire dalla form
             if ($vSong->validateLoad($song)) // se l'oggetto e' valido
             {
-                ini_set("upload_max_filesize", "120M"); // aumenta il limite di upload
-                
                 $song->setArtist($user); // si imposta l'utente della canzone
                 if (FPersistantManager::getInstance()->store($song)) 
                 {

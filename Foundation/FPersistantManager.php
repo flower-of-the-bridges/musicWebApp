@@ -149,36 +149,23 @@ class FPersistantManager {
      */
     function search(string $key, string $value, string $str) 
     {
-        switch($key){
-            case($key=='Musician'): // search di EMusicians
-                
-                if($value=='Name')
-                    $sql = FUser::searchUserByName();
-                if($value=='Genre')
-                    $sql = FUser::searchUserByGenre();
-                break;
-                
-            case($key=='Song'): // search di un ESongs
-                
-                if($value=='Name')
-                    $sql = FSong::searchSongByName();
-                if($value=='Genre')
-                    $sql = FSong::searchSongByGenre();
-                
-                break;
-                
-            default:
-                
-                $sql = NULL;
-                break;
+        $sql = '';
+        $className = 'F'.$key;
+        
+        if(class_exists($className))
+        {
+            $method = 'search'.$key.'By'.$value;
+            if(method_exists($className, $method))
+                $sql = $className::$method();
         }
         
+        
         if($sql)
-            return $this->execSearch($key, $value, $str, $sql);
+            return $this->execSearch('F'.$key, $value, $str, $sql);
         else return NULL;
     }
     
-    private function execSearch(string $key, string $value, string $str, string $sql)
+    private function execSearch(string $className, string $value, string $str, string $sql)
     {
         try
         {
@@ -191,9 +178,9 @@ class FPersistantManager {
             
             while($row = $stmt->fetch())
             { // per ogni tupla restituita dal db...
-                $obj[] = FPersistantManager::createObjectFromRow($key, $row); //...istanzio l'oggetto
+                $obj[] = FPersistantManager::createObjectFromRow($className, $row); //...istanzio l'oggetto
             }
-            
+         
             return $obj;
         }
         catch (PDOException $e)

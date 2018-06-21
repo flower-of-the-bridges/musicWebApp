@@ -3,7 +3,7 @@
 require_once 'inc.php';
 
 /**
- * La classe CUser implementa il caso d'uso 'Gestione Utenti'. Le varie funzionalità permettono 
+ * La classe CUser implementa la funzionalità 'Gestione Utenti'. I vari metodi permettono 
  * la creazione, autenticazione e visualizzazione di un profilo di un utente.
  * @author gruppo2 
  * @package Controller
@@ -11,7 +11,7 @@ require_once 'inc.php';
 class CUser
 {
     /**
-     * Metodo che implementa la funzionalita' di login. Se richiamato tramite GET, fornisce
+     * Metodo che implementa il caso d'uso di login. Se richiamato tramite GET, fornisce
      * la pagina di login, se richiamato tramite POST cerca di autenticare l'utente attraverso
      * i valori che quest'ultimo ha fornito
      */
@@ -35,7 +35,7 @@ class CUser
     }
 
     /**
-     * Metodo che implementa la funzionalità di registrazione. Se richiamato a seguito di una richiesta
+     * Metodo che implementa il caso d'uso di registrazione. Se richiamato a seguito di una richiesta
      * GET da parte del client, mostra la form di compilazione; altrimenti se richiamato tramite POST
      * riceve i dati forniti dall'utente e procede con la creazione di un nuovo utente.
      */

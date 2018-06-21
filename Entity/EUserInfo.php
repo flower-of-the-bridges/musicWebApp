@@ -193,7 +193,7 @@ class EUserInfo extends EObject
      * @param bool $bp controllo del luogo di nascita
      * @param bool $bd controllo della data di nascita
      */
-    function validateInfo(&$fn, &$ln, &$bp, &$bd)
+    function validate(bool &$fn, bool &$ln, bool &$bp, bool &$bd)
     {
         if (ctype_alpha($this->firstName)) 
         {

@@ -115,7 +115,7 @@ class FUserInfo
             $user->setLastName($row['last_name']);
         if($row['birth_place']!='NULL')
             $user->setBirthPlace($row['birth_place']);
-        if($row['birth_date']!='NULL')
+        if($row['birth_date']!='0000-00-00')
             $user->setBirthDate($row['birth_date']);
         if($row['bio']!='NULL')
             $user->setBio($row['bio']);

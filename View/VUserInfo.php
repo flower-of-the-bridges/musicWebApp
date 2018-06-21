@@ -3,9 +3,16 @@
 require_once 'inc.php';
 include_once 'View/VObject.php';
 
+/**
+ * 
+ * @author gruppo2
+ * @package View
+ */
 class VUserInfo extends VObject
 {
-    
+    /**
+     * 
+     */
     function __construct()
     {
         parent::__construct();
@@ -35,8 +42,8 @@ class VUserInfo extends VObject
             $userInfo->setBirthPlace($_POST['birthPlace']);
         if(isset($_POST['birthDate']))
             $userInfo->setBirthDate($_POST['birthDate']);
-        if(isset($_POST['birthDate']))
-            $userInfo->setBirthDate($_POST['birthDate']);
+        if(isset($_POST['bio']))
+            $userInfo->setBio($_POST['bio']);
         if(isset($_POST['genre']))
             $userInfo->setGenre($_POST['genre']);
     
@@ -51,8 +58,9 @@ class VUserInfo extends VObject
     {
         $img = new EImg();
         
-        if(isset($_POST['file']))
+        if($_FILES['file']['size']!=0)
         {
+            var_dump($_FILES);
             $img->setImg(file_get_contents($_FILES['file']['tmp_name']));
             $img->setSize($_FILES['file']['size']);
             $img->setType($_FILES['file']['type']);
@@ -60,37 +68,35 @@ class VUserInfo extends VObject
         return $img;
     }
     
-    
-    /**
-     * Mostra la form di prima inserzione delle info utente
-     *
-     * @param bool $error
-     *            facoltativo se presente un errore
-     */
-    function showSignUpInfo (EUser $user, bool $error = null)
-    {
-        if(!$error)
-            $error = false;
-        
-        $userInfo = new EUserInfo();
- 
-        $this->smarty->registerObject('user', $user);
-        $this->smarty->assign('userInfo', $userInfo);
-        $this->smarty->assign('uType', lcfirst(substr(get_class($user), 1)));
-
-        $this->smarty->assign('error', $error);
-        $this->smarty->display('registerUserInfo.tpl');
-    }
-    
+   
     /**
      * Controlla se l'oggetto EUserInfo sia valido
      * @param EUserInfo $eui di norma e' un oggetto ottenuto dal metodo createUserInfo()
+     * @return true se l'oggetto e' valido, false altrimenti
      */
-    function validateUserInfo(EUserInfo $eui)
+    function validateUserInfo(EUserInfo &$eui) : bool
     {
-        $eui->validateInfo($this->check['firstName'], $this->check['lastName'], $this->check['birthPlace'], $this->check['birthDate']);
+        $eui->validate($this->check['firstName'], $this->check['lastName'], $this->check['birthPlace'], $this->check['birthDate']);
+        
+        if($this->check['firstName'] && $this->check['lastName'] && $this->check['birthPlace'] && $this->check['birthDate'])
+            return true;
+        else 
+            return false;
     }
     
+    /**
+     * 
+     * @param EImg $img
+     * @return boolean
+     */
+    function validateImg(EImg &$img)
+    {
+        $img->validate($this->check['file']);
+        if($this->check['file'])
+            return true;
+        else 
+            return false;
+    }
     
     /**
      * Mostra la form di modifica delle info utente
@@ -110,6 +116,8 @@ class VUserInfo extends VObject
         $this->smarty->assign('uType', lcfirst(substr(get_class($user), 1)));
         
         $this->smarty->assign('error', $error);
+        $this->smarty->assign('check', $this->check);
+        
         $this->smarty->display('registerUserInfo.tpl');
     }
     

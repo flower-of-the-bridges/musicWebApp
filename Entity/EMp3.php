@@ -13,17 +13,15 @@ class EMp3 extends EObject
     //the blob itself
     private $mp3;
     
-    /////////////////////////////////////////////specifics methods
-    
-    function storeToDBMp3() : bool {/*someting that put mp3 in db on foundation*/ return $succes;}
-    
-    function loadFromDBMp3() : bool {/*someting that put mp3 from db on foundation*/}
-    
 
     /**
-     * 
+     * Costruisce un oggetto EMp3 vuoto
      */
-    function __construct () {/*Use functions*/}
+    function __construct ()
+    {
+        $this->size = 0;
+        $this->type = 'undefined';
+    }
 
 /****************************************** GETTER **************************************************/
     
@@ -86,12 +84,13 @@ class EMp3 extends EObject
 /*************************************** VALIDATION *******************************************/
     
     /**
-     * verifica che la dimensione del file sia superiore ad 1Mb
+     * verifica che la dimensione del file sia non nulla e minore al valore massimo contenuto in 
+     * un blob, ovvero 65kB.
      * @return bool true se la dimensione e' corretta, false altrimenti
      */
     function validateSize() : bool
     {
-        if($this->size>=10000)
+        if($this->size>0 && $this->size<=65535 )
             return true;
         else
             return false;
@@ -99,13 +98,23 @@ class EMp3 extends EObject
     
     /**
      * Verifica che il mime type sia effettivamente riferito ad un mp3. Possibili mime-type sono:
-     * - audio/mpeg
-     * - audio/mp3
+     * - audio/mpeg 
+     * - audio/x-mpeg 
+     * - audio/mp3 
+     * - audio/x-mp3 
+     * - audio/mpeg3 
+     * - audio/x-mpeg3 
+     * - audio/mpg 
+     * - audio/x-mpg 
+     * - audio/x-mpegaudio
      * @return bool true se il mime type e' corretto, false altrimenti
      */
     function validateType() : bool
     {
-        if($this->type!='audio/mpeg' && $this->type!='audio/mp3')
+        if($this->type!='audio/mpeg' && $this->type!='audio/x-mpeg' && 
+           $this->type!='audio/mp3' && $this->type!='audio/x-mp3' &&
+           $this->type!='audio/mpeg3' && $this->type!='audio/x-mpeg3' &&
+           $this->type!='audio/mpg' && $this->type!='audio/x-mpg' && $this->type!='audio/x-mpegaudio')
             return false;
         else 
             return true;

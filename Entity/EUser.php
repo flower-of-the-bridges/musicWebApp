@@ -185,6 +185,7 @@ class EUser extends EObject
             $img = new EImg();
             $img->setStatic();
         }
+        
         $img->setId($this->id);
         
         if(!FPersistantManager::getInstance()->load(EImg::class, $this->id)) // se le informazioni non sono presenti...

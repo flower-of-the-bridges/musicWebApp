@@ -2,7 +2,7 @@
 require_once 'inc.php';
 
 /**
- * La classe CSupInfo implementa il caso d'uso 'Gestione Supporto', ovvero consente ad un
+ * La classe CSupInfo implementa la funzionalità 'Gestione Supporto', ovvero consente ad un
  * utente di tipo Musicista di gestire le modalità con cui gli altri utenti possono supportarlo.
  * @author gruppo2
  * @package Controller

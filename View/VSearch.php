@@ -2,33 +2,85 @@
 require_once 'inc.php';
 include_once 'View/VObject.php';
 
+/**
+ * La classe VSearch si occupa dell'input-output per quanto riguarda la funzionalità 'Ricerca'.
+ * @author gruppo2
+ * @package View
+ */
 class VSearch extends VObject
 {
  
+    /**
+     * 
+     */
     function __construct()
     {
         parent::__construct();
     }
     
+    /**
+     * Restituisce il valore inserito dall'utente nella barra da ricerca. E' contenuto 
+     * nell'array globale $_GET
+     * @return string contenente il valore inserito dall'utente, se presente
+     */
     function getSearchValue() : string 
     {
         $string = "";
-        if($_GET['str'])
+        if(isset($_GET['str']))
         { // se l'utente ha inviato tramite GET un valore di ricerca, si ricava la stringa
             $string = $_GET['str'];
         }
+        return $string;
     }
     
-    function showSimpleSearchResult(EUser $user, $objects, string $key, string $value)
+    /**
+     * Ritorna la coppia chiave-valore scelta dall'utente nella ricerca avanzata. Tale coppia 
+     * e' contenuta nell'array globale $_GET.
+     * @return array avente come valori la chiave e il valore
+     */
+    function getKeyAndValue() : array
     {
-        //assegno a smarty le variabili php
-        $smarty->assign('key', $key);
-        $smarty->assign('value', $value);
-        $smarty->registerObject('user', $user);
-        $smarty->assign('objects', $objects);
+        $key="";
+        $value="";
+        
+        if($_GET['value'] == 'name' || $_GET['value'] == 'genre')
+            $value = ucfirst($_GET['value']);
+        if($_GET['key'] == 'song' || $_GET['key'] == 'user')
+            $key = ucfirst($_GET['key']);
+                
+        return array($key, $value);
+    }
+    
+    /**
+     * Mostra i risultati della ricerca
+     * @param EUser $user l'utente della sessione
+     * @param array $array contenente i risultati della ricerca | NULL se nessun oggetto e' stato costruito
+     * @param string $key la chiave di ricerca adoperata
+     * @param string $value il valore di ricerca adoperato
+     * @param string $string il dato ricercato dall'utente
+     */
+    function showSearchResult(EUser &$user, $array, string $key, string $value, string $string)
+    {
+        $this->smarty->assign('key', $key);
+        $this->smarty->assign('value', $value);
+        $this->smarty->assign('string', $string);
+        
+        $this->smarty->registerObject('user', $user);
+        $this->smarty->assign('uType', lcfirst(substr(get_class($user), 1)));
+  
+        $this->smarty->assign('array', $array);
         
         //mostro il contenuto della pagine
-        $smarty->display('search.tpl');
+        $this->smarty->display('search.tpl');
+    }
+     
+    function showAdvancedSearch(EUser &$user)
+    {
+        $this->smarty->registerObject('user', $user);
+        $this->smarty->assign('uType', lcfirst(substr(get_class($user), 1)));
+        
+        //mostro il contenuto della pagine
+        $this->smarty->display('advancedSearch.tpl');
     }
 }
 

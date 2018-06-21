@@ -53,12 +53,15 @@ class VSong extends VObject
                 $song->setHidden();
         }
         if (isset($_FILES['file'])) // se il file e' stato caricato
-        { // si procede alla creazione dell'EMp3
+        { 
+            // si procede alla creazione dell'EMp3
             $mp3 = new EMp3();
-            
-            $mp3->setMp3(file_get_contents($_FILES['file']['tmp_name']));
-            $mp3->setSize($_FILES['file']['size']);
-            $mp3->setType($_FILES['file']['type']);
+            if($_FILES['file']['size']) // se la dimensione e' specificata 
+            {
+                $mp3->setMp3(file_get_contents($_FILES['file']['tmp_name']));
+                $mp3->setSize($_FILES['file']['size']);
+                $mp3->setType($_FILES['file']['type']);
+            }
             
             $song->setMp3($mp3); // l'mp3 viene associato alla canzone
         }

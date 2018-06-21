@@ -33,6 +33,7 @@
         </div>
 			<div class="col-sm-7 well">
 				{if $content eq 'Song List'}
+					<h4 id="important">Songs List</h4>
 					{include file="SongList.tpl"}
 				{elseif $content eq 'Followers'}
 					<h4 id="important">Follower List</h4>

@@ -14,9 +14,13 @@ class EImg extends EObject
     private $img;
     
     /**
-     *
+     * Inizializza un'immagine vuota
      */
-    function __construct () {/*Use functions*/}
+    function __construct () 
+    {
+        $this->size = 0;
+        $this->type = 'not defined';
+    }
     
     /****************************************** GETTER **************************************************/
     
@@ -90,4 +94,17 @@ class EImg extends EObject
         $this->type = mime_content_type($file);
         $this->size = (int) filesize($file);
     }
+    
+    /**
+     * Controlla che l'immagine sia valido
+     * @param bool $file che denota se l'immagine e' corretta o meno
+     */
+    function validate(bool &$file)
+    {
+        if($this->size<=0 && $this->img>=65535)
+            $file = false;
+        if($this->type!='image/jpeg' && $this->type!='image/gif' && $this->type!='image/png' && $this->type!='image/svg')
+            $file = false;
+    }
+    
 }

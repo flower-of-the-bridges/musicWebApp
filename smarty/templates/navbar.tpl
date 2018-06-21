@@ -27,9 +27,9 @@
 					{/if} 
 					
 				</ul>
-				<form class="navbar-form navbar-right" role="search" action="search/simple">
+				<form class="navbar-form navbar-right" role="search" action="/deepmusic/search/simple">
 					<div class="form-group input-group">
-						<input type="text" class="form-control" name="str"  placeholder="Search..">
+						<input type="text" class="form-control" name="str"  placeholder="Search Song's Genre...">
 						<span class="input-group-btn">
 							<button class="btn btn-default" type="submit">
 								<span class="glyphicon glyphicon-search"></span>
@@ -39,7 +39,7 @@
 				</form>
 				{if $uType != "guest"}
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="search/advanced">Advanced Search</a></li>
+					<li><a href="/deepmusic/search/advanced">Advanced Search</a></li>
 				</ul>
 				{/if}
 			</div>
