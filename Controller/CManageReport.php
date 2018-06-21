@@ -25,7 +25,7 @@ class CManageReport
                 CManageReport::showReportTable($idMod);   
             }
         }
-        else if($_SERVER['REQUEST_METHOD'] == 'POST')
+        else 
             header('Location: HTTP/1.1 405 Invalid URL detected');
     }
         
@@ -87,7 +87,7 @@ class CManageReport
      * metodo statico che controlla se l'utente dispone dei diritti da moderatore
      * 
      * @return bool
-     *      se l'utente è un moderatore verra restituito il valore true
+     *      se l'utente ï¿½ un moderatore verra restituito il valore true
      */
     private function checkModSession() : bool
     {

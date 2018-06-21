@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<title>Report</title>
+<title>Sign Up Info</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet"
@@ -34,40 +34,108 @@
 			</div>
 			{/if}
 
-			<h2>Report</h2>
+			<h2>Register Info</h2>
 					
 			
-				<form method="post" id="info" enctype="multipart/form-data" action="make">
+				<form method="post" id="info" enctype="multipart/form-data" action="editInfo">
 					
   					<fieldset class="form-group">
   						<legend></legend>
-						
+						{if $uType!='musician'}
+							
 						<div class="form-group row">
-							<label for="BirthDate" class="col-sm-2 col-form-label {if !$check.title} text-danger{/if}">
-								Title : *
+							<label for="FirstName" class="col-sm-2 col-form-label {if !$check.firstName} text-danger{/if}">
+								First Name: *
+							</label> 
+							<div class="col-sm-7">
+								<input type="text" class="form-control" name="firstName" 
+								{if $uInfo->getFirstName()}
+									value="{$uInfo->getFirstName()}"
+								{/if}
+								placeholder="Enter your first name...">
+							</div>
+							{if !$check.firstName}
+							<div class="col-sm-3">
+	        					<small id="nameHelp" class="text-danger">
+	          						Must be 3-20 characters long.
+	        					</small>      
+	     					</div>
+	     					{/if}
+								
+							</div>
+							
+							<div class="form-group row">
+								<label for="LastName" class="col-sm-2 col-form-label {if !$check.lastName} text-danger{/if}">
+									Last Name: *
+								</label> 
+								<div class="col-sm-7">
+									<input type="text" class="form-control" name="lastName" 
+									{if $uInfo->getLastName()}
+										value="{$uInfo->getLastName()}"
+									{/if}
+									placeholder="Enter your last name...">
+								</div>
+								{if !$check.lastName}
+								<div class="col-sm-3">
+	        						<small id="surHelp" class="text-danger">
+	          							Must be 3-20 characters long.
+	        						</small>      
+	     						</div>
+	     						{/if}
+							</div>
+						
+						{/if}
+					
+						<div class="form-group row">
+							<label for="BirthPlace" class="col-sm-2 col-form-label {if !$check.birthPlace} text-danger{/if}">
+								Birth Place: *
 							</label>
 							<div class="col-sm-7">
-								<input type="text" class="form-control" name="title" 
-									placeholder="Enter report title...">
+								<input type="text" class="form-control" name="birthPlace" 
+									{if $uInfo->getBirthPlace()}
+										value="{$uInfo->getBirthPlace()}"
+									{/if}
+								placeholder="Enter your birth place...">
 							</div>
-							{if !$check.title}
+							{if !$check.birthPlace}
 							<div class="col-sm-3">
-	        					<small id="titleHelp" class="text-danger">
-	          						Only alphanumeric characters.
+	        						<small id="dateHelp" class="text-danger">
+	          							Must be 3-20 characters long
+	        						</small>      
+	     					</div>
+	     					{/if}
+						</div>
+	
+						<div class="form-group row">
+							<label for="BirthDate" class="col-sm-2 col-form-label {if !$check.birthDate} text-danger{/if}">
+								Birth Date: *
+							</label>
+							<div class="col-sm-7">
+								<input type="text" class="form-control" name="birthDate" 
+									{if $uInfo->getBirthDate(true)}
+										value="{$uInfo->getBirthDate(true)}"
+									{/if}
+									placeholder="Enter your birth date... (dd/mm/aaaa)">
+							</div>
+							{if !$check.birthDate}
+							<div class="col-sm-3">
+	        					<small id="dateHelp" class="text-danger">
+	          						Must be in format dd/mm/yyyy.
 	        					</small>      
 	     					</div>
 	     					{/if}
 						</div>
 	
 						<div class="form-group row">
-							<label for="Description" class="col-sm-2 col-form-label {if !$check.description} text-danger{/if}">
-								Description : *
+							<label for="Bio" class="col-sm-2 col-form-label {if !$check.bio} text-danger{/if}">
+								Bio : *
 							</label>
 							<div class="col-sm-7">
-								<textarea form="info" class="form-control" name="description" 
-								placeholder="Why are you reporting this item?"</textarea>
+								<textarea form="info" class="form-control" name="bio" 
+								placeholder="Say something about yourself..."{if $uInfo->getBio()}>{$uInfo->getBio()}
+								</{else}></{/if}textarea>
 							</div>
-							{if !$check.description}
+							{if !$check.bio}
 							<div class="col-sm-3">
 	        					<small id="bioHelp" class="text-danger">
 	          						No strange characters!
@@ -76,7 +144,13 @@
 	     					{/if}
 						</div>
 					</fieldset>
-					
+					<fieldset class="form-group">
+  						<legend></legend>
+  						<div class="form-group row">
+    						<label for="exampleInputFile">Select Profile Pic: *</label>
+    						<input type="file" class="form-control-file" name="file">
+  						</div>
+					</fieldset>
 						
 					<button type="submit" class="btn btn-primary">Submit</button>
 				</form>

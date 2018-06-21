@@ -46,7 +46,7 @@ class EReport extends EObject
         $className = E.ucfirst($this->objectType);
         if(class_exists($class_name))
         {
-            $obj = FPersistantManager::getInstance()->load($className::class, $this->idObject);
+            $obj = FPersistantManager::getInstance()->load($className, $this->idObject);
             if($obj)
                 return true;
             else
@@ -119,7 +119,7 @@ class EReport extends EObject
         if(class_exists($className))
         {
             if($this->idObject)
-                $obj = FPersistantManager::getInstance()->load($className::class, $this->idObject);
+                $obj = FPersistantManager::getInstance()->load($className, $this->idObject);
         }
         
         return $obj;    

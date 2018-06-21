@@ -45,6 +45,7 @@
 			<a href="/deepmusic/manageReport/decline/{$report->getId()}" 
 				class="btn btn-primary btn-lg btn-danger active" role="button" aria-pressed="true">Decline</a>
 			{/if}
+			
 		</div>
 	</div>
 </body>
