@@ -14,7 +14,7 @@ class EReport extends EObject
     private $description;       //description of the problem
     private $idSegnalatore;     //id of the user who send the report
     private $idObject;          //id of the reported object
-    private $objectTtype;       //provenience class of the reported object
+    private $objectType;       //provenience class of the reported object
     
        
     function __construct()
@@ -43,7 +43,17 @@ class EReport extends EObject
     
     function validateObject() : bool
     {
-        return FPersistantManager::getInstance()->load(E.ucfirst($this->objectTtype)::class, $this->idObject);
+        $className = E.ucfirst($this->objectType);
+        if(class_exists($class_name))
+        {
+            $obj = FPersistantManager::getInstance()->load($className::class, $this->idObject);
+            if($obj)
+                return true;
+            else
+                return false;
+        }
+        else 
+            return false;
     }
     
     
@@ -94,11 +104,41 @@ class EReport extends EObject
     
     function getObjectType () : string
     {
-        return $this->objectTtype;
+        return $this->objectType;
     }
     function setObjectType (string $type)
     {
-        $this->objectTtype = $type;
+        $this->objectType = $type;
     }
     
+    function getReportedObject()
+    {
+        $className = E.ucfirst($this->objectType);
+        $obj = NULL;
+        
+        if(class_exists($className))
+        {
+            if($this->idObject)
+                $obj = FPersistantManager::getInstance()->load($className::class, $this->idObject);
+        }
+        
+        return $obj;    
+    }
+    
+    function setReportedObject($obj)
+    {
+        if (is_a($obj, EListener::class) || is_a($obj, EMusician::class) || 
+            is_a($obj, EModerator::class) || is_a($obj, ESong::class) )
+        {   
+            $className = get_class($obj);
+            
+            if(is_a($obj, EListener::class) || is_a($obj, EMusician::class) ||
+                is_a($obj, EModerator::class))
+                $className = get_parent_class($obj);
+                
+            $this->objectType = substr($className,1);
+            $this->idObject = $obj->getId();
+        }
+            
+    }
 }
