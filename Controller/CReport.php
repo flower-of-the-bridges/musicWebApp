@@ -53,7 +53,11 @@ class CReport {
                 $report->setIdSegnalatore($loggedUser->getId());
                 $report->setIdObject($id);
                 $report->setObjectType($type);
-                FPersistantManager::getInstance()->store($report);
+                
+                if ($vReport->validateReport($report)) {
+                    FPersistantManager::getInstance()->store($report);
+                }else 
+                    $vReport->showErrorPage($loggedUser, "invalide report entry");
             }
             
         }
