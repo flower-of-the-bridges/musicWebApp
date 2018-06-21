@@ -24,12 +24,16 @@ class EReport extends EObject
     
     function validateTitle() : bool
     {
-        return $this->title != "";
+        $pattern = "/[A-Za-z0-9]{0-29}/";
+        $result = preg_match($pattern, $this->title);
+        return $result;
     }
     
     function validateDescription() : bool
     {
-        return $this->description != "";
+        $pattern = "/[A-Za-z0-9]/";
+        $result = preg_match($pattern, $this->title);
+        return $result;
     }
     
     function validateIdSegnalatore() : bool
