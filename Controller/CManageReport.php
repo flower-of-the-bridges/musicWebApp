@@ -17,38 +17,82 @@ class CManageReport
     {
         if($_SERVER['REQUEST_METHOD'] == 'GET')
         {
-            if($idMod!=null && $idReport == null)
+            if($idMod!=null && $idReport != null)
             {
-                
+                CManageReport::showReport($idMod,$idReport);
+            }else if($idReport == null)
+            {
+                CManageReport::showReportTable($idMod);   
             }
         }
         else if($_SERVER['REQUEST_METHOD'] == 'POST')
-            ;
+            header('Location: HTTP/1.1 405 Invalid URL detected');
     }
         
     static function update($idReport=null,$action=null)
     {
-        if($_SERVER['REQUEST_METHOD'] == 'GET')
-        {
-            
-        }
-        else if($_SERVER['REQUEST_METHOD'] == 'POST')
+        if($_SERVER['REQUEST_METHOD'] == 'POST')
         {
             if($idReport != null && $action != null)
             {
                 $action=$action.'Report';
                 CManageReport::$action($idMod,$idReport);
             }
-        }
-        else
+        }else 
             header('Location: HTTP/1.1 405 Invalid URL detected');
     }
-        
-    private function showReport(bool $error = false)
+       
+    
+    /**
+     * Mostra la pagina delle info base di tutti i report accettati dal moderatore loggato o quelli non accettati. 
+     * Reindirizza ad un messaggio di errore
+     * se l'utente che accede alla risorsa non e' un moderatore o se sta cercando di visualizzare qualcosa che non dovrebbe.
+     * @param int $idMod l'identificativo del moderatore.
+     */
+    private function showReportTable($idMod, bool $error = false)
     {
         if(!$error){$error=false;}
         
+        $vReport = new VReport();
+        $loggedUser = CSession::getUserFromSession();
         
+        if(CManageReport::checkModSession())
+        {
+            if($idMod=="" || $idMod == $loggedUser->getId())
+            {
+                $reportTable = FPersistantManager::getInstance()->load(EReport::class, $idMod, FTarget::LOAD_MOD_REPORT);
+                $vReport->showReportTable($reportTable);
+            }else 
+                $vReport->showErrorPage($loggedUser, "you are trying to visualize something that is none of your business");
+        }
+    }
+    
+    
+    /**
+     * Mostra la pagina delle info di un report. Reindirizza ad un messaggio di errore
+     * se l'utente che accede alla risorsa non e' un moderatore.
+     * @param int $id l'identificativo del report.
+     */
+    private function showReport($idMod, $idReport, bool $error = false)
+    {
+        if(!$error){$error=false;}
+        
+        $vReport = new VReport();
+        $loggedUser = CSession::getUserFromSession();
+        $eReport = FPersistantManager::getInstance()->load(EReport::class, $idReport);
+        
+        if(CManageReport::checkModSession())
+        {
+            if($loggedUser->getId() == $idMod)
+            {
+                if($eReport!=null)
+                {
+                    $vReport->showReport($eReport);    
+                }else 
+                    $vReport->showErrorPage($loggedUser, "you are trying to see something that not exist!");
+            }else 
+                $vReport->showErrorPage($loggedUser, "this report is not one of yours");
+        }
     }
     
     
@@ -58,7 +102,7 @@ class CManageReport
      * @return bool
      *      se l'utente è un moderatore verra restituito il valore true
      */
-    static function checkModSession() : bool
+    private function checkModSession() : bool
     {
         $vReport = new VReport();
         

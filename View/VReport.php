@@ -70,10 +70,17 @@ class VReport extends VObject
      * pagina riservata solo al moderatore che ha accettato il report
      * 
      */
-    function showReport (bool $error = null)
+    function showReport (EReport $eReport, bool $error = null)
     {
-        if(!$error)
-        {   $error = false; }
+        if(!$error){ $error = false; }
+        
+        
+        
+    }
+    
+    function showReportTable($reportTable, bool $error = null)
+    {
+        if(!$error){ $error = false; }
         
         
     }
