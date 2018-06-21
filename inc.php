@@ -20,9 +20,11 @@ require_once 'View/VUserInfo.php';
 require_once 'View/VSupInfo.php';
 require_once 'View/VSearch.php';
 require_once 'View/VSupporter.php';
+require_once 'View/VAdmin.php';
 
 require_once 'Entity/EListener.php';
 require_once 'Entity/EMusician.php';
+require_once 'Entity/EModerator.php';
 require_once 'Entity/EGuest.php';
 require_once 'Entity/EUser.php';
 require_once 'Entity/EUserInfo.php';

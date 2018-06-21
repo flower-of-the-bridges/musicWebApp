@@ -51,6 +51,33 @@ class CSession
     }
     
     /**
+     * Controlla se i privilegi di amministrazione siano presenti nella sessione
+     * @return bool true se l'utente ha i privilegi di amministrazione, false altrimenti
+     */
+    static function checkAdminPrivileges() : bool
+    {
+        if(isset($_SESSION['admin']))
+            return true;
+        else return false;
+    }
+    
+    /**
+     * Imposta i privilegi di amministrazione. Da chiamare solo dopo che e' stata attivata la sessione
+     */
+    static function setAdminPrivileges()
+    {        
+        $_SESSION['admin'] = true;   
+    }
+    
+    /**
+     * Rimuove i privilegi di amministrazione.
+     */
+    static function removeAdminPrivileges()
+    {
+        session_start();
+        unset($_SESSION['admin']);
+    }
+    /**
      * Termina una sessione.
      */
     static function destroySession()

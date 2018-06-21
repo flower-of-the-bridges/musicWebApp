@@ -2,10 +2,17 @@
 
 if(file_exists('config.inc.php'))
     require_once 'config.inc.php';
-    
-
 require_once 'inc.php';
 
+/**
+ * La classe CAdmin fornisce un accesso all'amministratore del database per effettuare alcune
+ * operazioni basiche attraverso l'applicazione, come :
+ * - signup di utenti esteso (possibilità di aggiungere moderatori)
+ * - rimozione di tuple dalla table supporter che hanno la data di scadenza scaduta
+ * @author gruppo2
+ * @package Controller
+ *
+ */
 class CAdmin
 {
     /**
@@ -17,19 +24,35 @@ class CAdmin
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') // se il metodo e' get...
         { //...carica la pagina del login, se l'utente e' effettivamente un guest
-            $vUser = new VUser();
+            $vAdmin = new VAdmin();
             $user = CSession::getUserFromSession();
-            if(get_class($user)!=EGuest::class) // se l'utente non è guest, non puo accedere al login
-            {
-                $vUser->showErrorPage($user, 'Why are you doing this? Yuo\'re already logged!');
-            }
+            if(!CSession::checkAdminPrivileges())
+                $vAdmin->showLogin();
             else
-                $vUser->showLogin();
+                header('Location: /deepmusic/admin/panel');
         }
         else if ($_SERVER['REQUEST_METHOD'] == 'POST')
-            CUser::authentication();
+            CAdmin::authentication();
             else
                 header('Location: HTTP/1.1 Invalid HTTP method detected');
+    }
+    
+    /**
+     * Mostra il pannello di amministrazione.
+     */
+    static function panel()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') // se il metodo e' get...
+        { t
+            $vAdmin = new VAdmin();
+            $user = CSession::getUserFromSession();
+            if(CSession::checkAdminPrivileges()) // se l'utente ha i privilegi, accede
+                $vAdmin->showPanel($user);
+            else 
+                $vAdmin->showErrorPage($user, 'You don\'t have administration privilegies');
+        }
+        else
+            header('Location: HTTP/1.1 Invalid HTTP method detected');
     }
     
     /**
@@ -41,26 +64,25 @@ class CAdmin
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') //se il metodo http utilizzato e' GET...
         { //...visualizza la pagina di signup, controllando che l'utente sia effettivamente un guest
-            $vUser = new VUser();
+            $vAdmin = new VAdmin();
             $user = CSession::getUserFromSession();
-            if (get_class($user)!=EGuest::class) // se l'utente non è guest, non puo accedere al login
-                $vUser->showErrorPage($user, 'Why are you doing this? Yuo\'re already logged!');
-                else
-                    $vUser->showSignUp();
+            
+            if (CSession::checkAdminPrivileges()) // se l'utente non è guest, non puo accedere al login
+                $vAdmin->showSignUp();
         }
         else if ($_SERVER['REQUEST_METHOD'] == 'POST')
-            CUser::register();
-            else
-                header('Location: Invalid HTTP method detected');
+            CAdmin::register();
+        else
+            header('Location: Invalid HTTP method detected');
     }
     
     /**
-     * Effettua il logout.
+     * Effettua il logout dalla sessione di amministrazione.
      */
     static function logout()
     {
-        CSession::destroySession();
-        header('Location: /deepmusic/home');
+        CSession::removeAdminPrivileges();
+        header('Location: /deepmusic/index');
     }
     
     /**
@@ -70,18 +92,20 @@ class CAdmin
      */
     private function authentication()
     {
-        $vUser = new VUser();
-        $loggedUser = $vUser->createUser();
+        $vAdmin = new VAdmin();
+        $user = CSession::getUserFromSession();
+        list($userAdmin, $userPassword) = $vAdmin->getUserAndPassword();
         
-        try{
-            global $address, $database;
-            $this->db = new PDO ("mysql:host=$address;dbname=$database", $loggedUser->getNickName(), $loggedUser->getPassword());
-            
+        global $admin, $pass;
+        
+        if($userAdmin == $admin && $userPassword == $pass)
+        {
+            CSession::setAdminPrivileges();
+            header('Location: /deepmusic/admin/panel');
         }
-        catch (PDOException $e){
-            echo "Errore : " . $e->getMessage();
-            die;
-        }
+        else
+            $vAdmin->showLogin(true);
+       
     }
     
     /**
@@ -90,38 +114,37 @@ class CAdmin
      */
     private function register()
     {
-        $vUser = new VUser();
-        $loggedUser = $vUser->createUser(); // viene creato un utente con i parametri della form
+        $vAdmin = new VAdmin();
+        $loggedUser = CSession::getUserFromSession();
+        $createdUser = $vAdmin->createUser(); // viene creato un utente con i parametri della form
         
-        if($vUser->validateSignUp($loggedUser))
+        if($vAdmin->validateSignUp($createdUser))
         {
-            if(!FPersistantManager::getInstance()->exists(EUser::class, FTarget::EXISTS_NICKNAME, $loggedUser->getNickName())
-                && !FPersistantManager::getInstance()->exists(EUser::class, FTarget::EXISTS_MAIL, $loggedUser->getMail()))
+            if(!FPersistantManager::getInstance()->exists(EUser::class, FTarget::EXISTS_NICKNAME, $createdUser->getNickName())
+                && !FPersistantManager::getInstance()->exists(EUser::class, FTarget::EXISTS_MAIL, $createdUser->getMail()))
             {
                 // se il nickname e la mail non sono stati ancora usati, si puo salvare l'utente
                 
-                $loggedUser->hashPassword(); // si cripta la password
+                $createdUser->hashPassword(); // si cripta la password
                 
-                FPersistantManager::getInstance()->store($loggedUser); // si salva l'utente
+                FPersistantManager::getInstance()->store($createdUser); // si salva l'utente
                 
-                CSession::startSession($loggedUser);
-                
-                if(is_a($loggedUser, EMusician::class)) // se l'utente e' musicista...
+                if(is_a($createdUser, EMusician::class)) // se l'utente e' musicista...
                 {
-                    $loggedUser->setSupportInfo(); // ..carica le info di supporto di default
+                    $createdUser->setSupportInfo(); // ..carica le info di supporto di default
                 }
                 
-                $loggedUser->setUserInfo();
-                $loggedUser->setImage();
+                $createdUser->setUserInfo();
+                $createdUser->setImage();
                 
                 
-                header('Location: /deepmusic/userInfo/editInfo/');
+                header('Location: /deepmusic/advanced/panel/');
             }
             else
-                $vUser->showSignUp(true);
+                $vAdmin->showSignUp(true);
         }
         else
-            $vUser->showSignUp();
+            $vAdmin->showSignUp();
     }
     
 }
