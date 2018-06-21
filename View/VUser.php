@@ -142,7 +142,7 @@ class VUser extends VObject
      * Mostra la pagina di signup
      *
      * @param bool $error
-     *            facoltativo se Ã¨ stato rilevato un errore
+     *            facoltativo se è stato rilevato un errore
      */
     function showSignUp(bool $error = NULL)
     {

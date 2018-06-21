@@ -7,9 +7,9 @@ class CReport {
     /**
      * Permette l'invio di un report
      * EUser $loggedUser
-     *      l'utente che sta inviando il report
+     *      l'utente che sta inviando il report invia
      * EReport $report
-     *      l'oggetto report stesso
+     *      l'oggetto report stesso contenente
      * EObject $obj
      *      l'oggetto segnalato
      */
@@ -19,10 +19,15 @@ class CReport {
         $vRep = new VReport();
         $report = $vRep->createReport();
         $report->setIdSegnalatore($loggedUser->getId());
+        $report->setIdModeratore("");
         
         FPersistantManager::getInstance()->store($report);
     }
     
+	/**
+	 * Metodo che fa la distinzione tra i due metodi di richiesta GET e POST
+	 * invocando la vista incaricata a mostrare l'appropriata interfaccia utente
+	 */
     static function make()
     {
         if($_SERVER['REQUEST_METHOD'] == 'GET')

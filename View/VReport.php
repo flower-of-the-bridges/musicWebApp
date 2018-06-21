@@ -41,6 +41,7 @@ class VReport extends VObject
         if(isset($_POST['objectType'])){
             $report->setObjectType($_POST['objectType']);
         }
+        
         return $report;
     }
     
@@ -66,22 +67,27 @@ class VReport extends VObject
     
     /**
      * mostra i dettagli di un report
+     * pagina riservata solo al moderatore che ha accettato il report
      * 
-     * todo
      */
-    function showReport ()
+    function showReport (bool $error = null)
     {
-        //TODO
+        if(!$error)
+        {   $error = false; }
+        
+        
     }
     
     /**
      * mostra la form di creazione del report
-     * 
-     * todo
+     * visibile all'utente che vuole inviare una segnalazione
      */
-    function showReportForm () 
+    function showReportForm (bool $error = null) 
     {
-        //TODO
+        if(!$error)
+        {   $error = false; }
+        
+        
     }
     
     

@@ -42,7 +42,7 @@ class FTarget
     /** caricamento dei following di un utente */
     const LOAD_FOLLOWING = 'Following'; 
     /** caricamento dei report di un moderatore */
-    const LOAD_MOD_REPORTS = 'ModReports';
+    const LOAD_MOD_REPORTS = 'ReportByIdMod';
     /** caricamento dei supporters */
     const LOAD_SUPPORTERS = 'Supporters'; 
     /** caricamento dei musicisti supportati */

@@ -43,7 +43,7 @@ class EReport extends EObject
     
     function validateObject() : bool
     {
-        //return FPersistantManager::getInstance()->load(E.ucfirst($this->objectTtype)::class, $this->idObject);
+        return FPersistantManager::getInstance()->load(E.ucfirst($this->objectTtype)::class, $this->idObject);
     }
     
     
