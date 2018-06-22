@@ -1,0 +1,201 @@
+<?php
+/* Smarty version 3.1.32, created on 2018-06-22 16:13:34
+  from 'C:\xampp\htdocs\deepmusic\smarty\templates\user\registerUserInfo.tpl' */
+
+/* @var Smarty_Internal_Template $_smarty_tpl */
+if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
+  'version' => '3.1.32',
+  'unifunc' => 'content_5b2d040ed8a796_43088605',
+  'has_nocache_code' => false,
+  'file_dependency' => 
+  array (
+    'e02d1480ae5f6943f063766c404b44a3a7b59387' => 
+    array (
+      0 => 'C:\\xampp\\htdocs\\deepmusic\\smarty\\templates\\user\\registerUserInfo.tpl',
+      1 => 1529656844,
+      2 => 'file',
+    ),
+  ),
+  'includes' => 
+  array (
+    'file:navbar.tpl' => 1,
+  ),
+),false)) {
+function content_5b2d040ed8a796_43088605 (Smarty_Internal_Template $_smarty_tpl) {
+?><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>Sign Up Info</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="/deepmusic/resources/css/style.css">
+<?php echo '<script'; ?>
+
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"><?php echo '</script'; ?>
+>
+<?php echo '<script'; ?>
+
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"><?php echo '</script'; ?>
+>
+
+</head>
+<body>
+
+	<?php $_smarty_tpl->assign('uName',$_smarty_tpl->smarty->registered_objects['user'][0]->getNickName(array(),$_smarty_tpl));?>
+
+	<?php $_smarty_tpl->assign('uId',$_smarty_tpl->smarty->registered_objects['user'][0]->getId(array(),$_smarty_tpl));?>
+ 
+
+
+	<?php $_smarty_tpl->_subTemplateRender("file:navbar.tpl", $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 0, $_smarty_tpl->cache_lifetime, array(), 0, false);
+?>
+	
+	<div class="container text-center">
+		<div class="col-sm-3">
+		
+        </div>
+        <div class="col-sm-7 well">
+			<?php if ($_smarty_tpl->tpl_vars['error']->value) {?>
+			<div class="alert alert-warning">
+				<strong>Warning!</strong><br>Wrong combination of user and password. <br>Please retry.
+			</div>
+			<?php }?>
+
+			<h2>Register Info</h2>
+					
+			
+				<form method="post" id="info" enctype="multipart/form-data" action="editInfo">
+					
+  					<fieldset class="form-group">
+  						<legend></legend>
+						<?php if ($_smarty_tpl->tpl_vars['uType']->value != 'musician') {?>
+							
+						<div class="form-group row">
+							<label for="FirstName" class="col-sm-2 col-form-label <?php if (!$_smarty_tpl->tpl_vars['check']->value['firstName']) {?> text-danger<?php }?>">
+								First Name: *
+							</label> 
+							<div class="col-sm-7">
+								<input type="text" class="form-control" name="firstName" 
+								<?php if ($_smarty_tpl->tpl_vars['uInfo']->value->getFirstName()) {?>
+									value="<?php echo $_smarty_tpl->tpl_vars['uInfo']->value->getFirstName();?>
+"
+								<?php }?>
+								placeholder="Enter your first name...">
+							</div>
+							<?php if (!$_smarty_tpl->tpl_vars['check']->value['firstName']) {?>
+							<div class="col-sm-3">
+	        					<small id="nameHelp" class="text-danger">
+	          						Must be 3-20 characters long.
+	        					</small>      
+	     					</div>
+	     					<?php }?>
+								
+							</div>
+							
+							<div class="form-group row">
+								<label for="LastName" class="col-sm-2 col-form-label <?php if (!$_smarty_tpl->tpl_vars['check']->value['lastName']) {?> text-danger<?php }?>">
+									Last Name: *
+								</label> 
+								<div class="col-sm-7">
+									<input type="text" class="form-control" name="lastName" 
+									<?php if ($_smarty_tpl->tpl_vars['uInfo']->value->getLastName()) {?>
+										value="<?php echo $_smarty_tpl->tpl_vars['uInfo']->value->getLastName();?>
+"
+									<?php }?>
+									placeholder="Enter your last name...">
+								</div>
+								<?php if (!$_smarty_tpl->tpl_vars['check']->value['lastName']) {?>
+								<div class="col-sm-3">
+	        						<small id="surHelp" class="text-danger">
+	          							Must be 3-20 characters long.
+	        						</small>      
+	     						</div>
+	     						<?php }?>
+							</div>
+						
+						<?php }?>
+					
+						<div class="form-group row">
+							<label for="BirthPlace" class="col-sm-2 col-form-label <?php if (!$_smarty_tpl->tpl_vars['check']->value['birthPlace']) {?> text-danger<?php }?>">
+								Birth Place: *
+							</label>
+							<div class="col-sm-7">
+								<input type="text" class="form-control" name="birthPlace" 
+									<?php if ($_smarty_tpl->tpl_vars['uInfo']->value->getBirthPlace()) {?>
+										value="<?php echo $_smarty_tpl->tpl_vars['uInfo']->value->getBirthPlace();?>
+"
+									<?php }?>
+								placeholder="Enter your birth place...">
+							</div>
+							<?php if (!$_smarty_tpl->tpl_vars['check']->value['birthPlace']) {?>
+							<div class="col-sm-3">
+	        						<small id="dateHelp" class="text-danger">
+	          							Must be 3-20 characters long
+	        						</small>      
+	     					</div>
+	     					<?php }?>
+						</div>
+	
+						<div class="form-group row">
+							<label for="BirthDate" class="col-sm-2 col-form-label <?php if (!$_smarty_tpl->tpl_vars['check']->value['birthDate']) {?> text-danger<?php }?>">
+								Birth Date: *
+							</label>
+							<div class="col-sm-7">
+								<input type="text" class="form-control" name="birthDate" 
+									<?php if ($_smarty_tpl->tpl_vars['uInfo']->value->getBirthDate(true)) {?>
+										value="<?php echo $_smarty_tpl->tpl_vars['uInfo']->value->getBirthDate(true);?>
+"
+									<?php }?>
+									placeholder="Enter your birth date... (dd/mm/aaaa)">
+							</div>
+							<?php if (!$_smarty_tpl->tpl_vars['check']->value['birthDate']) {?>
+							<div class="col-sm-3">
+	        					<small id="dateHelp" class="text-danger">
+	          						Must be in format dd/mm/yyyy.
+	        					</small>      
+	     					</div>
+	     					<?php }?>
+						</div>
+	
+						<div class="form-group row">
+							<label for="Bio" class="col-sm-2 col-form-label <?php if (!$_smarty_tpl->tpl_vars['check']->value['bio']) {?> text-danger<?php }?>">
+								Bio : *
+							</label>
+							<div class="col-sm-7">
+								<textarea form="info" class="form-control" name="bio" 
+								placeholder="Say something about yourself..."<?php if ($_smarty_tpl->tpl_vars['uInfo']->value->getBio()) {?>><?php echo $_smarty_tpl->tpl_vars['uInfo']->value->getBio();?>
+
+								</<?php } else { ?>></<?php }?>textarea>
+							</div>
+							<?php if (!$_smarty_tpl->tpl_vars['check']->value['bio']) {?>
+							<div class="col-sm-3">
+	        					<small id="bioHelp" class="text-danger">
+	          						No strange characters!
+	        					</small>      
+	     					</div>
+	     					<?php }?>
+						</div>
+					</fieldset>
+					<fieldset class="form-group">
+  						<legend></legend>
+  						<div class="form-group row">
+    						<label for="exampleInputFile">Select Profile Pic: *</label>
+    						<input type="file" class="form-control-file" name="file">
+  						</div>
+					</fieldset>
+						
+					<button type="submit" class="btn btn-primary">Submit</button>
+				</form>
+	</div>
+	<div class="col-sm-3">
+		
+	</div>
+	
+</body>
+</html><?php }
+}
+

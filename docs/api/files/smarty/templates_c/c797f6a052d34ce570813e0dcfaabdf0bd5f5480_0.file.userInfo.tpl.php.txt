@@ -1,0 +1,63 @@
+<?php
+/* Smarty version 3.1.32, created on 2018-06-22 16:13:41
+  from 'C:\xampp\htdocs\deepmusic\smarty\templates\user\userInfo.tpl' */
+
+/* @var Smarty_Internal_Template $_smarty_tpl */
+if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
+  'version' => '3.1.32',
+  'unifunc' => 'content_5b2d0415268777_08930691',
+  'has_nocache_code' => false,
+  'file_dependency' => 
+  array (
+    'c797f6a052d34ce570813e0dcfaabdf0bd5f5480' => 
+    array (
+      0 => 'C:\\xampp\\htdocs\\deepmusic\\smarty\\templates\\user\\userInfo.tpl',
+      1 => 1529656844,
+      2 => 'file',
+    ),
+  ),
+  'includes' => 
+  array (
+  ),
+),false)) {
+function content_5b2d0415268777_08930691 (Smarty_Internal_Template $_smarty_tpl) {
+$_smarty_tpl->assign('pInfo',$_smarty_tpl->smarty->registered_objects['profile'][0]->getUserInfo(array(),$_smarty_tpl));?>
+
+<?php $_smarty_tpl->assign('pImage',$_smarty_tpl->smarty->registered_objects['profile'][0]->getImage(array(),$_smarty_tpl));?>
+
+<div class="well">				
+	<p id="important"><?php echo $_smarty_tpl->tpl_vars['pName']->value;?>
+</p>
+	<img src="data:<?php echo $_smarty_tpl->tpl_vars['pImage']->value->getType();?>
+;base64,<?php echo $_smarty_tpl->tpl_vars['pImage']->value->getImg(true);?>
+" class="img-circle" alt="Avatar" width="165" height="150">
+</div>
+
+<div class="well">
+<?php if ($_smarty_tpl->tpl_vars['pType']->value == 'musician') {?>
+	<p id="important">Genre</p>
+	<p>	<span class="label label-primary"><?php if ($_smarty_tpl->tpl_vars['pInfo']->value->getGenre()) {
+echo $_smarty_tpl->tpl_vars['pInfo']->value->getGenre();
+} else { ?>Undefined<?php }?></span> </p>
+<?php } else { ?>
+	<p id="important"> First Name: </p> <span><?php if ($_smarty_tpl->tpl_vars['pInfo']->value->getFirstName()) {?> <?php echo $_smarty_tpl->tpl_vars['pInfo']->value->getFirstName();
+}?></span>
+	<p id="important"> Last Name: </p> <span> <?php if ($_smarty_tpl->tpl_vars['pInfo']->value->getLastName()) {?> <?php echo $_smarty_tpl->tpl_vars['pInfo']->value->getLastName();
+}?> </span>
+<?php }?>
+</div>
+
+<div class="well">
+	<p id="important">Info</p>
+	<p><?php if ($_smarty_tpl->tpl_vars['pInfo']->value->getBio()) {
+echo $_smarty_tpl->tpl_vars['pInfo']->value->getBio();
+}?></p>
+</div>
+<?php if ($_smarty_tpl->tpl_vars['uName']->value == $_smarty_tpl->tpl_vars['pName']->value) {?>
+<div class="well">
+	<p> <a href="/deepmusic/userInfo/editInfo">Modifica profilo </a> </p>
+</div>
+<?php }
+}
+}
+

@@ -1,0 +1,120 @@
+<?php
+/* Smarty version 3.1.32, created on 2018-06-21 17:17:49
+  from 'C:\xampp\htdocs\deepmusic\smarty\templates\login.tpl' */
+
+/* @var Smarty_Internal_Template $_smarty_tpl */
+if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
+  'version' => '3.1.32',
+  'unifunc' => 'content_5b2bc19ddc4131_02377243',
+  'has_nocache_code' => false,
+  'file_dependency' => 
+  array (
+    'ee59c66ce7c66fb389f1e406ca120b43653626d3' => 
+    array (
+      0 => 'C:\\xampp\\htdocs\\deepmusic\\smarty\\templates\\login.tpl',
+      1 => 1529078278,
+      2 => 'file',
+    ),
+  ),
+  'includes' => 
+  array (
+    'file:navbar.tpl' => 1,
+  ),
+),false)) {
+function content_5b2bc19ddc4131_02377243 (Smarty_Internal_Template $_smarty_tpl) {
+?><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>Log In</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="/deepmusic/smarty/templates/style.css">
+<?php echo '<script'; ?>
+
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"><?php echo '</script'; ?>
+>
+<?php echo '<script'; ?>
+
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"><?php echo '</script'; ?>
+>
+
+</head>
+<body>
+
+	<?php $_smarty_tpl->assign('uName',$_smarty_tpl->smarty->registered_objects['user'][0]->getNickName(array(),$_smarty_tpl));?>
+
+
+	<?php $_smarty_tpl->_subTemplateRender("file:navbar.tpl", $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 0, $_smarty_tpl->cache_lifetime, array(), 0, false);
+?>
+	
+	<div class="container text-center">
+		<div class="col-sm-3">
+		
+        </div>
+		<div class="col-sm-7 well">
+			<?php if ($_smarty_tpl->tpl_vars['error']->value) {?>
+			<div class="alert alert-warning">
+				<strong>Warning!</strong><br>Wrong combination of user and password. <br>Please retry.
+			</div>
+			<?php }?>
+			<h2>Login</h2>
+			<br>
+					<form class="form-horizontal" method="post" action="login">
+						
+						<div class="form-group row">
+      						<label for="user" class="col-sm-2 col-form-label <?php if (!$_smarty_tpl->tpl_vars['check']->value['name']) {?> text-danger<?php }?>">User:</label>
+      						<div class="col-sm-7">
+        						<input type="text" class="form-control is-invalid" id="user" name="name" placeholder="Insert username...">
+      						</div>
+      						<?php if (!$_smarty_tpl->tpl_vars['check']->value['name']) {?>
+      						<div class="col-sm-3">
+        						<small id="passwordHelp" class="text-danger">
+          							Must be 3-20 characters long.
+        						</small>      
+     						</div>
+     						<?php }?>
+    					</div>
+    					
+    					<div class="form-group row">
+      						<label for="inputPassword" class="col-sm-2 col-form-label <?php if (!$_smarty_tpl->tpl_vars['check']->value['pwd']) {?> text-danger<?php }?>">Password:</label>
+      						<div class="col-sm-7">
+        						<input type="password" class="form-control is-invalid" id="inputPassword" name="pwd" placeholder="Password">
+      						</div>
+      						<?php if (!$_smarty_tpl->tpl_vars['check']->value['pwd']) {?>
+      						<div class="col-sm-3">
+        						<small id="passwordHelp" class="text-danger">
+          							Must be 8-20 characters long.
+        						</small>      
+     						</div>
+     						<?php }?>
+    					</div>
+    					
+						<div class="form-group">
+
+							<div class="checkbox">
+								<label><input type="checkbox" name="remember">
+									Remember me</label>
+							</div>
+
+						</div>
+						<div class="form-group">
+
+							<button type="submit" class="btn btn-default">Submit</button>
+						</div>
+					</form>
+
+		</div>
+	<div class="col-sm-3">
+		
+	</div>
+	
+</body>
+</html>
+
+<?php }
+}
+

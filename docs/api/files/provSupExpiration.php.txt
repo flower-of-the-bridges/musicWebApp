@@ -1,0 +1,19 @@
+<?php
+private function updateSuppoter() : string
+{
+    
+    try{
+        global $address,$admin,$pass,$database;
+        $this->db = new PDO ("mysql:host=$address;dbname=$database", $admin, $pass);
+        
+    }catch (PDOException $e){
+        echo "Errore : " . $e->getMessage();
+        die;
+    }
+    
+    return "DELETE 
+            FROM supporter
+            WHERE expiration_date <= date('y-m-d');" ;
+        
+}
+

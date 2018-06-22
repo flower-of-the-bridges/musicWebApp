@@ -1,0 +1,219 @@
+<?php
+
+require_once 'inc.php';
+
+
+/**
+ * La classe CManageReport implementa i metodi responsabili dell'updating 
+ * dei report, riservata ai soli utenti di classe moderatore
+ * 
+ * @author gruppo2
+ * @package Controller
+ */
+class CManageReport
+{
+    
+    /**
+     * Mostra l'hub dei report
+     * @param string $assigned ricavata dall'url. Se equivale a 'assigned', mostra l'hub rispetto 
+     * ai report assegnati al moderatore della sessione attiva
+     */
+    static function show($assigned = null)
+    {
+        if($_SERVER['REQUEST_METHOD'] == 'GET')
+        {
+            if($assigned!=null && $assigned == 'assigned')
+            {
+                CManageReport::showReportTable(true);
+            }
+            else 
+                CManageReport::showReportTable(false);  
+        }
+        else 
+            header('Location: HTTP/1.1 405 Invalid URL detected');
+    }
+    
+    /**
+     * metodo che permette all'utente moderatore di accettare una segnalazione
+     *
+     * @param $idReport int
+     *      ossia il report che va aggiornato
+     */
+    static function accept($idReport)
+    {
+        if($_SERVER['REQUEST_METHOD'] == 'GET')
+        {
+            $vReport = new VReport();
+            $eReport = FPersistantManager::getInstance()->load(EReport::class, $idReport);
+            
+            $loggedUser = CSession::getUserFromSession();
+            
+            if (is_a($loggedUser, EModerator::class))
+            {
+                if($eReport)
+                {
+                    if(!$eReport->isAccepted())
+                    {
+                        $loggedUser->acceptReport($eReport);
+                        FPersistantManager::getInstance()->update($eReport);
+                        header('Location: /deepmusic/report/show/'.$eReport->getId());
+                    }
+                    else
+                        $vReport->showErrorPage($loggedUser, "this report is already under the attenction of a moderator");
+                }
+                else
+                    $vReport->showErrorPage($loggedUser, "you are trying to accept something that does not exist");
+            }
+        }
+    }
+    
+    /**
+     * metodo che permette all'utente moderatore di rinunciare ad una segnalazione
+     * precedentemente accettata
+     *
+     * @param $idReport int
+     *      ossia il report che va aggiornato
+     */
+    static function decline($idReport)
+    {
+        $vReport = new VReport();
+        $eReport = FPersistantManager::getInstance()->load(EReport::class, $idReport);
+        
+        $loggedUser = CSession::getUserFromSession();
+        if($_SERVER['REQUEST_METHOD'] == 'GET')
+        {
+            if(is_a($loggedUser, EModerator::class))
+            {
+                if($eReport != null)
+                {
+                    if($loggedUser->declineReport($eReport))
+                    {
+                       header('Location: /deepmusic/report/show/'.$eReport->getId());
+                    }
+                    else
+                        $vReport->showErrorPage($loggedUser, "This report is not under your attenction");
+                }
+                else
+                    $vReport->showErrorPage($loggedUser, "You are trying to decline something that does not exist");
+            }
+            else 
+                $vReport->showErrorPage($loggedUser, "You are not supposed to be here, how did you went this far from home?");
+        }
+        else
+            header('Location: HTTP/1.1 405 Invalid URL detected');
+    }
+    
+    /**
+     * metodo che permette all'utente moderatore di completare e quindi rimuovere una segnalazione
+     *
+     * @param $idReport int
+     *      ossia il report che va aggiornato
+     */
+    static function complete($idReport)
+    {
+        $vReport = new VReport();
+        $eReport = FPersistantManager::getInstance()->load(EReport::class, $idReport);
+        
+        $loggedUser = CSession::getUserFromSession();
+        if($_SERVER['REQUEST_METHOD'] == 'GET')
+        {
+            if(is_a($loggedUser, EModerator::class))
+            {
+                if($eReport != null)
+                {
+                    if($loggedUser->completeReport($eReport))
+                    {
+                        header('Location: /deepmusic/manageReport/show/assigned');
+                    }
+                    else
+                        $vReport->showErrorPage($loggedUser, "This report is not under your attenction");
+                }
+                else
+                    $vReport->showErrorPage($loggedUser, "You are trying to decline something that does not exist");
+            }
+            else
+                $vReport->showErrorPage($loggedUser, "You are not supposed to be here, how did you went this far from home?");
+        }
+        else
+            header('Location: HTTP/1.1 405 Invalid URL detected');
+    }
+    
+        
+    
+    /**
+     * Mostra la pagina delle info base di tutti i report accettati dal moderatore loggato o quelli non accettati. 
+     * Reindirizza ad un messaggio di errore
+     * se l'utente che accede alla risorsa non e' un moderatore o se sta cercando di visualizzare qualcosa che non dovrebbe.
+     * @param int $idMod l'identificativo del moderatore.
+     */
+    private function showReportTable(bool $assigned)
+    {
+        $vReport = new VReport();
+        $loggedUser = CSession::getUserFromSession();
+        if(is_a($loggedUser, EModerator::class))
+        {
+            $reports = NULL;
+            if($assigned)
+                $reports = $loggedUser->getAssignedReports();   
+            else 
+                $reports = $loggedUser->getUnassignedReports();
+            
+            $vReport->showReportTable($loggedUser, $reports, $assigned);
+        }
+        else
+            $vReport->showErrorPage($loggedUser, "you are not supposed to be here, how did you went this far from home?");
+    }
+    
+    
+    /**
+     * Mostra la pagina delle info di un report. Reindirizza ad un messaggio di errore
+     * se l'utente che accede alla risorsa non e' un moderatore.
+     * @param int $id l'identificativo del report.
+     */
+    private function showReport($idMod, $idReport, bool $error = false)
+    {
+        if(!$error){$error=false;}
+        
+        $vReport = new VReport();
+        $loggedUser = CSession::getUserFromSession();
+        $eReport = FPersistantManager::getInstance()->load(EReport::class, $idReport);
+        
+        if(CManageReport::checkModSession())
+        {
+            if($loggedUser->getId() == $idMod)
+            {
+                if($eReport!=null)
+                {
+                    $vReport->showReport($eReport);    
+                }else 
+                    $vReport->showErrorPage($loggedUser, "you are trying to see something that not exist!");
+            }else 
+                $vReport->showErrorPage($loggedUser, "this report is not one of yours");
+        }
+    }
+    
+    
+    /**
+     * Metodo che controlla se l'utente dispone dei diritti da moderatore
+     * 
+     * @return bool
+     *      se l'utente e' un moderatore verra restituito il valore true
+     */
+    private function checkModSession() : bool
+    {
+        $vReport = new VReport();
+        
+        $loggedUser = CSession::getUserFromSession();
+        
+        if(get_class($loggedUser) != EModerator::class)
+        {
+            $vReport->showErrorPage($loggedUser, "you are not supposed to be here, how did you went this far from home?");
+            return false;
+        }else
+            return true;
+    }
+    
+    
+    
+}
+

@@ -1,0 +1,149 @@
+<?php
+/* Smarty version 3.1.32, created on 2018-06-21 17:30:22
+  from 'C:\xampp\htdocs\deepmusic\smarty\templates\manageSupport.tpl' */
+
+/* @var Smarty_Internal_Template $_smarty_tpl */
+if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
+  'version' => '3.1.32',
+  'unifunc' => 'content_5b2bc48e43c2e0_34778224',
+  'has_nocache_code' => false,
+  'file_dependency' => 
+  array (
+    '6eb56e5274ad9ddb58abe607d9bb332674b80b7b' => 
+    array (
+      0 => 'C:\\xampp\\htdocs\\deepmusic\\smarty\\templates\\manageSupport.tpl',
+      1 => 1529566281,
+      2 => 'file',
+    ),
+  ),
+  'includes' => 
+  array (
+    'file:navbar.tpl' => 1,
+  ),
+),false)) {
+function content_5b2bc48e43c2e0_34778224 (Smarty_Internal_Template $_smarty_tpl) {
+?><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>Support Informations</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="/deepmusic/smarty/templates/style.css">
+<?php echo '<script'; ?>
+
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"><?php echo '</script'; ?>
+>
+<?php echo '<script'; ?>
+
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"><?php echo '</script'; ?>
+>
+
+</head>
+<body>
+
+	<?php $_smarty_tpl->assign('uName',$_smarty_tpl->smarty->registered_objects['user'][0]->getNickName(array(),$_smarty_tpl));?>
+
+	<?php $_smarty_tpl->assign('uId',$_smarty_tpl->smarty->registered_objects['user'][0]->getId(array(),$_smarty_tpl));?>
+
+
+	<?php $_smarty_tpl->_subTemplateRender("file:navbar.tpl", $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 0, $_smarty_tpl->cache_lifetime, array(), 0, false);
+?>
+	
+	<div class="container text-center">
+		<div class="col-sm-3">
+		
+        </div>
+		<div class="col-sm-7 well">
+			<h2>Support Informations</h2>
+			<?php if ($_smarty_tpl->tpl_vars['success']->value) {?>
+			<div class="alert alert-success">
+				<strong>Great!</strong><br><p>The support info have been updated!</p>
+			</div>
+			<?php }?>
+			<form method="post" action="edit">
+			<div class="col-sm-4">
+				<label for="contribute">Contribute</label> 
+				<select name="contribute" id="contribute" class="form-control">
+					<option value="<?php  $_prefixVariable1 = $_smarty_tpl->tpl_vars['supInfo']->value;
+echo $_prefixVariable1::CONT_BASE;?>
+" <?php  $_prefixVariable2 = $_smarty_tpl->tpl_vars['supInfo']->value;
+if ($_smarty_tpl->tpl_vars['supInfo']->value->getContribute() == $_prefixVariable2::CONT_BASE) {?>selected<?php }?>>$1</option>
+					<option value="<?php  $_prefixVariable3 = $_smarty_tpl->tpl_vars['supInfo']->value;
+echo $_prefixVariable3::CONT_MIDDLE;?>
+" <?php  $_prefixVariable4 = $_smarty_tpl->tpl_vars['supInfo']->value;
+if ($_smarty_tpl->tpl_vars['supInfo']->value->getContribute() == $_prefixVariable4::CONT_MIDDLE) {?>selected<?php }?>>$5</option>
+					<option value="<?php  $_prefixVariable5 = $_smarty_tpl->tpl_vars['supInfo']->value;
+echo $_prefixVariable5::CONT_TOP;?>
+" <?php  $_prefixVariable6 = $_smarty_tpl->tpl_vars['supInfo']->value;
+if ($_smarty_tpl->tpl_vars['supInfo']->value->getContribute() == $_prefixVariable6::CONT_TOP) {?>selected<?php }?>>$10</option>
+				</select>
+			</div>
+			<div class="col-sm-4">
+				<label for="inputState">Period</label> 
+				<select name="period" id="inputState" class="form-control">
+					<option value="<?php  $_prefixVariable7 = $_smarty_tpl->tpl_vars['supInfo']->value;
+echo $_prefixVariable7::TIME_BASE;?>
+" <?php  $_prefixVariable8 = $_smarty_tpl->tpl_vars['supInfo']->value;
+if ($_smarty_tpl->tpl_vars['supInfo']->value->getPeriod() == $_prefixVariable8::TIME_BASE) {?>selected<?php }?>>weekly</option>
+					<option value="<?php  $_prefixVariable9 = $_smarty_tpl->tpl_vars['supInfo']->value;
+echo $_prefixVariable9::TIME_MIDDLE;?>
+" <?php  $_prefixVariable10 = $_smarty_tpl->tpl_vars['supInfo']->value;
+if ($_smarty_tpl->tpl_vars['supInfo']->value->getPeriod() == $_prefixVariable10::TIME_MIDDLE) {?>selected<?php }?>>monthly</option>
+					<option value="<?php  $_prefixVariable11 = $_smarty_tpl->tpl_vars['supInfo']->value;
+echo $_prefixVariable11::TIME_TOP;?>
+" <?php  $_prefixVariable12 = $_smarty_tpl->tpl_vars['supInfo']->value;
+if ($_smarty_tpl->tpl_vars['supInfo']->value->getPeriod() == $_prefixVariable12::TIME_TOP) {?>selected<?php }?>>annual</option>
+				</select>
+			</div>
+			<div class="col-sm-4">
+				<label for="inputState">Confirm Changes</label>
+				<button type="submit" id="inputState" class="btn btn-primary">Submit</button>
+			</div>
+
+
+			</form>
+			<br></br>
+			<br>
+	
+			<h4 id="important">Supporters</h4>
+			<?php if ($_smarty_tpl->tpl_vars['supporters']->value) {?>
+			<table class="table table-responsive">
+				<tbody>					
+				<?php
+$_from = $_smarty_tpl->smarty->ext->_foreach->init($_smarty_tpl, $_smarty_tpl->tpl_vars['supporters']->value, 'user');
+if ($_from !== null) {
+foreach ($_from as $_smarty_tpl->tpl_vars['user']->value) {
+?>
+					<tr>
+					
+						<td><a href="/deepmusic/user/profile/<?php echo $_smarty_tpl->tpl_vars['user']->value->getId();?>
+"><?php echo $_smarty_tpl->tpl_vars['user']->value->getNickName();?>
+</a></td>
+						<td><?php echo substr(get_class($_smarty_tpl->tpl_vars['user']->value),1);?>
+</td>
+					</tr>
+				<?php
+}
+}
+$_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl, 1);?>
+				</tbody>
+			</table>
+			<?php } else { ?>
+			<p>We are sorry, nobody is supporting you!</p>
+			<?php }?>
+
+		</div>
+		<div class="col-sm-3">
+		
+		</div>
+	</div>
+</body>
+</html>
+
+<?php }
+}
+

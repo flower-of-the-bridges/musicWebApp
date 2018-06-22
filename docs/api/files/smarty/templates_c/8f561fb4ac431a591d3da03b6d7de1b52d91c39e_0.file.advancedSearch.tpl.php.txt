@@ -1,0 +1,90 @@
+<?php
+/* Smarty version 3.1.32, created on 2018-06-21 17:30:32
+  from 'C:\xampp\htdocs\deepmusic\smarty\templates\advancedSearch.tpl' */
+
+/* @var Smarty_Internal_Template $_smarty_tpl */
+if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
+  'version' => '3.1.32',
+  'unifunc' => 'content_5b2bc49899eb97_44681373',
+  'has_nocache_code' => false,
+  'file_dependency' => 
+  array (
+    '8f561fb4ac431a591d3da03b6d7de1b52d91c39e' => 
+    array (
+      0 => 'C:\\xampp\\htdocs\\deepmusic\\smarty\\templates\\advancedSearch.tpl',
+      1 => 1529566281,
+      2 => 'file',
+    ),
+  ),
+  'includes' => 
+  array (
+    'file:navbar.tpl' => 1,
+  ),
+),false)) {
+function content_5b2bc49899eb97_44681373 (Smarty_Internal_Template $_smarty_tpl) {
+?><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>Advanced Search</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="/deepmusic/smarty/templates/style.css">
+<?php echo '<script'; ?>
+
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"><?php echo '</script'; ?>
+>
+<?php echo '<script'; ?>
+
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"><?php echo '</script'; ?>
+>
+
+</head>
+<body>
+
+	<?php $_smarty_tpl->assign('uId',$_smarty_tpl->smarty->registered_objects['user'][0]->getId(array(),$_smarty_tpl));?>
+ 
+	<?php $_smarty_tpl->assign('uName',$_smarty_tpl->smarty->registered_objects['user'][0]->getNickName(array(),$_smarty_tpl));?>
+
+	
+	<?php $_smarty_tpl->_subTemplateRender("file:navbar.tpl", $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 0, $_smarty_tpl->cache_lifetime, array(), 0, false);
+?>
+	
+	<div class="container text-center">
+		<div class="col-sm-3">
+		
+        </div>
+		<div class="col-sm-7 well">
+			<form action="/deepmusic/search/advanced">
+				<div class="form-row">
+					<div class="form-group col-md-6">
+						<input type="text" class="form-control" id="search" name="str" placeholder="Search...">
+					</div>
+					<div class="form-group col-md-3">
+						<select id="inputKey" class="form-control" name="key">
+							<option value="song" selected>Song</option>
+							<option value="user">User</option>
+						</select>
+					</div>
+					<div class="form-group col-md-3">
+						<select id="inputKey" class="form-control" name="value">
+							<option value="genre" selected>Genre</option>
+							<option value="name">Name</option>
+						</select>
+					</div>
+					<button class="btn btn-primary" type="submit">Search</button>
+
+				</div>
+			</form>
+		</div>
+		<div class="col-sm-3">
+		
+		</div>
+	</div>
+</body>
+</html><?php }
+}
+
