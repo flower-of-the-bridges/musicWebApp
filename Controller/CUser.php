@@ -166,6 +166,27 @@ class CUser
     }
     
     /**
+     * La funzione remove implementa il caso d'uso 'Rimuovi Utente' e permette la visualizzazione
+     * della form per la rimozione di un utente, a seguito di una richiesta GET, o la conferma
+     * dell'operazione da parte di un utente a seguito di una richiesta POST.
+     *
+     * @param int $id l'identificativo della cazone, prelevato dall'URL.
+     */
+    static function remove($id = null)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'GET')
+        {
+            CUser::showRemoveForm($id);
+        }
+        else if ($_SERVER['REQUEST_METHOD'] == 'POST')
+        {
+            CUser::removeUser($id);
+        }
+        else
+            header('Location: HTTP/1.1 405 Invalid HTTP method detected');
+    }
+    
+    /**
      * La funzione Authentication verifica che le credenziali di accesso inserite da un utente
      * siano corrette: in tal caso, l'applicazione lo riporterà verso la sua pagina, altrimenti
      * restituirà la schermata di login, con un messaggio di errore
@@ -246,6 +267,83 @@ class CUser
         }
         else
             $vUser->showSignUp();
+    }
+    
+    /**
+     * Mostra la form per la rimozione di un utente. Reindirizza ad un messaggio di errore
+     * se l'utente che accede alla risorsa non e' un utente registrato.
+     * @param int $id l'identificativo dell'utente da rimuovere. Tale identificativo puo' essere
+     * specificato SOLO da un moderatore.
+     */
+    private function showRemoveForm($id = null)
+    {
+        $vUser = new VUser();
+        $user = CSession::getUserFromSession();
+        
+        if(is_numeric($id)) // verifica che nell'url sia stato inserito un id
+        { // verifica che l'utente che ha richiesto l'url sia un moderatore
+            
+            if(is_a($user, EModerator::class))
+            {
+                $removedUser = FPersistantManager::getInstance()->load(EUser::class, $id); // ricava l'utente da rimuovere
+                if($removedUser)
+                    $vUser->showRemoveForm($user, $removedUser);
+                else 
+                    $vUser->showErrorPage($user, 'The id doesn\'t match any user.');
+            }
+            else
+                $vUser->showErrorPage($user, 'You can\'t delete other users!');
+                
+            
+        }
+        else
+        {
+            if(get_class($user)!=EGuest::class)
+                $vUser->showRemoveForm($user);
+            else 
+                $vUser->showErrorPage($user, 'You can\'t delete a guest!');
+        }
+    }
+    
+    /**
+     * Rimuove un utente dall'applicazione
+     * @param int $id l'identificativo dell'utente da rimuovere, specificato SOLO se l'utente
+     * che sta effettuando l'operazione di rimozione sia un moderatore
+     */
+    private function removeUser($id = null)
+    {
+        $vUser = new VUser();
+        $user = CSession::getUserFromSession();
+        
+        if(is_numeric($id)) // verifica che nell'url sia stato inserito un id
+        { // verifica che l'utente che ha richiesto l'url sia un moderatore
+            
+            if(is_a($user, EModerator::class)) // se l'utente e' moderatore
+            { // ricava l'id del profilo da rimuovere
+                $removedUser = FPersistantManager::getInstance()->load(EUser::class, $id); // ricava l'utente da rimuovere
+                if($removedUser)
+                {
+                    FPersistantManager::getInstance()->remove(EUser::class, $removedUser->getId());
+                    header('Location: /deepmusic/index');
+                }
+                else
+                    $vUser->showErrorPage($user, 'The id doesn\'t match any user.');
+            }
+            else
+                $vUser->showErrorPage($user, 'You can\'t delete other users!');
+        }
+        else
+        { // altrimenti e' l'utente della sessione che chiede di essere rimosso
+            if(get_class($user)!=EGuest::class)
+            {
+                FPersistantManager::getInstance()->remove(EUser::class, $user->getId());
+                CSession::destroySession(); // viene rimossa la sessione
+                header('Location: /deepmusic/index');
+            }
+            else
+                $vUser->showErrorPage($user, 'You can\'t delete a guest!');
+        }
+        
     }
     
 }

@@ -43,9 +43,9 @@
         						<input type="text" class="form-control is-invalid" id="SongName" name="name" placeholder="Insert song's name...">
       						</div>
       						{if ! $check.name}
-      						<div class="col-sm-3">
+      						<div class="col-sm-3 well">
         						<small id="nameHelp" class="text-danger">
-          							Must be 3-20 characters long.
+          							Only alphanumeric characters.
         						</small>      
      						</div>
      						{/if}
@@ -56,7 +56,7 @@
         						<input type="text" class="form-control is-invalid" id="SongGenre" name="genre" placeholder="Insert song's genre...">
       						</div>
       						{if ! $check.genre}
-      						<div class="col-sm-3">
+      						<div class="col-sm-3 well">
         						<small id="genreHelp" class="text-danger">
           							Must be 3-20 characters long.
         						</small>      
@@ -65,10 +65,10 @@
     					</div>
     				
 						 <div class="form-group">
-    						<label for="exampleInputFile">File input: *</label>
+    						<label for="exampleInputFile" id="important">File input: *</label>
     						<input type="file" class="form-control-file" name="file">
     						{if ! $check.file}
-      						<div class="col-sm-3">
+      						<div class="col-sm-3 well">
         						<small id="fileHelp" class="text-danger">
           							File must be mp3.
         						</small>      

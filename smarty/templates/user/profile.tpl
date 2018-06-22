@@ -32,6 +32,20 @@
 		<div class="col-sm-3">
 		<!-- Informazioni utente -->
 			{include file="user/userInfo.tpl"}
+			{if $uId == $pId}
+			<div class = "well">
+			<!-- Rimozione profilo (se il profilo e' dell'utente della sessione)-->
+				<a href="/deepmusic/user/remove/" 
+					class="btn btn-primary btn-lg btn-danger active" role="button" aria-pressed="true">Remove Profile</a>
+			</div>
+			{elseif $uType eq 'moderator'}
+			<div class = "well">
+			<!-- Rimozione profilo (da parte di moderatore)-->
+				<a href="/deepmusic/user/remove/{$pId}" 
+					class="btn btn-primary btn-lg btn-danger active" role="button" aria-pressed="true">Remove Profile</a>
+			</div>
+			{/if}
+			
         </div>
 			<div class="col-sm-7 well">
 			<!-- Contenuto principale -->

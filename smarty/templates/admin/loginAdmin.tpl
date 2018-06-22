@@ -27,6 +27,7 @@
         </div>
 		<div class="col-sm-7 well">
 			<h2>Administrator Login</h2>
+			<hr>
 			{if $error}
 			<div class="alert alert-warning">
 				<strong>Warning!</strong><br>Wrong combination of user and password. <br>Please retry.
@@ -63,14 +64,6 @@
      						{/if}
     					</div>
     					
-						<div class="form-group">
-
-							<div class="checkbox">
-								<label><input type="checkbox" name="remember">
-									Remember me</label>
-							</div>
-
-						</div>
 						<div class="form-group">
 
 							<button type="submit" class="btn btn-default">Submit</button>

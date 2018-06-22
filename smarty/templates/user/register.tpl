@@ -40,7 +40,7 @@
         						<input type="text" class="form-control is-invalid" id="user" name="name" placeholder="Insert username...">
       						</div>
       						{if ! $check.name}
-      						<div class="col-sm-3">
+      						<div class="col-sm-3 well">
         						<small id="userHelp" class="text-danger">
           							Must be 3-20 characters long.
         						</small>      
@@ -54,7 +54,7 @@
         						<input type="password" class="form-control is-invalid" id="inputPassword" name="pwd" placeholder="Password">
       						</div>
       						{if ! $check.pwd}
-      						<div class="col-sm-3">
+      						<div class="col-sm-3 well">
         						<small id="passwordHelp" class="text-danger">
           							Must be 8-20 characters long.
         						</small>      
@@ -68,7 +68,7 @@
         						<input type="text" class="form-control is-invalid" id="mail" name="mail" placeholder="Insert email...">
       						</div>
       						{if ! $check.mail}
-      						<div class="col-sm-3">
+      						<div class="col-sm-3 well">
         						<small id="mailHelp" class="text-danger">
           							Must be an email.
         						</small>      

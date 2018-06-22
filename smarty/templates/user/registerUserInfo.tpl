@@ -55,9 +55,9 @@
 								placeholder="Enter your first name...">
 							</div>
 							{if !$check.firstName}
-							<div class="col-sm-3">
+							<div class="col-sm-3 well">
 	        					<small id="nameHelp" class="text-danger">
-	          						Must be 3-20 characters long.
+	          						Must contain only letters
 	        					</small>      
 	     					</div>
 	     					{/if}
@@ -76,9 +76,9 @@
 									placeholder="Enter your last name...">
 								</div>
 								{if !$check.lastName}
-								<div class="col-sm-3">
+								<div class="col-sm-3 well">
 	        						<small id="surHelp" class="text-danger">
-	          							Must be 3-20 characters long.
+	          							Must contain only letters
 	        						</small>      
 	     						</div>
 	     						{/if}
@@ -98,10 +98,10 @@
 								placeholder="Enter your birth place...">
 							</div>
 							{if !$check.birthPlace}
-							<div class="col-sm-3">
-	        						<small id="dateHelp" class="text-danger">
-	          							Must be 3-20 characters long
-	        						</small>      
+							<div class="col-sm-3 well">
+	        					<small id="dateHelp" class="text-danger">
+	          						Must contain alphanumeric characters
+	        					</small>      
 	     					</div>
 	     					{/if}
 						</div>
@@ -115,10 +115,10 @@
 									{if $uInfo->getBirthDate(true)}
 										value="{$uInfo->getBirthDate(true)}"
 									{/if}
-									placeholder="Enter your birth date... (dd/mm/aaaa)">
+									placeholder="Enter your birth date... (mm/dd/aaaa)">
 							</div>
 							{if !$check.birthDate}
-							<div class="col-sm-3">
+							<div class="col-sm-3 well">
 	        					<small id="dateHelp" class="text-danger">
 	          						Must be in format dd/mm/yyyy.
 	        					</small>      
@@ -136,7 +136,7 @@
 								</{else}></{/if}textarea>
 							</div>
 							{if !$check.bio}
-							<div class="col-sm-3">
+							<div class="col-sm-3 well">
 	        					<small id="bioHelp" class="text-danger">
 	          						No strange characters!
 	        					</small>      

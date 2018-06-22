@@ -26,14 +26,14 @@
 		
         </div>
 		<div class="col-sm-7 well">
+			<h2>Login</h2>
+			<hr>
 			{if $error}
 			<div class="alert alert-warning">
 			<!-- Errore form-->
 				<strong>Warning!</strong><br>Wrong combination of user and password. <br>Please retry.
 			</div>
 			{/if}
-			<h2>Login</h2>
-			<br>
 			<form class="form-horizontal" method="post" action="login">
 				<!-- Nickname -->
 				<div class="form-group row">
@@ -42,10 +42,10 @@
 						<input type="text" class="form-control is-invalid" id="user" name="name" placeholder="Insert username...">
 					</div>
 					{if ! $check.name}
-					<div class="col-sm-3">
+					<div class="col-sm-3 well">
 						<!-- Errore form -->
-						<small id="passwordHelp" class="text-danger">
-  							Must be 3-20 characters long.
+						<small id="nameHelp" class="text-danger">
+  							Must be 6-15 characters long.
 						</small>      
 					</div>
 					{/if}
@@ -58,7 +58,7 @@
 						<input type="password" class="form-control is-invalid" id="inputPassword" name="pwd" placeholder="Password">
 					</div>
 					{if ! $check.pwd}
-					<div class="col-sm-3">
+					<div class="col-sm-3 well">
 						<!-- Errore Form -->
 						<small id="passwordHelp" class="text-danger">
   							Must be 8-20 characters long.

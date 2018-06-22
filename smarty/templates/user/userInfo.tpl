@@ -14,7 +14,10 @@
 	<p id="important"> Last Name: </p> <span> {if $pInfo->getLastName()} {$pInfo->getLastName()}{/if} </span>
 {/if}
 </div>
-
+<div class="well">
+	<p id="important"> Birth Date: </p> <span>{if $pInfo->getBirthDate()} {$pInfo->getBirthDate(true)}{/if}</span>
+	<p id="important"> Birth Place: </p> <span> {if $pInfo->getBirthPlace()} {$pInfo->getBirthPlace()}{/if} </span>
+</div>
 <div class="well">
 	<p id="important">Info</p>
 	<p>{if $pInfo->getBio()}{$pInfo->getBio()}{/if}</p>
