@@ -7,7 +7,11 @@ if(file_exists('config.inc.php'))
     $controller->run();
 }
 else 
-    Installation::makeInstallation();
-
+    if(Installation::makeInstallation()){
+    
+        SampleUsers::generateUserPool(5, 5, 3);
+        
+        //header('Location: /deepmusic/index'); // redirect verso l'applicazione
+    }
 
 ?>

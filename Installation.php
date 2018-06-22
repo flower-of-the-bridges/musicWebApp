@@ -7,10 +7,15 @@ class Installation
      */
     static function makeInstallation()
     {
-        if($_SERVER['REQUEST_METHOD']=='GET')
+        if($_SERVER['REQUEST_METHOD']=='GET'){
             Installation::showForm();
-        else
-            Installation::install();
+            return false;
+        }
+        else{
+            $var = Installation::install();
+            return $var;
+        }
+            
     }
     
     /**
@@ -51,18 +56,23 @@ class Installation
             $query = $query . file_get_contents('tables.sql'); // aggiunge tables alla query
             $db->exec($query);
             $db->commit();
+            
             //costruisce il file config.inc.php
             $file = fopen('config.inc.php', 'w');
             $script = '<?php $address= \'localhost\'; $database= \'' . $database . '\'; $admin= \'' . $admin . '\';$pass= \'' . $pass . '\'; ?>';
             fwrite($file, $script);
             fclose($file);
-            header('Location: /deepmusic/index'); // redirect verso l'applicazione
+            
+            $db=null;
+            
+            return true;
         }
         catch (PDOException $e)
         {
             echo "Errore : " . $e->getMessage();
             $db->rollBack();
             die;
+            return false;
         }
     }
 }

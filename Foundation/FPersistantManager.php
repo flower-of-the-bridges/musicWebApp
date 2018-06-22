@@ -246,13 +246,13 @@ class FPersistantManager {
         try 
         {
             FPersistantManager::bindValues($stmt, $obj); // si associano i valori dell'oggetto alle entry della query
- 
+            
             $stmt->execute();
             if ($stmt->rowCount()) // si esegue la query
             {
-                if (method_exists($obj, 'getId') && $obj->getId() == 0) // ...se il valore e' non nullo, si assegna l'id
+                if (method_exists($obj, 'getId') && $obj->getId() == 0){ // ...se il valore e' non nullo, si assegna l'id
                     $obj->setId($this->db->lastInsertId()); // assegna all'oggetto l'ultimo id dato dal dbms
-                
+                }
                 $commit = $this->db->commit(); // effettua il commit
                 
                 $this->__destruct(); // chiude la connessione

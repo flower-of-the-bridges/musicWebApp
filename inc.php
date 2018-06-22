@@ -1,6 +1,7 @@
 <?php
 
 require_once 'Installation.php';
+require_once 'SampleUsers.php';
 require_once 'Controller/FrontController.php';
 require_once 'Controller/CUser.php';
 require_once 'Controller/CSong.php';
