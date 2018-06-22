@@ -248,16 +248,17 @@ class ESong extends EObject
     /**
      *
      */
-    function setStaticMp3()
+    function setStaticMp3() : EMp3
     {
         $mp3 = new EMp3();
         $file = dirname(__DIR__)."/resources/statics/short_guitar.mp3";
      
         $mp3->setMp3(file_get_contents($file));
-        $mp3->setType($mime_content_type($file));
+        $mp3->setType(mime_content_type($file));
         $mp3->setSize((int) filesize($file));
         
         $mp3->setId($this->id);
+        return $mp3;
     }
     
     /**

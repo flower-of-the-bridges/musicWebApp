@@ -1,4 +1,5 @@
 <?php
+
 require_once 'inc.php';
 
 class SampleUsers 
@@ -21,8 +22,7 @@ class SampleUsers
     
     private function generateListener(int $n,array $listaMus){
         $list=new EListener();
-        
-        $list->setId(0);
+ 
         $list->setNickName("listener".$n);
         $list->setPassword("listener".$n);
         $list->hashPassword();
@@ -44,7 +44,7 @@ class SampleUsers
         
         $list->setImage($staticImg);
         
-        for ($j=0; $j<$listaMus->lenght; $j++)
+        for ($j=0; $j<count($listaMus); $j++)
         {
             if($j%2){
                 $follow = new EFollower();
@@ -52,7 +52,9 @@ class SampleUsers
                 $follow->setUser($listaMus[$j]);
                 
                 FPersistantManager::getInstance()->store($follow);
-            }else{
+            }
+            else
+            {
                 $supp = new ESupporter();
                 $supp->setSupport($list);
                 $supp->setArtist($listaMus[$j]);
@@ -94,16 +96,14 @@ class SampleUsers
         $staticSong->setArtist($mus);
         $staticSong->setForAll();
         
-        for ($j = 0; $j < 5; $j++)
-        {
-            $staticSong->setName($mus->getNickName()." Song n".$j);
-            $staticSong->setGenre($j);
+        $staticSong->setName("Song ".$n);
+        $staticSong->setGenre("Rock");
             
-            FPersistantManager::getInstance()->store($staticSong);
+        FPersistantManager::getInstance()->store($staticSong);
             
-            $staticSong->setStaticMp3();
-            FPersistantManager::getInstance()->store($staticSong->getMp3());
-        }
+        $mp3 = $staticSong->setStaticMp3();
+        FPersistantManager::getInstance()->store($mp3);
+        
         return $mus;
     }
     

@@ -97,14 +97,17 @@ class CSong
                 }
                 else if($song->isForAll()) // se è per tutti...
                     $canSee = true;
-                else if ($song->isForRegisteredOnly() && get_class($user)!=EGuest::class) // se è per i registrati e l'utente non è guest...
-                    $canSee = true;
-                else if ($song->isForSupportersOnly() &&
-                    FPersistantManager::getInstance()->exists(ESupporter::class, FTarget::EXISTS_SUPPORTER, $song->getArtist()->getId(), $user->getId()))
-                    // se è per i supporter e l'utente supporta l'artista della canzone...
-                {
-                    $download = true;
-                    $canSee = true;
+                else if (get_class($user)!=EGuest::class) // se l'utente e' registrato...
+                { // si effettuano gli altri controlli
+                    if($song->isForRegisteredOnly() && get_class($user)!=EGuest::class) // se è per i registrati e l'utente non è guest...
+                        $canSee = true;
+                    else if ($song->isForSupportersOnly() &&
+                            FPersistantManager::getInstance()->exists(ESupporter::class, FTarget::EXISTS_SUPPORTER, $song->getArtist()->getId(), $user->getId()))
+                        // se è per i supporter e l'utente supporta l'artista della canzone...
+                    {
+                        $download = true;
+                        $canSee = true;
+                    }
                 }
                             
                $vSong->showSong($user, $song, $canSee, $download); // mostra la pagina della canzone
@@ -133,7 +136,7 @@ class CSong
             $song = FPersistantManager::getInstance()->load(ESong::class, $id); // carica la canzone dell'id
             if($song) // se la canzone esiste, esegue il controllo di visibilità
             {
-                if (is_a($user, EModerator::class) || ($song->isForSupportersOnly() &&
+                if ($user->getId()==$song->getArtist()->getId() || is_a($user, EModerator::class) || ($song->isForSupportersOnly() &&
                      FPersistantManager::getInstance()->exists(ESupporter::class, FTarget::EXISTS_SUPPORTER, $song->getArtist()->getId(), $user->getId())))
                                 // se è per i supporter e l'utente supporta l'artista della canzone...
                 {

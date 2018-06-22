@@ -88,5 +88,23 @@ class CSession
         
         session_destroy(); // distrugge la sessione
     }
+    
+    static function populateApplication()
+    {
+        setcookie('install', 'ok', time()+3600);
+    }
+    
+    static function checkPopulateApplication() : bool
+    {
+        if(isset($_COOKIE['install']))
+            return true;
+        else
+            return false;
+    }
+    
+    static function unsetCookie()
+    {
+        setcookie('install', 'ok', time()-3600);
+    }
 }
 

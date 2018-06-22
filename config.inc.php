@@ -1,1 +1,0 @@
-<?php $address= 'localhost'; $database= 'deepmusic'; $admin= 'root';$pass= 'web'; ?>

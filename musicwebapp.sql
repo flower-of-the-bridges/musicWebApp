@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jun 20, 2018 at 05:50 PM
+-- Generation Time: Jun 22, 2018 at 04:21 PM
 -- Server version: 10.1.30-MariaDB
 -- PHP Version: 7.2.1
 
@@ -21,8 +21,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `musicwebapp`
 --
-CREATE DATABASE IF NOT EXISTS `musicwebapp` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `musicwebapp`;
 
 -- --------------------------------------------------------
 
@@ -74,13 +72,15 @@ CREATE TABLE IF NOT EXISTS `mp3` (
 
 CREATE TABLE IF NOT EXISTS `report` (
   `id` smallint(5) NOT NULL AUTO_INCREMENT,
-  `id_moderatore` smallint(5) DEFAULT NULL,
+  `id_moderatore` smallint(5) UNSIGNED DEFAULT NULL,
   `title` varchar(30) NOT NULL,
-  `description` varchar(63000) NOT NULL DEFAULT '"no decription needed"',
-  `id_segnalatore` smallint(5) NOT NULL,
+  `description` varchar(300) NOT NULL DEFAULT '"no description needed"',
+  `id_segnalatore` smallint(5) UNSIGNED NOT NULL,
   `id_object` smallint(5) NOT NULL,
   `object_type` varchar(30) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `id_moderatore` (`id_moderatore`),
+  KEY `id_segnalatore` (`id_segnalatore`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS `song` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`,`id_artist`),
   KEY `id_artist` (`id_artist`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -144,7 +144,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `mail` (`mail`),
   UNIQUE KEY `nickname` (`nickname`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -185,6 +185,12 @@ ALTER TABLE `image`
 --
 ALTER TABLE `mp3`
   ADD CONSTRAINT `song_mp3_constraint` FOREIGN KEY (`id_song`) REFERENCES `song` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `report`
+--
+ALTER TABLE `report`
+  ADD CONSTRAINT `report_ibfk_2` FOREIGN KEY (`id_segnalatore`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `song`

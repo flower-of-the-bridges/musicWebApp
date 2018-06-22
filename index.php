@@ -1,17 +1,21 @@
 <?php
 require_once 'inc.php';
 
-if(file_exists('config.inc.php'))
+if(CSession::checkPopulateApplication())
+{
+    CSession::unsetCookie();
+    header('Location: /deepmusic/index');
+    SampleUsers::generateUserPool(3, 3, 3);
+    
+}
+elseif(file_exists('config.inc.php'))
 {
     $controller = new FrontController();
     $controller->run();
 }
-else 
-    if(Installation::makeInstallation()){
-    
-        SampleUsers::generateUserPool(5, 5, 3);
-        
-        //header('Location: /deepmusic/index'); // redirect verso l'applicazione
-    }
+elseif(Installation::makeInstallation()){
+    CSession::populateApplication();
+    header('Location: /deepmusic/index'); // redirect verso l'applicazione
+}
 
 ?>
