@@ -2,9 +2,20 @@
 
 require_once 'inc.php';
 
-
+/**
+ * La classe CReport implementa la funzionalita' 'Segnala Contenuto': offre metodi grazie ai quali
+ * e' possibile segnalare un oggetto o una canzone. Permette inoltre, agli utenti di tipo moderatore,
+ * la visualizzazione di un report.
+ * @author gruppo2
+ * @package Controller
+ *
+ */
 class CReport {
       
+    /**
+     * Mostra le informazioni di un report.
+     * @param $idReport
+     */
     static function show($idReport=null)
     {
         if($_SERVER['REQUEST_METHOD'] == 'GET')

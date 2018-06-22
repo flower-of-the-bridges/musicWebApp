@@ -85,7 +85,7 @@ class VSong extends VObject
         $this->smarty->assign('error', $error);
         $this->smarty->assign('check', $this->check);
         
-        $this->smarty->display('loadSong.tpl');
+        $this->smarty->display('song/loadSong.tpl');
     }
     
     /**
@@ -116,7 +116,7 @@ class VSong extends VObject
             $this->smarty->assign('check', $this->check);
             
             $this->smarty->assign('checked', $checked);
-            $this->smarty->display('editSong.tpl');
+            $this->smarty->display('song/editSong.tpl');
     }
 
     /**
@@ -133,7 +133,7 @@ class VSong extends VObject
         $this->smarty->assign('song', $song);
         
         $this->smarty->assign('uType', lcfirst(substr(get_class($user), 1)));
-        $this->smarty->display('removeSong.tpl');
+        $this->smarty->display('song/removeSong.tpl');
     }
     
     
@@ -152,7 +152,7 @@ class VSong extends VObject
         
         $this->smarty->assign('canSee', $canSee);
         
-        $this->smarty->display('song.tpl');
+        $this->smarty->display('song/song.tpl');
         
     }
     

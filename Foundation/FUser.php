@@ -134,8 +134,8 @@ class FUser
     static function searchUserByGenre() : string
     {
         return "SELECT users.* 
-                FROM users, usersInfo
-                WHERE LOCATE( :Genre , genre) > 0 AND usersInfo.id = users.id;";
+                FROM users, user_info
+                WHERE LOCATE( :Genre , user_info.genre) > 0 AND user_info.id = users.id;";
     }
     
     /**

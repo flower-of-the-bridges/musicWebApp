@@ -8,7 +8,7 @@
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <link rel="stylesheet"
-	href="/deepmusic/smarty/templates/style.css">
+	href="/deepmusic/resources/css/style.css">
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script
@@ -32,7 +32,7 @@
 			</div>
 			{/if}
 			<h2>Register</h2>
-					<form method="post" enctype="multipart/form-data" action="/deepmusic/admin/signup">
+					<form method="post" enctype="multipart/form-data" action="signup">
 						
 						<div class="form-group row">
       						<label for="user" class="col-sm-2 col-form-label {if !$check.name} text-danger{/if}">User: *</label>
@@ -88,12 +88,6 @@
 								<label class="form-check-label"> <input type="radio"
 									class="form-check-input" name="type" value="musician">
 									Musician
-								</label>
-							</div>
-							<div class="form-check">
-								<label class="form-check-label"> <input type="radio"
-									class="form-check-input" name="type" value="moderator">
-									Moderator
 								</label>
 							</div>
 						</fieldset>

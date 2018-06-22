@@ -70,7 +70,7 @@ class VReport extends VObject
         $this->smarty->assign('uType', lcfirst(substr(get_class($user), 1)));
         
         $this->smarty->assign('check', $this->check);
-        $this->smarty->display('report.tpl');
+        $this->smarty->display('report/report.tpl');
         
         
         
@@ -97,7 +97,7 @@ class VReport extends VObject
  
         $this->smarty->assign('check', $this->check);
         
-        $this->smarty->display('makeReport.tpl');
+        $this->smarty->display('report/makeReport.tpl');
         
         
     }

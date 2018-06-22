@@ -71,7 +71,7 @@ class VSearch extends VObject
         $this->smarty->assign('array', $array);
         
         //mostro il contenuto della pagine
-        $this->smarty->display('search.tpl');
+        $this->smarty->display('search/search.tpl');
     }
      
     function showAdvancedSearch(EUser &$user)
@@ -80,7 +80,7 @@ class VSearch extends VObject
         $this->smarty->assign('uType', lcfirst(substr(get_class($user), 1)));
         
         //mostro il contenuto della pagine
-        $this->smarty->display('advancedSearch.tpl');
+        $this->smarty->display('search/advancedSearch.tpl');
     }
 }
 

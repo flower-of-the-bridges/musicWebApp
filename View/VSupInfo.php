@@ -60,7 +60,7 @@ class VSupInfo extends VObject
         
         $this->smarty->assign('success', $success);
         
-        $this->smarty->display('manageSupport.tpl');
+        $this->smarty->display('support/manageSupport.tpl');
         
     }
     

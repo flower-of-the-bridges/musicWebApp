@@ -43,7 +43,7 @@ class CAdmin
     static function panel()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') // se il metodo e' get...
-        { t
+        { 
             $vAdmin = new VAdmin();
             $user = CSession::getUserFromSession();
             if(CSession::checkAdminPrivileges()) // se l'utente ha i privilegi, accede
@@ -86,9 +86,9 @@ class CAdmin
     }
     
     /**
-     * La funzione Authentication verifica che le credenziali di accesso inserite da un utente
-     * siano corrette: in tal caso, l'applicazione lo riporterà verso la sua pagina, altrimenti
-     * restituirà la schermata di login, con un messaggio di errore
+     * La funzione authentication verifica che le credenziali di accesso al pannello di amministrazione
+     * (le stesse usate per l'accesso al database) siano valide. In caso affermativo, instaura un parametro 
+     * di sessione che denota il privilegio di amministrazione e effettua un redirect verso il pannello di controllo.
      */
     private function authentication()
     {

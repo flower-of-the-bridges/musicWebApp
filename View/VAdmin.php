@@ -69,7 +69,7 @@ class VAdmin extends VObject
             $this->smarty->assign('error', $error);
             $this->smarty->assign('check', $this->check);
             
-            $this->smarty->display('loginAdmin.tpl');
+            $this->smarty->display('admin/loginAdmin.tpl');
     }
     
     /**
@@ -114,7 +114,7 @@ class VAdmin extends VObject
             $this->smarty->assign('error', $error);
             $this->smarty->assign('check', $this->check);
             
-            $this->smarty->display('registerAdmin.tpl');
+            $this->smarty->display('admin/registerAdmin.tpl');
     }
     
     /**
@@ -128,7 +128,7 @@ class VAdmin extends VObject
 
         $this->smarty->assign('check', $this->check);
         
-        $this->smarty->display('panel.tpl');
+        $this->smarty->display('admin/panel.tpl');
         
     }
 }

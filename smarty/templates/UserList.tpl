@@ -6,6 +6,7 @@
 			<td><a href="/deepmusic/user/profile/{$user->getId()}">{$user->getNickName()}</a></td>
 			{if isset($value)}
 			{if $value eq 'Genre'}
+			<!-- Genere musicale utente (se la table appare nella ricerca per genere) -->
 			<td>{$user->getUserInfo()->getGenre()}</td>
 			{/if}
 			{/if}

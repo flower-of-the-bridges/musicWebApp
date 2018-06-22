@@ -34,6 +34,7 @@ class VUserInfo extends VObject
     function createUserInfo() : EUserInfo
     {
         $userInfo = new EUserInfo();
+        
         if(isset($_POST['firstName']))
             $userInfo->setFirstName($_POST['firstName']);
         if(isset($_POST['lastName']))
@@ -60,7 +61,6 @@ class VUserInfo extends VObject
         
         if($_FILES['file']['size']!=0)
         {
-            var_dump($_FILES);
             $img->setImg(file_get_contents($_FILES['file']['tmp_name']));
             $img->setSize($_FILES['file']['size']);
             $img->setType($_FILES['file']['type']);
@@ -119,7 +119,7 @@ class VUserInfo extends VObject
         $this->smarty->assign('error', $error);
         $this->smarty->assign('check', $this->check);
         
-        $this->smarty->display('registerUserInfo.tpl');
+        $this->smarty->display('user/registerUserInfo.tpl');
     }
     
     

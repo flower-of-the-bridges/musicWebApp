@@ -19,7 +19,7 @@ class VSupporter extends VObject
         $this->smarty->assign('supInfo', $musician->getSupportInfo());
         
         $this->smarty->assign('uType', lcfirst(substr(get_class($user), 1)));
-        $this->smarty->display('confirmSupport.tpl');
+        $this->smarty->display('supporter/confirmSupport.tpl');
     }
     
     function validateChoice() : bool

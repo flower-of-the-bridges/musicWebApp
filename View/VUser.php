@@ -113,7 +113,7 @@ class VUser extends VObject
         
         $this->smarty->assign('array', $array);
         
-        $this->smarty->display('profile.tpl');
+        $this->smarty->display('user/profile.tpl');
     }
 
     /**
@@ -135,14 +135,14 @@ class VUser extends VObject
         $this->smarty->assign('error', $error);
         $this->smarty->assign('check', $this->check);
         
-        $this->smarty->display('login.tpl');
+        $this->smarty->display('user/login.tpl');
     }
 
     /**
      * Mostra la pagina di signup
      *
      * @param bool $error
-     *            facoltativo se è stato rilevato un errore
+     *            facoltativo se e' stato rilevato un errore
      */
     function showSignUp(bool $error = NULL)
     {
@@ -157,7 +157,7 @@ class VUser extends VObject
         $this->smarty->assign('error', $error);
         $this->smarty->assign('check', $this->check);
         
-        $this->smarty->display('register.tpl');
+        $this->smarty->display('user/register.tpl');
     }
 }
 

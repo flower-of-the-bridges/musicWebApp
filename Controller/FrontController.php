@@ -58,7 +58,7 @@ class FrontController
             $smarty = SmartyConfig::configure();
             $smarty->registerObject('user', $user);
             $smarty->assign('uType', lcfirst(substr(get_class($user),1)));
-            var_dump($_SESSION);
+            
             $smarty->display('index.tpl');
         }
         

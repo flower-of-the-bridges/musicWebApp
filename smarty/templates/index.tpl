@@ -8,7 +8,7 @@
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <link rel="stylesheet"
-	href="/deepmusic/smarty/templates/style.css">
+	href="/deepmusic/resources/css/style.css">
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script
@@ -19,9 +19,10 @@
 	
 	{user->getNickName assign='uName'}
 	{user->getId assign='uId'}
-
+	<!-- Navbar -->
 	{include file="navbar.tpl"}
 
+	<!-- Riquadro centrale -->
 	<div class="container text-center well">
 		<h3>The next generation of musicians!</h3>
 		<p>Are you tired of the same old songs? Do you want something new?

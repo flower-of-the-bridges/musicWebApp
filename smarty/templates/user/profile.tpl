@@ -15,7 +15,7 @@
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <link rel="stylesheet"
-	href="/deepmusic/smarty/templates/style.css">
+	href="/deepmusic/resources/css/style.css">
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script
@@ -28,35 +28,52 @@
 	
 	
 	<div class="container text-center">
+	
 		<div class="col-sm-3">
-			{include file="userInfo.tpl"}
+		<!-- Informazioni utente -->
+			{include file="user/userInfo.tpl"}
         </div>
 			<div class="col-sm-7 well">
+			<!-- Contenuto principale -->
 				{if $content eq 'Song List'}
-					<h4 id="important">Songs List</h4>
-					{include file="SongList.tpl"}
+			
+				<!--lista canzoni-->
+				<h4 id="important">Songs List</h4>
+				{include file="SongList.tpl"}
+				
 				{elseif $content eq 'Followers'}
-					<h4 id="important">Follower List</h4>
-					<a href="/deepmusic/user/profile/{$pId}">Back to Profile</a>
-					{include file="UserList.tpl"}
+				
+				<!--lista folloer-->
+				<h4 id="important">Follower List</h4>
+				<a href="/deepmusic/user/profile/{$pId}">Back to Profile</a>
+				{include file="UserList.tpl"}
+				
 				{elseif $content eq 'Following'}
-					<h4 id="important">Following List</h4>
-					<a href="/deepmusic/user/profile/{$pId}">Back to Profile</a>
-					{include file="UserList.tpl"}
+				<!-- Lista following -->
+				<h4 id="important">Following List</h4>
+				<a href="/deepmusic/user/profile/{$pId}">Back to Profile</a>
+				{include file="UserList.tpl"}
+				
 				{elseif $content eq 'Supporters'}
-					<h4 id="important">Supporters List</h4>
-					<a href="/deepmusic/user/profile/{$pId}">Back to Profile</a>
-					{include file="UserList.tpl"}
+				<!-- Lista Supporter -->	
+				<h4 id="important">Supporters List</h4>
+				<a href="/deepmusic/user/profile/{$pId}">Back to Profile</a>
+				{include file="UserList.tpl"}
+				
 				{elseif $content eq 'Supporting'}
-					<h4 id="important">Supporting List</h4>
-					<a href="/deepmusic/user/profile/{$pId}">Back to Profile</a>
-					{include file="UserList.tpl"}
+				<!-- Lista Supporting -->
+				<h4 id="important">Supporting List</h4>
+				<a href="/deepmusic/user/profile/{$pId}">Back to Profile</a>
+				{include file="UserList.tpl"}
+				
 				{elseif $content eq 'None'}
+				<!-- Simple introduction-->
 				<h3>Hi! I'm a {ucfirst($pType)}!</h3>
 				{/if}
 			</div>
 		<div class="col-sm-2">
-			{include file="followOptions.tpl"}	
+		<!-- Follow/Support Options -->
+			{include file="user/followOptions.tpl"}	
 			{if $uId!=$pId && $uType!='guest'}
 			<div class = "well">
 				<a href="/deepmusic/report/make/{$pId}&user">Report User</a>
