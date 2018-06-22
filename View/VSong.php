@@ -142,8 +142,9 @@ class VSong extends VObject
      * @param EUser $user l'utente che sta visualizzando la pagina
      * @param ESong $song la canzone da visualizzare
      * @param bool $canSee true se l'utente puo' visualizzare la canzone, false altrimenti
+     * @param bool $download true se l'utente puo' scaricare la canzone, false altrimenti
      */
-    function showSong(EUser &$user, ESong &$song, bool $canSee)
+    function showSong(EUser &$user, ESong &$song, bool $canSee, bool $download)
     {
         $this->smarty->registerObject('user', $user);
         $this->smarty->assign('song', $song);
@@ -151,6 +152,7 @@ class VSong extends VObject
         $this->smarty->assign('uType', lcfirst(substr(get_class($user), 1)));
         
         $this->smarty->assign('canSee', $canSee);
+        $this->smarty->assign('download', $download);
         
         $this->smarty->display('song/song.tpl');
         

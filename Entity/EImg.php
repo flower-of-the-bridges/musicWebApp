@@ -88,7 +88,7 @@ class EImg extends EObject
      */
     function setStatic()
     {
-        $file = dirname(__DIR__)."/resources/defProPic.jpg";
+        $file = dirname(__DIR__)."/resources/statics/defProPic.jpg";
         
         $this->img = file_get_contents($file);
         $this->type = mime_content_type($file);

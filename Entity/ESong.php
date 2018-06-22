@@ -250,11 +250,14 @@ class ESong extends EObject
      */
     function setStaticMp3()
     {
-        //momentaneamente il file e' una risorsa statica
-        $this->mp3->setMp3(file_get_contents('./prova.mp3'));    //si apre il file contenuto nel path.
-        $this->mp3->setId($this->id);
-        $this->mp3->setSize(200);
-        $this->mp3->setType('mp3');
+        $mp3 = new EMp3();
+        $file = dirname(__DIR__)."/resources/statics/short_guitar.mp3";
+     
+        $mp3->setMp3(file_get_contents($file));
+        $mp3->setType($mime_content_type($file));
+        $mp3->setSize((int) filesize($file));
+        
+        $mp3->setId($this->id);
     }
     
     /**

@@ -59,9 +59,7 @@ class EUserInfo extends EObject
                 if (! preg_match('/\b' . $songGenre . '\b/', $this->genre)) // verifica che il genere non sia gia stato inserito
                     $this->genre .= $songGenre . " "; // aggiunge il valore al genere
             }
-            
         }
-
     }
 
     

@@ -40,6 +40,10 @@
 			{/if}
 			<br>
 			<br>
+			{if $download}
+				<a href="/deepmusic/song/download/{$song->getId()}" 
+				class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Download</a>
+			{/if}
 			{if $uId eq $song->getArtist()->getId() or $uType eq 'moderator'}
 			<a href="/deepmusic/song/edit/{$song->getId()}" 
 				class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Edit</a>
@@ -47,12 +51,14 @@
 			<a href="/deepmusic/song/remove/{$song->getId()}" 
 				class="btn btn-primary btn-lg btn-danger active" role="button" aria-pressed="true">Delete</a>
 			{/if}
-			{if $canSee && $uId!=$song->getArtist()->getId() && $uType!='guest'}
+			{if $canSee && $uId!=$song->getArtist()->getId() && $uType!='guest' && $uType!='moderator'}
 			</div>
 			<div class = "well">
 				<a href="/deepmusic/report/make/{$song->getId()}&song">Report Song</a>
 			</div>
 			{/if}
+	
+			
 		</div>
 		
 			

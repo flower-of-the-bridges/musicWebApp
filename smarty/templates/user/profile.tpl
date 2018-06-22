@@ -74,7 +74,7 @@
 		<div class="col-sm-2">
 		<!-- Follow/Support Options -->
 			{include file="user/followOptions.tpl"}	
-			{if $uId!=$pId && $uType!='guest'}
+			{if $uId!=$pId && $uType!='guest' && $uType!='moderator'}
 			<div class = "well">
 				<a href="/deepmusic/report/make/{$pId}&user">Report User</a>
 			</div>

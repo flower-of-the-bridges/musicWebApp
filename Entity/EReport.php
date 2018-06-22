@@ -62,30 +62,6 @@ class EReport extends EObject
             return false;
     }
     
-    function validateIdSegnalatore() : bool
-    {
-        if($this->idSegnalatore != "")
-        {
-            return FPersistantManager::getInstance()->load(EUser::class, $this->idSegnalatore);
-        }else 
-            return  false;
-    }
-    
-    function validateObject() : bool
-    {
-        $className = E.ucfirst($this->objectType);
-        if(class_exists($class_name))
-        {
-            $obj = FPersistantManager::getInstance()->load($className, $this->idObject);
-            if($obj)
-                return true;
-            else
-                return false;
-        }
-        else 
-            return false;
-    }
-    
     /**
      * 
      * @return string il titolo del report

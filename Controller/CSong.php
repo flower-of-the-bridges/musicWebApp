@@ -88,9 +88,13 @@ class CSong
             if($song) // se la canzone esiste, esegue il controllo di visibilità
             {
                 $canSee = false; // variabile booleana che denota se l'utente può vedere la canzone o no
+                $download = false; // variabile booleana che denota se l'utente può scaricare il brano
                 
                 if($user->getId() == $song->getArtist()->getId() || is_a($user, EModerator::class)) // se l'utente è l'autore della canzone
+                {
                     $canSee = true;
+                    $download = true;
+                }
                 else if($song->isForAll()) // se è per tutti...
                     $canSee = true;
                 else if ($song->isForRegisteredOnly() && get_class($user)!=EGuest::class) // se è per i registrati e l'utente non è guest...
@@ -98,9 +102,59 @@ class CSong
                 else if ($song->isForSupportersOnly() &&
                     FPersistantManager::getInstance()->exists(ESupporter::class, FTarget::EXISTS_SUPPORTER, $song->getArtist()->getId(), $user->getId()))
                     // se è per i supporter e l'utente supporta l'artista della canzone...
+                {
+                    $download = true;
                     $canSee = true;
+                }
                             
-               $vSong->showSong($user, $song, $canSee); // mostra la pagina della canzone
+               $vSong->showSong($user, $song, $canSee, $download); // mostra la pagina della canzone
+            }
+            else
+                $vSong->showErrorPage($user, 'The song\'s id doesn\'t match any song stored in the system.');
+        }
+        else
+            header('Location: HTTP/1.1 405 Invalid URL detected');
+    }
+    
+    /**
+     * La funzione show permette la visualizzazione della canzone da parte di un utente. Se l'utente
+     * può effettivamente visualizzarla, sarà possibile riprodurla, altrimenti verrà mostrato un
+     * messaggio d'errore. In caso la canzone sia visualizzata dall'artista stesso o da un moderatore,
+     * sarà possibile visualizzare funzionalità come la modifica o la rimozione.
+     *
+     * @param int $id l'identificativo della canzone da visualizzare.
+     */
+    static function download($id)
+    {
+        if(is_numeric($id)) // se nell'url è effettivamente presente un id.
+        {
+            $vSong = new VSong(); // crea la view
+            $user = CSession::getUserFromSession(); // ottiene l'utente dalla sessione
+            $song = FPersistantManager::getInstance()->load(ESong::class, $id); // carica la canzone dell'id
+            if($song) // se la canzone esiste, esegue il controllo di visibilità
+            {
+                if (is_a($user, EModerator::class) || ($song->isForSupportersOnly() &&
+                     FPersistantManager::getInstance()->exists(ESupporter::class, FTarget::EXISTS_SUPPORTER, $song->getArtist()->getId(), $user->getId())))
+                                // se è per i supporter e l'utente supporta l'artista della canzone...
+                {
+                    $mp3 = FPersistantManager::getInstance()->load(EMp3::class, $song->getId());
+                    
+                    header('Content-Description: File Transfer');
+                    header('Content-Lenght: '.$mp3->getSize() );
+                    header('Content-Type: '.$mp3->getType());
+                    $fileName = $song->getArtist()->getNickName().'-'.$song->getName();
+                    header('Content-Disposition: attachment; filename= '.$fileName.'.mp3');
+                    header('Expires: 0');
+                    header('Cache-Control: must-revalidate');
+                    header('Pragma: public');
+                    
+                    ob_clean();
+                    flush();
+                    echo $mp3->getMp3();
+                    exit;
+                }
+                else 
+                    $vSong->showErrorPage($user, 'You can\'t download this song');
             }
             else
                 $vSong->showErrorPage($user, 'The song\'s id doesn\'t match any song stored in the system.');
