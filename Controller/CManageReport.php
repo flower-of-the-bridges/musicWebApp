@@ -80,19 +80,24 @@ class CManageReport
         $eReport = FPersistantManager::getInstance()->load(EReport::class, $idReport);
         
         $loggedUser = CSession::getUserFromSession();
-        
-        if (CManageReport::checkModSession())
+        if($_SERVER['REQUEST_METHOD'] == 'GET')
         {
-            if($eReport != null)
+            if(is_a($loggedUser, EModerator::class))
             {
-                if($eReport->getIdModeratore() == $loggedUser->getId())
+                if($eReport != null)
                 {
-                    $eReport->setIdModeratore("");
-                    FPersistantManager::getInstance()->update($eReport);
-                }else
-                    $vReport->showErrorPage($loggedUser, "this report is not under your attenction");
-            }else
-                $vReport->showErrorPage($loggedUser, "you are trying to decline something that does not exist");
+                    if($loggedUser->declineReport($eReport))
+                    {
+                       header('Location: /deepmusic/report/show/'.$eReport->getId());
+                    }
+                    else
+                        $vReport->showErrorPage($loggedUser, "This report is not under your attenction");
+                }
+                else
+                    $vReport->showErrorPage($loggedUser, "You are trying to decline something that does not exist");
+            }
+            else 
+                $vReport->showErrorPage($loggedUser, "You are not supposed to be here, how did you went this far from home?");
         }
         else
             header('Location: HTTP/1.1 405 Invalid URL detected');
@@ -110,19 +115,27 @@ class CManageReport
         $eReport = FPersistantManager::getInstance()->load(EReport::class, $idReport);
         
         $loggedUser = CSession::getUserFromSession();
-        
-        if (CManageReport::checkModSession())
+        if($_SERVER['REQUEST_METHOD'] == 'GET')
         {
-            if($eReport != null)
+            if(is_a($loggedUser, EModerator::class))
             {
-                if($eReport->getIdModeratore() == $loggedUser->getId())
+                if($eReport != null)
                 {
-                    FPersistantManager::getInstance()->remove(EReport::class, $eReport->getId());
-                }else
-                    $vReport->showErrorPage($loggedUser, "this report is not under your attenction");
-            }else
-                $vReport->showErrorPage($loggedUser, "you are trying to complete something that does not exist");
+                    if($loggedUser->completeReport($eReport))
+                    {
+                        header('Location: /deepmusic/manageReport/show/assigned');
+                    }
+                    else
+                        $vReport->showErrorPage($loggedUser, "This report is not under your attenction");
+                }
+                else
+                    $vReport->showErrorPage($loggedUser, "You are trying to decline something that does not exist");
+            }
+            else
+                $vReport->showErrorPage($loggedUser, "You are not supposed to be here, how did you went this far from home?");
         }
+        else
+            header('Location: HTTP/1.1 405 Invalid URL detected');
     }
     
         

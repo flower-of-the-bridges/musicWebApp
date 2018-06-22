@@ -212,7 +212,7 @@ class ESong extends EObject
      */
     function validateName() : bool
     {
-        if (preg_match("/^[a-zA-Z][a-zA-Z -]+$/", $this->name)) // solo lettere, numeri e spazi
+        if (preg_match("/^[a-zA-Z0-9][a-zA-Z0-9 -]+$/", $this->name)) // solo lettere, numeri e spazi
             return true;
         else 
             return false;
@@ -225,7 +225,7 @@ class ESong extends EObject
      */
     function validateGenre(): bool
     {
-        if (preg_match("/^[a-zA-Z][a-zA-Z -]+$/", $this->genre)) // solo lettere, numeri e spazi
+        if (preg_match("/^[a-zA-Z0-9][a-zA-Z0-9 -]+$/", $this->genre)) // solo lettere, numeri e spazi
             return true;
         else
             return false;

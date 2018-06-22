@@ -190,8 +190,9 @@ class EUserInfo extends EObject
      * @param bool $ln controllo del cognome
      * @param bool $bp controllo del luogo di nascita
      * @param bool $bd controllo della data di nascita
+     * @param bool $bio controllo della biografia
      */
-    function validate(bool &$fn, bool &$ln, bool &$bp, bool &$bd)
+    function validate(bool &$fn, bool &$ln, bool &$bp, bool &$bd, bool $bio)
     {
         if (ctype_alpha($this->firstName)) 
         {
@@ -224,6 +225,10 @@ class EUserInfo extends EObject
             } else $bd = false;
         } else $bd = false;
         
+        if (preg_match("/^(\p{L})|([a-zA-Z0-9][a-zA-Z0-9 -])+$/ui", $this->description)) // solo lettere, numeri e spazi
+            $bio = true;
+        else 
+            $bio = false;
     }
     
     

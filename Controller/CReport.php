@@ -100,11 +100,13 @@ class CReport {
                 $report->setIdSegnalatore($loggedUser->getId());
                 $report->setIdObject($id);
                 $report->setObjectType($type);
-                
-                if ($vReport->validateReport($report)) {
+                if ($vReport->validateReport($report))
+                {
                     FPersistantManager::getInstance()->store($report);
-                }else 
-                    $vReport->showErrorPage($loggedUser, "invalide report entry");
+                    header('Location: /deepmusic/index');
+                }
+                else 
+                    $vReport->showReportForm($loggedUser, $id, $type);
             }
             
         }

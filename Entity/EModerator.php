@@ -61,7 +61,7 @@ class EModerator extends EUser
     
     /**
      * Metodo con cui il moderatore declina un report, se effettivamente e' di sua competenza
-     * @param EReport $report il report da prendere in carico
+     * @param EReport $report il report da non avere piu in carico
      */
     function declineReport(EReport &$report) : bool
     {
@@ -69,6 +69,20 @@ class EModerator extends EUser
         {
             $report->setIdModeratore(0);
             return FPersistantManager::getInstance()->update($report);
+        }
+        else
+            return false;
+    }
+    
+    /**
+     * Metodo con cui il moderatore completa un report, se effettivamente e' di sua competenza
+     * @param EReport $report il report da completare
+     */
+    function completeReport(EReport &$report) : bool
+    {
+        if($report->getIdModeratore() == $this->getId())
+        {
+            return FPersistantManager::getInstance()->remove(EReport::class, $report->getId());
         }
         else
             return false;

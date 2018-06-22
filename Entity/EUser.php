@@ -37,12 +37,6 @@ class EUser extends EObject
         parent::__construct();
     }
     
-    function isStringOk(string $toCheck) : bool
-    {          
-        if( !preg_match('/^[a-zA-Z0-9_-]{8,32}$/', $toCheck) )
-            {return false;}
-        return true;
-    }
     
     /**
      * Metodo che verifica se l'email dell'istanza sia corretta. Una email corretta
@@ -66,7 +60,7 @@ class EUser extends EObject
      */
     function validatePassword() : bool
     {
-        if($this->password && preg_match('/^[[:alpha:]]{3,20}$/', $this->password))
+        if($this->password && preg_match('/^[[:alnum:]]{6,20}$/', $this->password)) // solo numeri-lettere da 6 a 20
         {
             return true;
         }
@@ -100,7 +94,7 @@ class EUser extends EObject
      */
     function validateNickName() : bool
     {
-        if ($this->nickname && preg_match('/^[[:alpha:]]{3,20}$/', $this->nickname))
+        if ($this->nickname && preg_match('/^[a-zA-Z0-9_-]{6,15}$/', $this->nickname))
         {
             return true;
         }

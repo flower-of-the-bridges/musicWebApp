@@ -76,7 +76,7 @@ class VUserInfo extends VObject
      */
     function validateUserInfo(EUserInfo &$eui) : bool
     {
-        $eui->validate($this->check['firstName'], $this->check['lastName'], $this->check['birthPlace'], $this->check['birthDate']);
+        $eui->validate($this->check['firstName'], $this->check['lastName'], $this->check['birthPlace'], $this->check['birthDate'], $this->check['bio']);
         
         if($this->check['firstName'] && $this->check['lastName'] && $this->check['birthPlace'] && $this->check['birthDate'])
             return true;

@@ -41,21 +41,25 @@ class EReport extends EObject
      * @return bool true se e' valido, false altrimenti
      */
     function validateTitle() : bool
-    {
-        $pattern = "/[A-Za-z0-9]{0-29}/";
-        $result = preg_match($pattern, $this->title);
-        return $result;
+    {   // solo lettere (accenti), numeri 
+        if (preg_match("/^(\p{L})|([a-zA-Z0-9][a-zA-Z0-9 -])+$/ui", $this->title)) 
+            return true;
+        else
+            return false;
     }
     
     /**
-     * Verifica che la descrizione del report sia valida. Deve contenere solo caratteri alfanumerici.
+     * Verifica che la descrizione del report sia valida. Deve contenere solo lettere (anche con accenti)
+     * numeri e spazi.
      * @return bool true se e' valido, false altrimenti
      */
     function validateDescription() : bool
     {
-        $pattern = "/[A-Za-z0-9]/";
-        $result = preg_match($pattern, $this->title);
-        return $result;
+        // solo lettere (accenti), numeri
+        if (preg_match("/^(\p{L})|([a-zA-Z0-9][a-zA-Z0-9 -])+$/ui", $this->description)) // solo lettere, numeri e spazi
+            return true;
+        else
+            return false;
     }
     
     function validateIdSegnalatore() : bool
