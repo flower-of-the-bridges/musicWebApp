@@ -243,7 +243,8 @@ class CSong
                     $songNew->setArtist($songOld->getArtist());
                     FPersistantManager::getInstance()->update($songNew);
                     
-                    $user->setGenre(); // aggiorna il genere musicale
+                    if(is_a($user, EMusician::class))  // se l'utente e' musicista
+                        $user->setGenre(); // aggiorna il genere musicale
                     
                     header('Location: /deepmusic/song/show/'.$songNew->getId());
                 }
@@ -281,7 +282,9 @@ class CSong
                 if($vSong->validateRemove()) // se l'utente ha deciso di rimuoverla...
                 { // ...la canzone viene rimossa
                     FPersistantManager::getInstance()->remove(ESong::class, $song->getId()); // rimuove la canzone
-                    $user->setGenre(); // aggiorna il genere musicale
+                    
+                    if(is_a($user, EMusician::class))  // se l'utente e' musicista
+                        $user->setGenre(); // aggiorna il genere musicale
                     
                     header('Location: /deepmusic/user/profile/'.$user->getId()); // l'utente viene reindirizzato al profilo
                 }

@@ -39,7 +39,7 @@ class FReport
     {
         return "SELECT *
                 FROM report
-                WHERE id_moderatore = :id_moderatore;";
+                WHERE id_moderatore = :id;";
     }
     
     static function bindValues(PDOStatement &$stmt, EReport &$rep)
@@ -59,6 +59,7 @@ class FReport
     static function createObjectFromRow($row) : EReport
     {
         $rep = new EReport();
+        
         $rep->setId($row['id']);
         $rep->setIdModeratore($row['id_moderatore']);
         $rep->setTitle($row['title']);
@@ -66,7 +67,6 @@ class FReport
         $rep->setIdSegnalatore($row['id_segnalatore']);
         $rep->setIdObject($row['id_object']);
         $rep->setObjectType($row['object_type']);
-        
         
         return $rep;
     }

@@ -44,6 +44,42 @@ class CReport {
     }
     
     /**
+     * Mostra la pagina delle info di un report. Reindirizza ad un messaggio di errore
+     * se l'utente che accede alla risorsa non e' un moderatore.
+     * @param int $id l'identificativo del report.
+     */
+    private function showReport($idReport = null)
+    {
+        
+        $vReport = new VReport();
+        $loggedUser = CSession::getUserFromSession();
+        
+        if(get_class($loggedUser)==EModerator::class) // se l'utente e' moderatore
+        {
+            if(is_numeric($idReport)) // se l'id report e' specificato
+            { // si carica il report
+                $eReport = FPersistantManager::getInstance()->load(EReport::class, $idReport); // carica il report
+                
+                if($eReport) // se il report esiste
+                { // si verifica che il moderatore puo' vederlo (il report non deve essere assegnato oppure deve essere assegnato a lui)
+                    if($loggedUser->isReportAcceptable($eReport))
+                        $vReport->showReport($loggedUser, $eReport);
+                    else
+                        $vReport->showErrorPage($loggedUser, "This report is not one of yours");
+                }
+                else
+                    $vReport->showErrorPage($loggedUser, "You are trying to see something that not exist!");
+            }
+            else
+                $vReport->showErrorPage($loggedUser, 'The id is not specified!');
+        }
+        else
+            $vReport->showErrorPage($loggedUser, 'You must be a moderator to see reports!');
+            
+            
+    }
+    
+    /**
      * Permette l'invio di un report
      * EUser $loggedUser
      *      l'utente che sta inviando il report invia
@@ -141,42 +177,5 @@ class CReport {
             return false;
         }
     }
-    
-    /**
-     * Mostra la pagina delle info di un report. Reindirizza ad un messaggio di errore
-     * se l'utente che accede alla risorsa non e' un moderatore.
-     * @param int $id l'identificativo del report.
-     */
-    private function showReport($idReport = null)
-    {
-        
-        $vReport = new VReport();
-        $loggedUser = CSession::getUserFromSession();
-        
-        if(get_class($loggedUser)==EModerator::class) // se l'utente e' moderatore
-        {
-            
-            if(is_numeric($idReport)) // se l'id report e' specificato
-            { // si carica il report
-                $eReport = FPersistantManager::getInstance()->load(EReport::class, $idReport); // carica il report
-                
-                if($eReport) // se il report esiste
-                { // si verifica che il moderatore puo' vederlo (il report non deve essere assegnato oppure deve essere assegnato a lui)
-                    if(!$eReport->isAccepted() || $eReport->getIdModeratore() == $loggedUser->getId())
-                        $vReport->showReport($loggedUser, $eReport);
-                    else
-                        $vReport->showErrorPage($loggedUser, "this report is not one of yours");  
-                }
-                else 
-                    $vReport->showErrorPage($loggedUser, "you are trying to see something that not exist!");
-            }
-            else 
-                $vReport->showErrorPage($loggedUser, 'The id is not specified!');
-        }
-        else 
-            $vReport->showErrorPage($loggedUser, 'You must be a moderator to see reports!');
-        
-    
-    }
-    
+     
 }

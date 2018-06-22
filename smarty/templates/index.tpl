@@ -64,6 +64,8 @@
 			</div>
 		</div>
 	</div>
-
+	<footer class="container-fluid text-center">
+  		<a href="/deepmusic/admin/login">Admin Panel</a>
+	</footer>
 </body>
 </html>

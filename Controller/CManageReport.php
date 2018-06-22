@@ -13,17 +13,21 @@ require_once 'inc.php';
 class CManageReport
 {
     
-    static function show($idMod=null,$idReport=null)
+    /**
+     * Mostra l'hub dei report
+     * @param string $assigned ricavata dall'url. Se equivale a 'assigned', mostra l'hub rispetto 
+     * ai report assegnati al moderatore della sessione attiva
+     */
+    static function show($assigned = null)
     {
         if($_SERVER['REQUEST_METHOD'] == 'GET')
         {
-            if($idMod!=null && $idReport != null)
+            if($assigned!=null && $assigned == 'assigned')
             {
-                CManageReport::showReport($idMod,$idReport);
-            }else if($idReport == null)
-            {
-                CManageReport::showReportTable($idMod);   
+                CManageReport::showReportTable(true);
             }
+            else 
+                CManageReport::showReportTable(false);  
         }
         else 
             header('Location: HTTP/1.1 405 Invalid URL detected');
@@ -37,23 +41,29 @@ class CManageReport
      */
     static function accept($idReport)
     {
-        $vReport = new VReport();
-        $eReport = FPersistantManager::getInstance()->load(EReport::class, $idReport);
-        
-        $loggedUser = CSession::getUserFromSession();
-        
-        if (CManageReport::checkModSession())
+        if($_SERVER['REQUEST_METHOD'] == 'GET')
         {
-            if($eReport != null)
+            $vReport = new VReport();
+            $eReport = FPersistantManager::getInstance()->load(EReport::class, $idReport);
+            
+            $loggedUser = CSession::getUserFromSession();
+            
+            if (is_a($loggedUser, EModerator::class))
             {
-                if($eReport->getIdModeratore() == "")
+                if($eReport)
                 {
-                    $eReport->setIdModeratore($loggedUser->getId());
-                    FPersistantManager::getInstance()->update($eReport);
-                }else
-                    $vReport->showErrorPage($loggedUser, "this report is already under the attenction of a moderator");
-            }else
-                $vReport->showErrorPage($loggedUser, "you are trying to accept something that does not exist");
+                    if(!$eReport->isAccepted())
+                    {
+                        $loggedUser->acceptReport($eReport);
+                        FPersistantManager::getInstance()->update($eReport);
+                        header('Location: /deepmusic/report/show/'.$eReport->getId());
+                    }
+                    else
+                        $vReport->showErrorPage($loggedUser, "this report is already under the attenction of a moderator");
+                }
+                else
+                    $vReport->showErrorPage($loggedUser, "you are trying to accept something that does not exist");
+            }
         }
     }
     
@@ -84,6 +94,8 @@ class CManageReport
             }else
                 $vReport->showErrorPage($loggedUser, "you are trying to decline something that does not exist");
         }
+        else
+            header('Location: HTTP/1.1 405 Invalid URL detected');
     }
     
     /**
@@ -121,22 +133,22 @@ class CManageReport
      * se l'utente che accede alla risorsa non e' un moderatore o se sta cercando di visualizzare qualcosa che non dovrebbe.
      * @param int $idMod l'identificativo del moderatore.
      */
-    private function showReportTable($idMod, bool $error = false)
+    private function showReportTable(bool $assigned)
     {
-        if(!$error){$error=false;}
-        
         $vReport = new VReport();
         $loggedUser = CSession::getUserFromSession();
-        
-        if(CManageReport::checkModSession())
+        if(is_a($loggedUser, EModerator::class))
         {
-            if($idMod=="" || $idMod == $loggedUser->getId())
-            {
-                $reportTable = FPersistantManager::getInstance()->load(EReport::class, $idMod, FTarget::LOAD_MOD_REPORT);
-                $vReport->showReportTable($reportTable);
-            }else 
-                $vReport->showErrorPage($loggedUser, "you are trying to visualize something that is none of your business");
+            $reports = NULL;
+            if($assigned)
+                $reports = $loggedUser->getAssignedReports();   
+            else 
+                $reports = $loggedUser->getUnassignedReports();
+            
+            $vReport->showReportTable($loggedUser, $reports, $assigned);
         }
+        else
+            $vReport->showErrorPage($loggedUser, "you are not supposed to be here, how did you went this far from home?");
     }
     
     

@@ -29,19 +29,30 @@
 		
         </div>
 		<div class="col-sm-7 well">
-			
-			<h2>{$report->getTitle()} (Made by <a href="/deepmusic/user/profile/{$rId}">{$rName}</a></h2>
-				
-			<p>{$report->getDescription()}<p>
-			
+		<!-- Informazioni Report -->	
+			<h2>{$report->getTitle()} (Made by <a href="/deepmusic/user/profile/{$rId}">{$rName}</a>)</h2>
+			<div class="well">
+			<!-- Descrizione Report -->
+				<h4 id="important">Description</h4>	
+				<p>{$report->getDescription()}<p>
+			</div>
+			<!-- Link all'oggetto del Report-->
+			{if $report->getObjectType() eq 'user'}
+			<a href="/deepmusic/user/profile/{$report->getIdObject()}">Show Reported Object.</a>
+			{else}
+			<a href="/deepmusic/song/show/{$report->getIdObject()}">Show Reported Object.</a>
+			{/if}
 			<br>
 			<br>
 			{if !$report->isAccepted()}
+			<!-- Bottone per accettare il report -->
 			<a href="/deepmusic/manageReport/accept/{$report->getId()}" 
 				class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Accept</a>
 			{else}
+			<!-- Bottone per completare il report -->
 			<a href="/deepmusic/manageReport/complete/{$report->getId()}" 
 				class="btn btn-primary btn-lg btn-success active" role="button" aria-pressed="true">Complete</a>
+			<!-- Bottone per declinare il report -->
 			<a href="/deepmusic/manageReport/decline/{$report->getId()}" 
 				class="btn btn-primary btn-lg btn-danger active" role="button" aria-pressed="true">Decline</a>
 			{/if}

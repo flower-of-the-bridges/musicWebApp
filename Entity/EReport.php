@@ -209,6 +209,17 @@ class EReport extends EObject
     }
     
     /**
+     * Restituisce l'utente che ha effettuato il report
+     * @return EUser se il report contiene l'identificativo segnalatore di un utente esistente | NULL altrimenti
+     */
+    function getSegnalatore()
+    {
+        if($this->idSegnalatore)
+            return FPersistantManager::getInstance()->load(EUser::class, $this->idSegnalatore);
+        else 
+            return NULL;
+    }
+    /**
      * Imposta tipologia e identificativo dell'oggetto nel report a partire dall'oggetto stesso
      * @param ESong | EUser $obj l'oggetto da cui ricavare i valori
      */

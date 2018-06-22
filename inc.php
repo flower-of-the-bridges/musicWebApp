@@ -5,6 +5,7 @@ require_once 'Controller/FrontController.php';
 require_once 'Controller/CUser.php';
 require_once 'Controller/CSong.php';
 require_once 'Controller/CReport.php';
+require_once 'Controller/CManageReport.php';
 require_once 'Controller/CSession.php';
 require_once 'Controller/CFollower.php';
 require_once 'Controller/CUserInfo.php';

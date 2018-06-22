@@ -22,6 +22,10 @@
  * 
  *  - EXISTS_SONG
  *  - LOAD_MUSICIAN_SONG
+ *  
+ * ETarget supporta:
+ * 
+ *  - LOAD_MOD_REPORTS
  * 
  * EFollower supporta necessariamente:
  * 
@@ -31,6 +35,8 @@
  * 
 
  *  - EXISTS_SUPPORTER
+ *  
+ *  
  * 
  */
 class FTarget

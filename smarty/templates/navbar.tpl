@@ -28,6 +28,11 @@
 					<li><a href="/deepmusic/song/load"><span
 							class="glyphicon glyphicon-cd"></span> Add Song </a></li> 
 					{/if}
+					{if $uType eq 'moderator'}
+					<!-- Link all'hub dei report (se moderatore) -->
+					<li><a href="/deepmusic/manageReport/show"><span
+							class="glyphicon glyphicon-warning-sign"></span> Report Hub </a></li> 
+					{/if}
 					<!-- Logout (se logged) -->
 					<li><a href="/deepmusic/user/logout"><span
 							class="glyphicon glyphicon-log-out"></span> Log Out </a></li>

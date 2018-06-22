@@ -62,23 +62,32 @@ class VReport extends VObject
      * Pagina riservata solo al moderatore che ha accettato il report.
      * 
      */
-    function showReport (EReport $eReport, bool $error = null)
+    function showReport (EUser &$user, EReport &$report)
     {
         $this->smarty->registerObject('user', $user);
-        $this->smarty->assign('report', $eReport);
-        
         $this->smarty->assign('uType', lcfirst(substr(get_class($user), 1)));
         
+        $reportUser = $report->getSegnalatore();
+        $this->smarty->assign('rName', $reportUser->getNickName());
+        $this->smarty->assign('rId', $reportUser->getId());
+        
+        $this->smarty->assign('report', $report);
+
         $this->smarty->assign('check', $this->check);
         $this->smarty->display('report/report.tpl');
-        
-        
-        
     }
     
-    function showReportTable($reportTable, bool $error = null)
+    function showReportTable(EUser &$user, &$reportTable, bool $assigned)
     {
-        if(!$error){ $error = false; }
+        $this->smarty->registerObject('user', $user);
+        $this->smarty->assign('uType', lcfirst(substr(get_class($user), 1)));
+        
+        $this->smarty->assign('array', $reportTable);
+        $this->smarty->assign('assigned', $assigned);
+        
+        $this->smarty->assign('check', $this->check);
+        
+        $this->smarty->display('report/hubReport.tpl');
         
         
     }

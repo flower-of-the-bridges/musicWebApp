@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<title>Log In</title>
+<title>Administrator Log</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet"
@@ -26,12 +26,12 @@
 		
         </div>
 		<div class="col-sm-7 well">
+			<h2>Administrator Login</h2>
 			{if $error}
 			<div class="alert alert-warning">
 				<strong>Warning!</strong><br>Wrong combination of user and password. <br>Please retry.
 			</div>
 			{/if}
-			<h2>Login</h2>
 			<br>
 					<form class="form-horizontal" method="post" action="login">
 						

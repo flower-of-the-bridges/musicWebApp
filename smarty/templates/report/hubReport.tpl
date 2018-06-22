@@ -3,9 +3,6 @@
 {user->getNickName assign='uName'}
 {user->getId assign='uId'}
  
-{profile->getNickName assign='pName'}
-{profile->getId assign='pId'}
-
 <html lang="en">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -30,36 +27,58 @@
 	<div class="container text-center">
 	
 		<div class="col-sm-3">
-			{include file="userInfo.tpl"}
+
         </div>
 		<div class="col-sm-7 well">
+			<h2>{if $assigned}Assigned{else}Unassigned{/if} Report Hub</h2>
+			{if $assigned}
+			<!-- Link ai report non assegnati al moderatore -->
+			<a href="/deepmusic/manageReport/show">Switch to Unassigned Reports.</a>
+			{else}
+			<!-- Link ai report assegnati al moderatore -->
+			<a href="/deepmusic/manageReport/show/assigned">Switch to Assigned Reports.</a>
+			{/if}
+			<hr>
+			{if $array}
 			<table class="table table-responsive">
+			<!-- Table dei report -->
 				<tbody>					
 				{foreach $array as $report}
-			
 					<tr>
+						<!-- Titolo del report (con link verso il report) -->
 						<td>
 							<a href="/deepmusic/report/show/{$report->getId()}">{$report->getTitle()}</a>
 						</td>
-						{if $accepted}
+						{if !$assigned}
 						<td>
+						<!-- Link per accettare il report -->
 							<a href="/deepmusic/manageReport/accept/{$report->getId()}">
-							<span class="glyphicon glyphicon-pencil"></span>Accept</a>
+							<span class="glyphicon glyphicon-plus"></span> Accept</a>
 						</td>
 						{else} 
 						<td>
+						<!-- Link per completare il report-->
 							<a href="/deepmusic/manageReport/complete/{$report->getId()}">
-							<span class="glyphicon glyphicon-pencil"></span>Complete</a>
+							<span class="glyphicon glyphicon-ok"></span> Complete</a>
 						</td>
 						<td>
+						<!-- Link per respingere il report -->
 							<a href="/deepmusic/manageReport/decline/{$report->getId()}">
-							<span class="glyphicon glyphicon-pencil"></span>Decline</a>
+							<span class="glyphicon glyphicon-remove"></span> Decline</a>
 						</td>
 						{/if}
 					</tr>
 				{/foreach}
 				</tbody>
 			</table>
+			{else}
+			<!-- Messaggio se non ci sono report -->
+			{if $assigned}
+			<p> You don't have any report assigned...don't be lazy and get one!</p>
+			{else}
+			<p>You're lucky! There are no reports submitted!</p>
+			{/if}
+			{/if}
 		</div>
 		
 		<div class="col-sm-2">
