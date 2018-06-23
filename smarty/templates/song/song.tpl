@@ -36,7 +36,7 @@
 				<source src="player({$song->getId()})" type="audio/mpeg">
 			</audio>
 			{else}
-			<h4>The song you are viewing is{if $song->isForRegisteredOnly()}for logged users.{elseif $song->isForSupportersOnly}for {$song->getArtist()->getNickName()}'s supporters.{else}hidden.{/if}<h4>
+			<h4>The song you are viewing is {if $song->isForRegisteredOnly()}for logged users.{elseif $song->isForSupportersOnly()}for {$song->getArtist()->getNickName()}'s supporters.{else}hidden.{/if}<h4>
 			{/if}
 			<br>
 			<br>
